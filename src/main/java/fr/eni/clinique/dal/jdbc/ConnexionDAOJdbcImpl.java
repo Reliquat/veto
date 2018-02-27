@@ -1,4 +1,4 @@
-package fr.eni.clinique.dal.factory;
+package fr.eni.clinique.dal.jdbc;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import fr.eni.clinique.bo.Personnel;
 import fr.eni.clinique.common.util.ResourceUtil;
 import fr.eni.clinique.dal.exception.DalException;
+import fr.eni.clinique.dal.factory.MSSQLConnectionFactory;
 
 public class ConnexionDAOJdbcImpl {
 

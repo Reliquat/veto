@@ -1,5 +1,7 @@
 package fr.eni.clinique.dal.factory;
 
+import fr.eni.clinique.dal.jdbc.ConnexionDAOJdbcImpl;
+
 /**
  * DAO Fabric.
  * 
