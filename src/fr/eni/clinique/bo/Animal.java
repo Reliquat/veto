@@ -6,11 +6,25 @@ public class Animal {
 	private String sexe;
 	private String couleur;
 	private Race race;
-	private String espece;
 	private String tatouage;
-	private String Antecedents;
+	private String antecedents;
 	private boolean archive;
 	
+	public Animal() {
+		super();
+	}
+	public Animal(int codeAnimal, String nomAnimal, String sexe, String couleur, Race race, String espece,
+			String tatouage, String antecedents, boolean archive) {
+		super();
+		this.codeAnimal = codeAnimal;
+		this.nomAnimal = nomAnimal;
+		this.sexe = sexe;
+		this.couleur = couleur;
+		this.race = race;
+		this.tatouage = tatouage;
+		this.antecedents = antecedents;
+		this.archive = archive;
+	}
 	public int getCodeAnimal() {
 		return codeAnimal;
 	}
@@ -41,12 +55,6 @@ public class Animal {
 	public void setRace(Race race) {
 		this.race = race;
 	}
-	public String getEspece() {
-		return espece;
-	}
-	public void setEspece(String espece) {
-		this.espece = espece;
-	}
 	public String getTatouage() {
 		return tatouage;
 	}
@@ -54,15 +62,21 @@ public class Animal {
 		this.tatouage = tatouage;
 	}
 	public String getAntecedents() {
-		return Antecedents;
+		return antecedents;
 	}
 	public void setAntecedents(String antecedents) {
-		Antecedents = antecedents;
+		this.antecedents = antecedents;
 	}
 	public boolean isArchive() {
 		return archive;
 	}
 	public void setArchive(boolean archive) {
 		this.archive = archive;
+	}
+	@Override
+	public String toString() {
+		return "Animal [codeAnimal=" + codeAnimal + ", nomAnimal=" + nomAnimal + ", sexe=" + sexe + ", couleur="
+				+ couleur + ", race=" + race + ", tatouage=" + tatouage + ", antecedents=" + antecedents + ", archive="
+				+ archive + "]";
 	}
 }

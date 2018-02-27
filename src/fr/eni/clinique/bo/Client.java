@@ -17,7 +17,27 @@ public class Client {
 	private Boolean archive;
 	private ArrayList<Animal> animaux;
 	
-	
+	public Client() {
+		super();
+	}
+	public Client(int codeClient, String nomClient, String prenomClient, String adresse1, String adresse2,
+			String codePostal, String ville, String numTel, String assurance, String email, String remarque,
+			Boolean archive, ArrayList<Animal> animaux) {
+		super();
+		this.codeClient = codeClient;
+		this.nomClient = nomClient;
+		this.prenomClient = prenomClient;
+		this.adresse1 = adresse1;
+		this.adresse2 = adresse2;
+		this.codePostal = codePostal;
+		this.ville = ville;
+		this.numTel = numTel;
+		this.assurance = assurance;
+		this.email = email;
+		this.remarque = remarque;
+		this.archive = archive;
+		this.animaux = animaux;
+	}
 	public int getCodeClient() {
 		return codeClient;
 	}
@@ -95,5 +115,12 @@ public class Client {
 	}
 	public void setAnimaux(ArrayList<Animal> animaux) {
 		this.animaux = animaux;
+	}
+	@Override
+	public String toString() {
+		return "Client [codeClient=" + codeClient + ", nomClient=" + nomClient + ", prenomClient=" + prenomClient
+				+ ", adresse1=" + adresse1 + ", adresse2=" + adresse2 + ", codePostal=" + codePostal + ", ville="
+				+ ville + ", numTel=" + numTel + ", assurance=" + assurance + ", email=" + email + ", remarque="
+				+ remarque + ", archive=" + archive + ", animaux=" + animaux + "]";
 	}
 }

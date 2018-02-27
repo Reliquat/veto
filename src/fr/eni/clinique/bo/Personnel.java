@@ -10,6 +10,18 @@ public class Personnel {
 	private boolean archive;
 	private ArrayList<Agenda> rdv;
 	
+	public Personnel() {
+		super();
+	}
+	public Personnel(int codePers, String nom, String motPasse, String role, boolean archive, ArrayList<Agenda> rdv) {
+		super();
+		this.codePers = codePers;
+		this.nom = nom;
+		this.motPasse = motPasse;
+		this.role = role;
+		this.archive = archive;
+		this.rdv = rdv;
+	}
 	public int getCodePers() {
 		return codePers;
 	}
@@ -45,5 +57,10 @@ public class Personnel {
 	}
 	public void setAgenda(ArrayList<Agenda> agenda) {
 		this.rdv = agenda;
+	}
+	@Override
+	public String toString() {
+		return "Personnel [codePers=" + codePers + ", nom=" + nom + ", motPasse=" + motPasse + ", role=" + role
+				+ ", archive=" + archive + ", rdv=" + rdv + "]";
 	}
 }
