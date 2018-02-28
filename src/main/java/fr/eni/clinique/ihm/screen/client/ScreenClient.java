@@ -111,7 +111,7 @@ public class ScreenClient extends JFrame implements Observer{
 		//>>
 		panel.add(btnNewButton);
 		
-		btnAjouter = new JButton("\r\nAjouter");
+		btnAjouter = new JButton("Ajouter");
 		btnAjouter.setIcon(new ImageIcon(ScreenClient.class.getResource("/Images/plus.png")));
 		btnAjouter.setBounds(407, 11, 100, 78);
 		//<<
