@@ -1,4 +1,4 @@
-package fr.eni.clinique.ihm.screen;
+package fr.eni.clinique.ihm.screen.login;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
