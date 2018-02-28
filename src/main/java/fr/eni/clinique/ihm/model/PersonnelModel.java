@@ -10,95 +10,20 @@ import fr.eni.clinique.bo.Personnel;
 public class PersonnelModel extends Observable {
 
 
-    private List<Personnel> articles = new ArrayList<>();
-    private int currentIndex;
+    private List<Personnel> personnels = new ArrayList<>();
     public boolean dataChanged;
 
     public void loadPersonnel(List<Personnel> personnels) {
-    	
-    	for (Personnel personnel : personnels){
-    		
-    	}
-        this.articles.clear();
-        this.articles.addAll(articles);
-        firstOrNew();
+    	this.personnels = personnels;
     }
 
     
-    public void addArticle(Personnel article) {
-        articles.add(article);
-        last();
+    public void addPersonnel(Personnel personnel) {
+    	personnels.add(personnel);
     }
 
-    public void changeCurrentArticle(Personnel article) {
-
-        if (!articles.isEmpty()) {
-            articles.set(currentIndex, article);
-            setDataChanged();
-            changeState();
-        }
-    }
-
-    public void removeCurrentArticle() {
-
-        if (!articles.isEmpty()) {
-            
-            // Data change if we removing an article with an id.
-            
-            
-            articles.remove(currentIndex);
-
-            if (currentIndex > articles.size() - 1) {
-                currentIndex = 0;
-            }
-            
-            changeState();
-        }
-    }
-
-    public void firstOrNew() {
-
-        currentIndex = 0;
-        changeState();
-    }
-
-    public void previousArticle() {
-        if (!articles.isEmpty()) {
-            if (currentIndex > 0) {
-                currentIndex--;
-            } else {
-                currentIndex = articles.size() - 1;
-            }
-        }
-        changeState();
-    }
-
-    public void nextArticle() {
-        if (!articles.isEmpty()) {
-            if (currentIndex < articles.size() - 1) {
-                currentIndex++;
-            } else {
-                currentIndex = 0;
-            }
-        }
-        changeState();
-    }
-
-    private void last() {
-
-        if (!articles.isEmpty()) {
-            currentIndex = articles.size() - 1;
-        }
-        changeState();
-    }
-
-    private void changeState() {
-
-    	Personnel article = null;
-        if (!articles.isEmpty()) {
-            article = articles.get(currentIndex);
-        }
-        
+    public void removeCurrentPersonnel(int index) {
+    	personnels.remove(index);
     }
 
     /**

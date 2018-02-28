@@ -4,28 +4,22 @@ import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import java.awt.BorderLayout;
 import javax.swing.JButton;
 import javax.swing.SwingConstants;
 import javax.swing.ImageIcon;
 import java.awt.FlowLayout;
 import javax.swing.JTable;
-import javax.swing.ListSelectionModel;
-import javax.swing.JList;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.GridLayout;
-import javax.swing.UIManager;
-import javax.swing.border.EmptyBorder;
+import java.util.Observable;
+import java.util.Observer;
+
 import javax.swing.border.LineBorder;
 import java.awt.Color;
 import javax.swing.AbstractAction;
 import java.awt.event.ActionEvent;
-import javax.swing.Action;
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeEvent;
 
-public class adminScreen {
+public class adminScreen implements Observer{
 
 	private JFrame frmGestionDuPersonnel;
 	private JTable table;
@@ -88,7 +82,7 @@ public class adminScreen {
 		delete.setHorizontalAlignment(SwingConstants.LEFT);
 		panel.add(delete);
 		
-		JButton btnNewButton = new JButton("R\u00E9initialiser");
+		JButton btnNewButton = new JButton("Réinitialiser");
 		btnNewButton.setIcon(new ImageIcon(adminScreen.class.getResource("/Images/unlock.png")));
 		btnNewButton.setHorizontalAlignment(SwingConstants.LEFT);
 		panel.add(btnNewButton);
@@ -110,5 +104,10 @@ public class adminScreen {
 		}
 		public void actionPerformed(ActionEvent e) {
 		}
+	}
+	@Override
+	public void update(Observable arg0, Object arg1) {
+		// TODO Auto-generated method stub
+		
 	}
 }
