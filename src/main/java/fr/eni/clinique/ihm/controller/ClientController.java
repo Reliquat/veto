@@ -7,7 +7,6 @@ import fr.eni.clinique.ihm.screen.client.ScreenRechercheClient;
 public class ClientController implements ClientActionListener{
 
 	private ClientModel model;
-	private ScreenRechercheClient screenRechercheClient;
 	
     public ClientController(ClientModel model) {
         super();
