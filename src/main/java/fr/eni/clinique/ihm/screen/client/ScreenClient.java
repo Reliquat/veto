@@ -99,7 +99,7 @@ public class ScreenClient extends JFrame implements Observer{
 		
 		JButton btnNewButton = new JButton("Rechercher");
 		btnNewButton.setBounds(10, 11, 100, 78);
-		//
+		//<<
 		btnNewButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -108,13 +108,13 @@ public class ScreenClient extends JFrame implements Observer{
                 }
             }
         });
-		//
+		//>>
 		panel.add(btnNewButton);
 		
 		btnAjouter = new JButton("Ajouter");
 		btnAjouter.setIcon(new ImageIcon(ScreenClient.class.getResource("/Images/plus.png")));
 		btnAjouter.setBounds(407, 11, 100, 78);
-		//
+		//<<
 		btnAjouter.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -123,7 +123,7 @@ public class ScreenClient extends JFrame implements Observer{
                 }
             }
         });
-		//
+		//>>
 		panel.add(btnAjouter);
 		
 		btnSupprimer = new JButton("Supprimer");
