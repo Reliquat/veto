@@ -1,16 +1,18 @@
 package fr.eni.clinique.ihm.listener;
 
+import fr.eni.clinique.dal.exception.DalException;
+
 public interface ClientActionListener {
 
 	void Rechercher();
 	
 	void Ajouter();
 	
-	void Supprimer();
+	void Supprimer(int CodePers) throws DalException;
 
-	void Valider();
+	void Valider(int CodePers);
 	
-	void Editer();
+	void Editer(int CodePers);
 	
 	void Annuler();
 	
