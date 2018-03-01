@@ -6,6 +6,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
 import fr.eni.clinique.bo.Personnel;
 import fr.eni.clinique.common.util.ObjectUtil;
@@ -17,6 +19,7 @@ public class PersonnelDAOJdbcImpl {
 
     private final static String SELECT_BY_NAME = "SELECT CodePers, Nom, MotPasse, Role, Archive FROM Personnels WHERE Nom = ?";
     private final static String SELECT_BY_ID = "SELECT CodePers, Nom, MotPasse, Role, Archive FROM Personnels WHERE CodePers = ?";
+    private final static String SELECT_ALL = "SELECT CodePers, Nom, MotPasse, Role, Archive FROM Personnels";
     private final static String INSERT_QUERY = "INSERT INTO Personnels(Nom, MotPasse, Role, Archive) VALUES (?, ?, ?, ?);";
     private final static String UPDATE_QUERY = "UPDATE Personnels SET Nom = ?, MotPasse = ?, Role = ?, Archive = ? WHERE CodePers = ?;";
     private final static String DELETE_QUERY = "DELETE FROM Personnels WHERE @CodePers = ?";
@@ -98,6 +101,30 @@ public class PersonnelDAOJdbcImpl {
             ResourceUtil.safeClose(connection, statement, resultSet);
         }
         return personnel;
+    }
+    
+    public List<Personnel> selectAll() throws DalException {
+        
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
+        List<Personnel> liste = new ArrayList<Personnel>();
+        
+        try {
+            connection = MSSQLConnectionFactory.get();
+            statement = connection.createStatement();
+            resultSet = statement.executeQuery(SELECT_ALL);
+
+            while (resultSet.next()) {
+                liste.add(createPersonnel(resultSet));
+            }
+        } catch(SQLException e) {
+            throw new DalException(e.getMessage(), e);
+        } finally {
+            ResourceUtil.safeClose(connection, statement, resultSet);
+        }
+        
+        return liste;
     }
     
     public Personnel insertPersonnel(Personnel personnel) throws DalException {

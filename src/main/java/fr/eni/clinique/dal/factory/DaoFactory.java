@@ -19,13 +19,12 @@ public class DaoFactory {
     public static ConnexionDAOJdbcImpl connexionDao() {
         return ConnexionDAOJdbcImpl.getInstance();
     }
-   
+    
     /**
      * Returns PersonnelDAOJdbcImpl.
-     *  
      * @return
      */
-    public static PersonnelDAOJdbcImpl personnelDao() {
-        return PersonnelDAOJdbcImpl.getInstance();
+    public static PersonnelDAOJdbcImpl personnelDao(){
+    	return PersonnelDAOJdbcImpl.getInstance();
     }
 }

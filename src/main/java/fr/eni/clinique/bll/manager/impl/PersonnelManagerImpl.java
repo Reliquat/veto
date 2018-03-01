@@ -30,7 +30,7 @@ public class PersonnelManagerImpl implements PersonnelManager{
     }
 
 	@Override
-	public List<Personnel> getListePersonnel() {
+	public List<Personnel> getListePersonnel() throws BLLException {
 		List<Personnel> personnels = null;
         
         try {
@@ -89,7 +89,6 @@ public class PersonnelManagerImpl implements PersonnelManager{
 
         try {
             ObjectUtil.checkNotNullWithMessage(personnel, "Une erreur technique est survenue");
-            ObjectUtil.checkNotNullWithMessage(personnel.getRdv(), "Le Rendez-vous est obligatoire");
             ObjectUtil.checkNotBlankWithMessage(personnel.getMotPasse(), "Le Mot de Passe est obligatoire");
             ObjectUtil.checkNotBlankWithMessage(personnel.getNom(), "Le nom est obligatoire");
             ObjectUtil.checkNotBlankWithMessage(personnel.getRole(), "Le Rôle est obligatoire");                  
