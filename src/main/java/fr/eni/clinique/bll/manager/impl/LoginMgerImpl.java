@@ -1,14 +1,15 @@
 package fr.eni.clinique.bll.manager.impl;
 
-import java.util.List;
-
-import fr.eni.clinique.bll.exception.BLLException;
 import fr.eni.clinique.bll.manager.LoginMger;
 import fr.eni.clinique.bo.Personnel;
+import fr.eni.clinique.common.util.ObjectUtil;
+import fr.eni.clinique.dal.exception.DalException;
+import fr.eni.clinique.dal.factory.DaoFactory;
+import fr.eni.clinique.dal.jdbc.ConnexionDAOJdbcImpl;
 
 public class LoginMgerImpl implements LoginMger{
 
-	private PersonnelDAO personnelDAO =  DaoFactory.personnelDAO();
+	private ConnexionDAOJdbcImpl personnelDAO =  DaoFactory.connexionDao();
 	
 	private static LoginMgerImpl instance;
     
@@ -24,73 +25,20 @@ public class LoginMgerImpl implements LoginMger{
     }
 
 	@Override
-	public List<Personnel> getLogin() {
-		List<Personnel> personnels = null;
-        
-        try {
-            personnels = personnelDAO.selectAll();
-            
-        } catch (DALException e) {
-            throw new BLLException("Erreur récupération catalogue", e);
-        }
-        
-        return personnels;
-	}
+	public Personnel checkLogin(String name, String password) throws DalException {
 
-	@Override
-	public Personnel addPersonnel(Personnel personnel) {
+		Personnel personnel = null;
 		
-		if(personnel.getCodePers() != null ) {
-            throw new BLLException("Personnel deja existant.");
-        }
-        
-        try {
-        	validerPersonnel(personnel);
-            
-            personnel = personnelDAO.insert(personnel);
-            
-        } catch (DALException e) {
-            throw new BLLException("Echec addPersonnel", e);
-        }
-        return personnel;
-	}
-
-	@Override
-	public void updatePersonnel(Personnel personnel) {
+		ObjectUtil.checkNotNull(name);
+		ObjectUtil.checkNotNull(password);
 		
-		try {
-            validerPersonnel(personnel);
-            
-            personnelDAO.update(personnel);
-            
-        } catch (DALException e) {
-            throw new BLLException(String.format("Echec updatePersonnel-personnel: %s", personnel), e);
-        }
-	}
-
-	@Override
-	public void removePersonnel(Personnel personnel) {
+		personnel = personnelDAO.selectByName(name);
 		
-		try {
-            personnelDAO.delete(personnel.getCodePers());
-            
-        } catch (DALException e) {
-            throw new BLLException("Echec de la suppression du personnel - ", e);
-        }
+		if (personnel != null && !personnel.getMotPasse().equals(password)) {
+			personnel = null;
+		}
+		
+		return personnel;
 	}
-	
-    private void validerPersonnel(Personnel personnel) throws BLLException {
 
-        try {
-            ObjectUtil.checkNotNullWithMessage(personnel, "Une erreur technique est survenue");
-            ObjectUtil.checkNotNullWithMessage(personnel.getMotPasse(), "Le Mot de Passe est obligatoire");
-            ObjectUtil.checkNotBlankWithMessage(personnel.getNom(), "Le nom est obligatoire");
-            ObjectUtil.checkNotBlankWithMessage(personnel.getRdv(), "Le Rendez-vous est obligatoire");
-            ObjectUtil.checkNotBlankWithMessage(personnel.getRole(), "Le R�le est obligatoire");                  
-        } catch (IllegalArgumentException e) {
-            throw new BLLException(String.format("Erreur de validation : %s", e.getMessage()), e);
-        } catch (Exception e) {
-            throw new TechnicalException(e.getMessage(), e);
-        }
-    }
 }
