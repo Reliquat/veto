@@ -7,11 +7,14 @@ import fr.eni.clinique.bll.manager.LoginMger;
 import fr.eni.clinique.bll.manager.PersonnelManager;
 import fr.eni.clinique.bo.Personnel;
 import fr.eni.clinique.common.exception.TechnicalException;
+import fr.eni.clinique.common.util.ObjectUtil;
 import fr.eni.clinique.dal.exception.DalException;
+import fr.eni.clinique.dal.factory.DaoFactory;
+import fr.eni.clinique.dal.jdbc.PersonnelDAOJdbcImpl;
 
 public class PersonnelManagerImpl implements PersonnelManager{
 
-	private PersonnelDAO personnelDAO =  DaoFactory.personnelDAO();
+	private PersonnelDAOJdbcImpl personnelDAO =  DaoFactory.personnelDao();
 	
 	private static PersonnelManagerImpl instance;
     
@@ -33,7 +36,7 @@ public class PersonnelManagerImpl implements PersonnelManager{
         try {
             personnels = personnelDAO.selectAll();
             
-        } catch (DALException e) {
+        } catch (DalException e) {
             throw new BLLException("Erreur récupération liste personnel", e);
         }
         
@@ -41,7 +44,7 @@ public class PersonnelManagerImpl implements PersonnelManager{
 	}
 
 	@Override
-	public Personnel addPersonnel(Personnel personnel) {
+	public Personnel addPersonnel(Personnel personnel) throws BLLException{
 		
 		if(personnel.getCodePers() != 0 ) {
             throw new BLLException("Personnel deja existant.");
@@ -50,7 +53,7 @@ public class PersonnelManagerImpl implements PersonnelManager{
         try {
         	validerPersonnel(personnel);
             
-            personnel = personnelDAO.insert(personnel);
+            personnel = personnelDAO.insertPersonnel(personnel);
             
         } catch (DalException e) {
             throw new BLLException("Echec addPersonnel", e);
@@ -59,12 +62,12 @@ public class PersonnelManagerImpl implements PersonnelManager{
 	}
 
 	@Override
-	public void updatePersonnel(Personnel personnel) {
+	public void updatePersonnel(Personnel personnel) throws BLLException {
 		
 		try {
             validerPersonnel(personnel);
             
-            personnelDAO.update(personnel);
+            personnelDAO.updatePersonnel(personnel);
             
         } catch (DalException e) {
             throw new BLLException(String.format("Echec updatePersonnel-personnel: %s", personnel), e);
@@ -72,10 +75,10 @@ public class PersonnelManagerImpl implements PersonnelManager{
 	}
 
 	@Override
-	public void removePersonnel(Personnel personnel) {
+	public void removePersonnel(Personnel personnel) throws BLLException {
 		
 		try {
-            personnelDAO.delete(personnel.getCodePers());
+            personnelDAO.deletePersonnel(personnel.getCodePers());
             
         } catch (DalException e) {
             throw new BLLException("Echec de la suppression du personnel - ", e);
@@ -86,9 +89,9 @@ public class PersonnelManagerImpl implements PersonnelManager{
 
         try {
             ObjectUtil.checkNotNullWithMessage(personnel, "Une erreur technique est survenue");
-            ObjectUtil.checkNotNullWithMessage(personnel.getMotPasse(), "Le Mot de Passe est obligatoire");
+            ObjectUtil.checkNotNullWithMessage(personnel.getRdv(), "Le Rendez-vous est obligatoire");
+            ObjectUtil.checkNotBlankWithMessage(personnel.getMotPasse(), "Le Mot de Passe est obligatoire");
             ObjectUtil.checkNotBlankWithMessage(personnel.getNom(), "Le nom est obligatoire");
-            ObjectUtil.checkNotBlankWithMessage(personnel.getRdv(), "Le Rendez-vous est obligatoire");
             ObjectUtil.checkNotBlankWithMessage(personnel.getRole(), "Le Rôle est obligatoire");                  
         } catch (IllegalArgumentException e) {
             throw new BLLException(String.format("Erreur de validation : %s", e.getMessage()), e);
