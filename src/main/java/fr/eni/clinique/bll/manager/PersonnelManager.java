@@ -7,7 +7,7 @@ import fr.eni.clinique.bo.Personnel;
 
 public interface PersonnelManager {
 
-	List<Personnel> getListePersonnel();
+	List<Personnel> getListePersonnel() throws BLLException;
     
 	Personnel addPersonnel(Personnel personnel) throws BLLException;
     
