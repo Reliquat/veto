@@ -59,7 +59,7 @@ public class ConnexionDAOJdbcImpl {
             }
             
         } catch (SQLException e) {
-            throw new DalException("Erreur d'execution de la requete SELECT BY ID Personnel (connexion)", e);
+            throw new DalException("Erreur d'execution de la requete DELETE Eleve", e);
         } finally {
             ResourceUtil.safeClose(connection, statement, resultSet);
         }
