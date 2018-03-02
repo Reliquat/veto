@@ -17,7 +17,9 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.LineBorder;
 
+import fr.eni.clinique.bo.Client;
 import fr.eni.clinique.common.AppConstants;
+import fr.eni.clinique.common.util.ObjectUtil;
 import fr.eni.clinique.ihm.controller.ClientController;
 import fr.eni.clinique.ihm.listener.ClientActionListener;
 import fr.eni.clinique.ihm.model.ClientModel;
@@ -32,18 +34,20 @@ public class ScreenClient extends JFrame implements Observer{
 	private JFrame frmClient;
 	private JPanel panel;
 	private JLabel lblVille;
-	private JTextField textField_6;
+
 	private JButton btnAjouter;
 	private JButton btnSupprimer;
 	private JButton btnAnnuler;
 	private JButton btnValider;
-	private JTextField textField_7;
-	private JTextField textField_8;
-	private JTextField textField_9;
-	private JTextField textField_10;
-	private JTextField textField;
-	private JTextField textField_1;
+	private JTextField villeTxt;
+	private JTextField cpTxt;
+	private JTextField adresse1Txt;
+	private JTextField adresse2Txt;
+	private JTextField prenomTxt;
+	private JTextField nomTxt;
+	private JTextField codeCliTxt;
 	private JLabel lblCodePostal;
+	private int codeCli;
 
 	private ClientActionListener actionListener;
 	
@@ -111,7 +115,7 @@ public class ScreenClient extends JFrame implements Observer{
 		//>>
 		panel.add(btnNewButton);
 		
-		btnAjouter = new JButton("\r\nAjouter");
+		btnAjouter = new JButton("Ajouter");
 		btnAjouter.setIcon(new ImageIcon(ScreenClient.class.getResource("/Images/plus.png")));
 		btnAjouter.setBounds(407, 11, 100, 78);
 		//<<
@@ -143,11 +147,11 @@ public class ScreenClient extends JFrame implements Observer{
 		lblVille.setBounds(10, 453, 127, 25);
 		frmClient.getContentPane().add(lblVille);
 		
-		textField_6 = new JTextField();
-		textField_6.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		textField_6.setColumns(10);
-		textField_6.setBounds(147, 417, 150, 25);
-		frmClient.getContentPane().add(textField_6);
+		cpTxt = new JTextField();
+		cpTxt.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		cpTxt.setColumns(10);
+		cpTxt.setBounds(147, 417, 150, 25);
+		frmClient.getContentPane().add(cpTxt);
 		
 		JPanel panel_1 = new JPanel();
 		panel_1.setBounds(520, 122, 544, 416);
@@ -176,56 +180,56 @@ public class ScreenClient extends JFrame implements Observer{
 		lblAdresse_1.setBounds(10, 345, 127, 25);
 		frmClient.getContentPane().add(lblAdresse_1);
 		
-		textField_7 = new JTextField();
-		textField_7.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		textField_7.setColumns(10);
-		textField_7.setBounds(147, 345, 150, 25);
-		frmClient.getContentPane().add(textField_7);
+		adresse1Txt = new JTextField();
+		adresse1Txt.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		adresse1Txt.setColumns(10);
+		adresse1Txt.setBounds(147, 345, 150, 25);
+		frmClient.getContentPane().add(adresse1Txt);
 		
 		JLabel lblPrenom_1 = new JLabel("Prenom");
 		lblPrenom_1.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		lblPrenom_1.setBounds(10, 309, 127, 25);
 		frmClient.getContentPane().add(lblPrenom_1);
 		
-		textField_8 = new JTextField();
-		textField_8.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		textField_8.setColumns(10);
-		textField_8.setBounds(147, 309, 150, 25);
-		frmClient.getContentPane().add(textField_8);
+		prenomTxt = new JTextField();
+		prenomTxt.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		prenomTxt.setColumns(10);
+		prenomTxt.setBounds(147, 309, 150, 25);
+		frmClient.getContentPane().add(prenomTxt);
 		
 		JLabel lblNom_1 = new JLabel("Nom");
 		lblNom_1.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		lblNom_1.setBounds(10, 273, 127, 25);
 		frmClient.getContentPane().add(lblNom_1);
 		
-		textField_9 = new JTextField();
-		textField_9.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		textField_9.setColumns(10);
-		textField_9.setBounds(147, 273, 150, 25);
-		frmClient.getContentPane().add(textField_9);
+		nomTxt = new JTextField();
+		nomTxt.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		nomTxt.setColumns(10);
+		nomTxt.setBounds(147, 273, 150, 25);
+		frmClient.getContentPane().add(nomTxt);
 		
 		JLabel lblCode = new JLabel("Code");
 		lblCode.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		lblCode.setBounds(10, 237, 127, 25);
 		frmClient.getContentPane().add(lblCode);
 		
-		textField_10 = new JTextField();
-		textField_10.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		textField_10.setColumns(10);
-		textField_10.setBounds(147, 237, 150, 25);
-		frmClient.getContentPane().add(textField_10);
+		codeCliTxt = new JTextField();
+		codeCliTxt.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		codeCliTxt.setColumns(10);
+		codeCliTxt.setBounds(147, 237, 150, 25);
+		frmClient.getContentPane().add(codeCliTxt);
 		
-		textField = new JTextField();
-		textField.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		textField.setColumns(10);
-		textField.setBounds(147, 381, 150, 25);
-		frmClient.getContentPane().add(textField);
+		adresse2Txt = new JTextField();
+		adresse2Txt.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		adresse2Txt.setColumns(10);
+		adresse2Txt.setBounds(147, 381, 150, 25);
+		frmClient.getContentPane().add(adresse2Txt);
 		
-		textField_1 = new JTextField();
-		textField_1.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		textField_1.setColumns(10);
-		textField_1.setBounds(147, 453, 150, 25);
-		frmClient.getContentPane().add(textField_1);
+		villeTxt = new JTextField();
+		villeTxt.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		villeTxt.setColumns(10);
+		villeTxt.setBounds(147, 453, 150, 25);
+		frmClient.getContentPane().add(villeTxt);
 		
 		lblCodePostal = new JLabel("Code Postal");
 		lblCodePostal.setFont(new Font("Tahoma", Font.PLAIN, 20));
@@ -241,6 +245,21 @@ public class ScreenClient extends JFrame implements Observer{
     private void ajouterClient() {
 
     	actionListener.Ajouter();
+    }
+    
+    private void supprimerClient() {
+
+    	actionListener.Supprimer(codeCliTxt);
+    }
+    
+    private void validerClient() {
+
+    	actionListener.Valider(codeCliTxt);
+    }
+    
+    private void annulerClient() {
+
+    	actionListener.Annuler();
     }
     
     public void setActionListener(ClientActionListener actionListener) {
@@ -260,4 +279,41 @@ public class ScreenClient extends JFrame implements Observer{
 		// TODO Auto-generated method stub
 		
 	}
+	
+    public void showClient(Client client) {
+        
+
+        // Autres caractéristiques de l'article
+        codeCli = client.getCodeClient();
+        nomTxt.setText(ObjectUtil.nullToBlank(client.getNomClient().trim()));
+        prenomTxt.setText(ObjectUtil.nullToBlank(client.getPrenomClient()).trim());
+        adresse1Txt.setText(ObjectUtil.nullToBlank(client.getAdresse1()).trim());
+        adresse2Txt.setText(ObjectUtil.nullToBlank(client.getAdresse2()).trim());
+        cpTxt.setText(ObjectUtil.nullToBlank(client.getCodePostal()).trim());
+        villeTxt.setText(ObjectUtil.nullToBlank(client.getVille().trim()));
+    }
+	
+    private Client readClient() {
+        
+    	Client client = null;
+        
+        client.setCodeClient(codeCliTxt);
+        client.setNomClient(nomTxt);
+        client.setMarque(marqueTxt.getText().trim());
+        client.setDesignation(designationTxt.getText().trim());
+        
+        try {
+            client.setPrixUnitaire(Float.parseFloat(prixTxt.getText()));
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException("Format du prix non valide", e);
+        }
+        
+        try {
+            client.setQteStock(Integer.parseInt(stockTxt.getText()));
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException("Format du stock non valide", e);
+        }
+        
+        return client;
+    }
 }

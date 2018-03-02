@@ -1,13 +1,14 @@
 package fr.eni.clinique.ihm.controller;
 
+import fr.eni.clinique.dal.exception.DalException;
+import fr.eni.clinique.dal.jdbc.PersonnelDAOJdbcImpl;
 import fr.eni.clinique.ihm.listener.ClientActionListener;
 import fr.eni.clinique.ihm.model.ClientModel;
-import fr.eni.clinique.ihm.screen.client.ScreenRechercheClient;
 
 public class ClientController implements ClientActionListener{
 
 	private ClientModel model;
-	
+	private PersonnelDAOJdbcImpl personnelDAO;
     public ClientController(ClientModel model) {
         super();
         this.model = model;
@@ -15,37 +16,37 @@ public class ClientController implements ClientActionListener{
 	
 	@Override
 	public void Rechercher() {
-		// TODO Auto-generated method stub
+		
 		model.rechercherClient();
 	}
 
 	@Override
 	public void Ajouter() {
-		// TODO Auto-generated method stub
+		
 		model.ajouterClient();
 	}
 
 	@Override
-	public void Supprimer() {
-		// TODO Auto-generated method stub
+	public void Supprimer(int CodePers) throws DalException {
+		
+		personnelDAO.deletePersonnel(CodePers);
+	}
+
+	@Override
+	public void Valider(String CodePers) {
+		
 		
 	}
 
 	@Override
-	public void Valider() {
-		// TODO Auto-generated method stub
+	public void Editer(String CodePers) {
 		
-	}
-
-	@Override
-	public void Editer() {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void Annuler() {
-		// TODO Auto-generated method stub
+		
 		
 	}
 

@@ -14,7 +14,7 @@ public class ClientModel extends Observable{
     }
 	
 	public void ajouterClient() {
-		ScreenAjoutClient.main();
+		screenRechercheClient.main();
 	}
     
 }
