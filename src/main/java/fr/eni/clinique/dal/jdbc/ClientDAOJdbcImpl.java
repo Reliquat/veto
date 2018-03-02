@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import fr.eni.clinique.bo.Client;
-import fr.eni.clinique.bo.Personnel;
 import fr.eni.clinique.common.util.ObjectUtil;
 import fr.eni.clinique.common.util.ResourceUtil;
 import fr.eni.clinique.dal.exception.DalException;
@@ -38,7 +37,7 @@ public class ClientDAOJdbcImpl {
         return SINGLETON;
     }
     
-private Client createClient(ResultSet resultSet) throws SQLException {
+    private Client createClient(ResultSet resultSet) throws SQLException {
         
     	Client client = new Client();
         client.setCodeClient(resultSet.getInt("CodeClient"));

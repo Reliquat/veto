@@ -13,7 +13,7 @@ import fr.eni.clinique.dal.jdbc.ClientDAOJdbcImpl;
 
 public class ClientManagerImpl implements ClientManager{
 
-	private ClientDAOJdbcImpl ClientDAO =  DaoFactory.clientDao();
+	private ClientDAOJdbcImpl clientDAO =  DaoFactory.clientDao();
 	
 	private static ClientManagerImpl instance;
     
@@ -33,7 +33,7 @@ public class ClientManagerImpl implements ClientManager{
 		List<Client> clients = null;
         
         try {
-            clients = ClientDAO.selectAll();
+            clients = clientDAO.selectAll();
             
         } catch (DalException e) {
             throw new BLLException("Erreur récupération liste client", e);
@@ -52,7 +52,7 @@ public class ClientManagerImpl implements ClientManager{
         try {
         	validerClient(client);
             
-            client = ClientDAO.insertClient(client);
+            client = clientDAO.insertClient(client);
             
         } catch (DalException e) {
             throw new BLLException("Echec addClient", e);
@@ -66,7 +66,7 @@ public class ClientManagerImpl implements ClientManager{
 		try {
             validerClient(client);
             
-            ClientDAO.updateClient(client);
+            clientDAO.updateClient(client);
             
         } catch (DalException e) {
             throw new BLLException(String.format("Echec updateClient-Client: %s", client), e);
@@ -77,7 +77,7 @@ public class ClientManagerImpl implements ClientManager{
 	public void removeClient(Client client) throws BLLException {
 		
 		try {
-            ClientDAO.deleteClient(client.getCodeClient());
+			clientDAO.deleteClient(client.getCodeClient());
             
         } catch (DalException e) {
             throw new BLLException("Echec de la suppression du Client - ", e);
@@ -105,4 +105,29 @@ public class ClientManagerImpl implements ClientManager{
         }
     }
 	
+    public Client getById(int id) throws BLLException {
+    	
+    	Client client = null;
+    	
+    	try {
+			client = clientDAO.selectById(id);
+		} catch (DalException e) {
+			// TODO Auto-generated catch block
+			throw new BLLException(e.getMessage(), e);
+		}
+    	return client;
+    }
+    
+    public Client getByName(String name) throws BLLException {
+    	
+    	Client client = null;
+    	
+    	try {
+			client = clientDAO.selectByName(name);
+		} catch (DalException e) {
+			// TODO Auto-generated catch block
+			throw new BLLException(e.getMessage(), e);
+		}
+    	return client;
+    }
 }

@@ -1,8 +1,11 @@
 package fr.eni.clinique.ihm.screen.login;
 
+import java.awt.EventQueue;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JComponent;
@@ -13,9 +16,14 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
 import fr.eni.clinique.common.AppConstants;
+import fr.eni.clinique.ihm.controller.LoginController;
+import fr.eni.clinique.ihm.listener.LoginActionListener;
+import fr.eni.clinique.ihm.model.LoginModel;
 
 public class LoginScreen extends JFrame{
 
+	private LoginActionListener actionListener;
+	
 	/**
 	 * 
 	 */
@@ -25,6 +33,28 @@ public class LoginScreen extends JFrame{
 	private JTextField nomTxt;
 	private JPasswordField motPasseTxt;
 	private JButton validateButton;
+	private static LoginScreen window;
+	
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					
+					LoginModel loginModel = new LoginModel();
+					LoginController loginController = new LoginController(loginModel);
+					
+					window = new LoginScreen(AppConstants.APP_NAME);
+					window.setLocationRelativeTo(null);
+					window.setVisible(true);
+					
+					window.setActionListener(loginController);
+					
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
 	
     public LoginScreen(String title) {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -41,6 +71,16 @@ public class LoginScreen extends JFrame{
         motPasseTxt = createPasswordField(AppConstants.EMPTY, "Entrez le mot de passe du personnel ici");
         validateButton = new JButton();
         validateButton.setText("Valider");
+        //<<
+        validateButton.addActionListener(new ActionListener() {
+              @Override
+              public void actionPerformed(ActionEvent e) {
+                  if(actionListener != null) {
+                	  ConnexionPage();
+                  }
+              }
+          });
+  		//>>
         
         addFormRow("Nom", nomTxt, 1);
         addFormRow("Mot de passe", motPasseTxt, 2);  
@@ -88,5 +128,21 @@ public class LoginScreen extends JFrame{
         gridBagConstraints.weightx = weight;
         
         return gridBagConstraints;
+    }
+    
+    private void ConnexionPage(){
+    	
+    	actionListener.ConnexionPage();
+    	window.setVisible(false);
+    	
+    	
+    }
+    
+    public void setActionListener(LoginActionListener actionListener) {
+        
+        if(actionListener != null) {
+            
+            this.actionListener = actionListener;
+        }
     }
 }

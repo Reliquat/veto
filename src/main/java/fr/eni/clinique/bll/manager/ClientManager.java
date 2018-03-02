@@ -15,4 +15,7 @@ public interface ClientManager {
     
     void removeClient(Client client) throws BLLException;
 	
+    Client getById(int id) throws BLLException;
+    
+    Client getByName(String name) throws BLLException;
 }
