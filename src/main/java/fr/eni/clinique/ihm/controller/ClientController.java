@@ -1,51 +1,59 @@
 package fr.eni.clinique.ihm.controller;
 
+import java.util.List;
+
+import fr.eni.clinique.bll.exception.BLLException;
+import fr.eni.clinique.bll.manager.ClientManager;
+import fr.eni.clinique.bll.manager.impl.ClientManagerImpl;
+import fr.eni.clinique.bo.Client;
 import fr.eni.clinique.dal.exception.DalException;
-import fr.eni.clinique.dal.jdbc.PersonnelDAOJdbcImpl;
+import fr.eni.clinique.ihm.event.ClientActionEvent;
 import fr.eni.clinique.ihm.listener.ClientActionListener;
 import fr.eni.clinique.ihm.model.ClientModel;
 
 public class ClientController implements ClientActionListener{
 
-	private ClientModel model;
-	private PersonnelDAOJdbcImpl personnelDAO;
+	private ClientModel clientModel;
+	private ClientManager clientManager = ClientManagerImpl.getInstance();
+	
     public ClientController(ClientModel model) {
         super();
-        this.model = model;
+        this.clientModel = model;
     }
 	
 	@Override
-	public void Rechercher() {
+	public void RechercherClientScreen() {
 		
-		model.rechercherClient();
+		clientModel.rechercherClient();
 	}
 
 	@Override
-	public void Ajouter() {
+	public void AjouterClient() {
 		
-		model.ajouterClient();
+		clientModel.ajouterClient();
 	}
 
 	@Override
-	public void Supprimer(int CodePers) throws DalException {
+	public void SupprimerClient(ClientActionEvent event) throws DalException {
 		
-		personnelDAO.deletePersonnel(CodePers);
+		if(event.getClient().getCodeClient() != 0){
+			try {
+				clientManager.removeClient(event.getClient());
+			} catch (BLLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 	}
 
 	@Override
-	public void Valider(String CodePers) {
+	public void ValiderClient(ClientActionEvent event) {
 		
 		
 	}
 
 	@Override
-	public void Editer(String CodePers) {
-		
-		
-	}
-
-	@Override
-	public void Annuler() {
+	public void EditerClient(ClientActionEvent event) {
 		
 		
 	}
@@ -56,7 +64,32 @@ public class ClientController implements ClientActionListener{
 		
 	}
 
+	@Override
+	public void ValiderAjoutClient(ClientActionEvent event) throws DalException {
+		
+		List<Client> client;
+		try {
+			client = clientManager.getListeClient();
+			clientModel.loadClient(client);	
+		} catch (BLLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 	
-	
-	
+	public Client getByName(String name) throws BLLException {
+		return clientManager.getByName(name);
+	}
+
+	@Override
+	public void RechercherClient(String name) {
+		
+		try {
+			clientManager.getByName(name);
+		} catch (BLLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
 }

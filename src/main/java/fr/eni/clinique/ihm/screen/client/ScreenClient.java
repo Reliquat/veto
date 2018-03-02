@@ -20,9 +20,12 @@ import javax.swing.border.LineBorder;
 import fr.eni.clinique.bo.Client;
 import fr.eni.clinique.common.AppConstants;
 import fr.eni.clinique.common.util.ObjectUtil;
+import fr.eni.clinique.dal.exception.DalException;
 import fr.eni.clinique.ihm.controller.ClientController;
+import fr.eni.clinique.ihm.event.ClientActionEvent;
 import fr.eni.clinique.ihm.listener.ClientActionListener;
 import fr.eni.clinique.ihm.model.ClientModel;
+import javax.swing.JTable;
 
 public class ScreenClient extends JFrame implements Observer{
 
@@ -39,6 +42,11 @@ public class ScreenClient extends JFrame implements Observer{
 	private JButton btnSupprimer;
 	private JButton btnAnnuler;
 	private JButton btnValider;
+
+	private JTextField remarqueTxt;
+	private JTextField emailTxt;
+	private JTextField assuranceTxt;
+	private JTextField numtelTxt;
 	private JTextField villeTxt;
 	private JTextField cpTxt;
 	private JTextField adresse1Txt;
@@ -46,10 +54,13 @@ public class ScreenClient extends JFrame implements Observer{
 	private JTextField prenomTxt;
 	private JTextField nomTxt;
 	private JTextField codeCliTxt;
+	
 	private JLabel lblCodePostal;
 	private int codeCli;
 
+
 	private ClientActionListener actionListener;
+	private JTable tableAnimaux;
 	
 	/**
 	 * Launch the application.
@@ -101,10 +112,10 @@ public class ScreenClient extends JFrame implements Observer{
 		frmClient.getContentPane().add(panel);
 		panel.setLayout(null);
 		
-		JButton btnNewButton = new JButton("Rechercher");
-		btnNewButton.setBounds(10, 11, 100, 78);
+		JButton btnRechercher = new JButton("Rechercher");
+		btnRechercher.setBounds(10, 11, 100, 78);
 		//<<
-		btnNewButton.addActionListener(new ActionListener() {
+		btnRechercher.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if(actionListener != null) {
@@ -113,7 +124,7 @@ public class ScreenClient extends JFrame implements Observer{
             }
         });
 		//>>
-		panel.add(btnNewButton);
+		panel.add(btnRechercher);
 		
 		btnAjouter = new JButton("Ajouter");
 		btnAjouter.setIcon(new ImageIcon(ScreenClient.class.getResource("/Images/plus.png")));
@@ -132,35 +143,61 @@ public class ScreenClient extends JFrame implements Observer{
 		
 		btnSupprimer = new JButton("Supprimer");
 		btnSupprimer.setBounds(516, 11, 100, 78);
+		//<<
+		btnSupprimer.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if(actionListener != null) {
+                	supprimerClient();
+                }
+            }
+        });
+		//>>
 		panel.add(btnSupprimer);
 		
 		btnAnnuler = new JButton("Annuler");
 		btnAnnuler.setBounds(956, 11, 100, 78);
+		//<<
+		btnAnnuler.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if(actionListener != null) {
+                	annulerClient();
+                }
+            }
+        });
+		//>>
 		panel.add(btnAnnuler);
 		
 		btnValider = new JButton("Valider");
 		btnValider.setBounds(846, 11, 100, 78);
+		//<<
+		btnValider.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if(actionListener != null) {
+                	validerClient();
+                }
+            }
+        });
+		//>>
 		panel.add(btnValider);
 		
 		lblVille = new JLabel("Ville");
 		lblVille.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		lblVille.setBounds(10, 453, 127, 25);
+		lblVille.setBounds(10, 338, 200, 25);
 		frmClient.getContentPane().add(lblVille);
 		
 		cpTxt = new JTextField();
 		cpTxt.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		cpTxt.setColumns(10);
-		cpTxt.setBounds(147, 417, 150, 25);
+		cpTxt.setBounds(220, 302, 150, 25);
 		frmClient.getContentPane().add(cpTxt);
 		
 		JPanel panel_1 = new JPanel();
 		panel_1.setBounds(520, 122, 544, 416);
 		frmClient.getContentPane().add(panel_1);
 		panel_1.setLayout(null);
-		
-		JList list = new JList();
-		list.setBounds(10, 11, 524, 340);
-		panel_1.add(list);
 		
 		JButton btnNewButton_1 = new JButton("Editer");
 		btnNewButton_1.setBounds(461, 362, 73, 43);
@@ -175,92 +212,170 @@ public class ScreenClient extends JFrame implements Observer{
 		btnAjouter_1.setBounds(295, 362, 73, 43);
 		panel_1.add(btnAjouter_1);
 		
+		tableAnimaux = new JTable();
+		tableAnimaux.setBounds(10, 11, 524, 342);
+		panel_1.add(tableAnimaux);
+		
 		JLabel lblAdresse_1 = new JLabel("Adresse");
 		lblAdresse_1.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		lblAdresse_1.setBounds(10, 345, 127, 25);
+		lblAdresse_1.setBounds(10, 230, 200, 25);
 		frmClient.getContentPane().add(lblAdresse_1);
 		
 		adresse1Txt = new JTextField();
 		adresse1Txt.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		adresse1Txt.setColumns(10);
-		adresse1Txt.setBounds(147, 345, 150, 25);
+		adresse1Txt.setBounds(220, 230, 150, 25);
 		frmClient.getContentPane().add(adresse1Txt);
 		
 		JLabel lblPrenom_1 = new JLabel("Prenom");
 		lblPrenom_1.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		lblPrenom_1.setBounds(10, 309, 127, 25);
+		lblPrenom_1.setBounds(10, 194, 200, 25);
 		frmClient.getContentPane().add(lblPrenom_1);
 		
 		prenomTxt = new JTextField();
 		prenomTxt.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		prenomTxt.setColumns(10);
-		prenomTxt.setBounds(147, 309, 150, 25);
+		prenomTxt.setBounds(220, 194, 150, 25);
 		frmClient.getContentPane().add(prenomTxt);
 		
 		JLabel lblNom_1 = new JLabel("Nom");
 		lblNom_1.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		lblNom_1.setBounds(10, 273, 127, 25);
+		lblNom_1.setBounds(10, 158, 200, 25);
 		frmClient.getContentPane().add(lblNom_1);
 		
 		nomTxt = new JTextField();
 		nomTxt.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		nomTxt.setColumns(10);
-		nomTxt.setBounds(147, 273, 150, 25);
+		nomTxt.setBounds(220, 158, 150, 25);
 		frmClient.getContentPane().add(nomTxt);
 		
 		JLabel lblCode = new JLabel("Code");
 		lblCode.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		lblCode.setBounds(10, 237, 127, 25);
+		lblCode.setBounds(10, 122, 200, 25);
 		frmClient.getContentPane().add(lblCode);
 		
 		codeCliTxt = new JTextField();
 		codeCliTxt.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		codeCliTxt.setColumns(10);
-		codeCliTxt.setBounds(147, 237, 150, 25);
+		codeCliTxt.setBounds(220, 122, 150, 25);
 		frmClient.getContentPane().add(codeCliTxt);
 		
 		adresse2Txt = new JTextField();
 		adresse2Txt.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		adresse2Txt.setColumns(10);
-		adresse2Txt.setBounds(147, 381, 150, 25);
+		adresse2Txt.setBounds(220, 266, 150, 25);
 		frmClient.getContentPane().add(adresse2Txt);
 		
 		villeTxt = new JTextField();
 		villeTxt.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		villeTxt.setColumns(10);
-		villeTxt.setBounds(147, 453, 150, 25);
+		villeTxt.setBounds(220, 338, 150, 25);
 		frmClient.getContentPane().add(villeTxt);
 		
 		lblCodePostal = new JLabel("Code Postal");
 		lblCodePostal.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		lblCodePostal.setBounds(10, 417, 127, 25);
+		lblCodePostal.setBounds(10, 302, 200, 25);
 		frmClient.getContentPane().add(lblCodePostal);
+		
+		JLabel lblNumroTlphone = new JLabel("Num\u00E9ro t\u00E9l\u00E9phone");
+		lblNumroTlphone.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		lblNumroTlphone.setBounds(10, 374, 200, 25);
+		frmClient.getContentPane().add(lblNumroTlphone);
+		
+		numtelTxt = new JTextField();
+		numtelTxt.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		numtelTxt.setColumns(10);
+		numtelTxt.setBounds(220, 374, 150, 25);
+		frmClient.getContentPane().add(numtelTxt);
+		
+		JLabel lblAssurance = new JLabel("Assurance");
+		lblAssurance.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		lblAssurance.setBounds(10, 410, 200, 25);
+		frmClient.getContentPane().add(lblAssurance);
+		
+		assuranceTxt = new JTextField();
+		assuranceTxt.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		assuranceTxt.setColumns(10);
+		assuranceTxt.setBounds(220, 410, 150, 25);
+		frmClient.getContentPane().add(assuranceTxt);
+		
+		JLabel lblEmail = new JLabel("Email");
+		lblEmail.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		lblEmail.setBounds(10, 446, 200, 25);
+		frmClient.getContentPane().add(lblEmail);
+		
+		emailTxt = new JTextField();
+		emailTxt.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		emailTxt.setColumns(10);
+		emailTxt.setBounds(220, 446, 150, 25);
+		frmClient.getContentPane().add(emailTxt);
+		
+		JLabel lblRemarque = new JLabel("Remarque");
+		lblRemarque.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		lblRemarque.setBounds(10, 482, 200, 25);
+		frmClient.getContentPane().add(lblRemarque);
+		
+		remarqueTxt = new JTextField();
+		remarqueTxt.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		remarqueTxt.setColumns(10);
+		remarqueTxt.setBounds(220, 482, 150, 25);
+		frmClient.getContentPane().add(remarqueTxt);
 	}
 	
     private void rechercherClient() {
 
-    	actionListener.Rechercher();
+    	actionListener.RechercherClientScreen();
     }
     
     private void ajouterClient() {
 
-    	actionListener.Ajouter();
+    	actionListener.AjouterClient();
     }
     
     private void supprimerClient() {
 
-    	actionListener.Supprimer(codeCliTxt);
+    	try {
+			actionListener.SupprimerClient(new ClientActionEvent(readClient()));
+		} catch (DalException e) {
+			
+			e.printStackTrace();
+		}
     }
     
     private void validerClient() {
 
-    	actionListener.Valider(codeCliTxt);
+    	try {
+			actionListener.ValiderClient(new ClientActionEvent(readClient()));
+		} catch (DalException e) {
+			
+			e.printStackTrace();
+		}
     }
     
     private void annulerClient() {
 
-    	actionListener.Annuler();
+    	codeCliTxt.setText(AppConstants.EMPTY);
+        nomTxt.setText(AppConstants.EMPTY);
+        prenomTxt.setText(AppConstants.EMPTY);
+        adresse1Txt.setText(AppConstants.EMPTY);
+        adresse2Txt.setText(AppConstants.EMPTY);
+        cpTxt.setText(AppConstants.EMPTY);
+        villeTxt.setText(AppConstants.EMPTY);
+        numtelTxt.setText(AppConstants.EMPTY);
+        assuranceTxt.setText(AppConstants.EMPTY);
+        emailTxt.setText(AppConstants.EMPTY);
+        remarqueTxt.setText(AppConstants.EMPTY);
     }
+    
+    /*private void editerAnimal() {
+
+    	try {
+			actionListener.Editer(new ClientActionEvent(readClient()));
+		} catch (DalException e) {
+			
+			e.printStackTrace();
+		}
+    }*/
     
     public void setActionListener(ClientActionListener actionListener) {
         
@@ -282,37 +397,34 @@ public class ScreenClient extends JFrame implements Observer{
 	
     public void showClient(Client client) {
         
-
-        // Autres caractéristiques de l'article
         codeCli = client.getCodeClient();
         nomTxt.setText(ObjectUtil.nullToBlank(client.getNomClient().trim()));
         prenomTxt.setText(ObjectUtil.nullToBlank(client.getPrenomClient()).trim());
         adresse1Txt.setText(ObjectUtil.nullToBlank(client.getAdresse1()).trim());
         adresse2Txt.setText(ObjectUtil.nullToBlank(client.getAdresse2()).trim());
-        cpTxt.setText(ObjectUtil.nullToBlank(client.getCodePostal()).trim());
+        cpTxt.setText(ObjectUtil.nullToBlank(client.getCodePostal().trim()));
         villeTxt.setText(ObjectUtil.nullToBlank(client.getVille().trim()));
+        numtelTxt.setText(ObjectUtil.nullToBlank(client.getNumTel().trim()));
+        assuranceTxt.setText(ObjectUtil.nullToBlank(client.getAssurance().trim()));
+        emailTxt.setText(ObjectUtil.nullToBlank(client.getEmail().trim()));
+        remarqueTxt.setText(ObjectUtil.nullToBlank(client.getRemarque().trim()));
     }
 	
     private Client readClient() {
         
     	Client client = null;
         
-        client.setCodeClient(codeCliTxt);
-        client.setNomClient(nomTxt);
-        client.setMarque(marqueTxt.getText().trim());
-        client.setDesignation(designationTxt.getText().trim());
-        
-        try {
-            client.setPrixUnitaire(Float.parseFloat(prixTxt.getText()));
-        } catch (NumberFormatException e) {
-            throw new IllegalArgumentException("Format du prix non valide", e);
-        }
-        
-        try {
-            client.setQteStock(Integer.parseInt(stockTxt.getText()));
-        } catch (NumberFormatException e) {
-            throw new IllegalArgumentException("Format du stock non valide", e);
-        }
+        client.setCodeClient(codeCli);
+        client.setNomClient(nomTxt.getText().trim());
+        client.setPrenomClient(prenomTxt.getText().trim());
+        client.setAdresse1(adresse1Txt.getText().trim());
+        client.setAdresse2(adresse2Txt.getText().trim());
+        client.setCodePostal(cpTxt.getText().trim());
+        client.setVille(villeTxt.getText().trim());
+        client.setNumTel(numtelTxt.getText().trim());
+        client.setAssurance(assuranceTxt.getText().trim());
+        client.setEmail(emailTxt.getText().trim());
+        client.setRemarque(remarqueTxt.getText().trim());
         
         return client;
     }
