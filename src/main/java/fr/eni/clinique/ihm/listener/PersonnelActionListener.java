@@ -1,5 +1,6 @@
 package fr.eni.clinique.ihm.listener;
 
+import fr.eni.clinique.bll.exception.BLLException;
 import fr.eni.clinique.ihm.event.PersonnelActionEvent;
 
 public interface PersonnelActionListener {
@@ -8,8 +9,9 @@ public interface PersonnelActionListener {
 
     /**
      * New personnel Notification
+     * @throws BLLException 
      */
-    void newPersonnel();
+    void newPersonnel() throws BLLException;
     
     /**
      * Delete personnel Notification.
