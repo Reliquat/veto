@@ -2,6 +2,7 @@ package fr.eni.clinique.ihm.controller;
 
 import java.util.List;
 
+import fr.eni.clinique.bll.exception.BLLException;
 import fr.eni.clinique.bll.manager.PersonnelManager;
 import fr.eni.clinique.bll.manager.impl.PersonnelManagerImpl;
 import fr.eni.clinique.bo.Personnel;
@@ -25,15 +26,11 @@ public class PersonnelController implements PersonnelActionListener{
 	public void init() throws Exception {
 		
 		personnelModel = new PersonnelModel();
-		
+		personnelModel.loadPersonnel(personnelManager.getListePersonnel());
 	}
 
 	@Override
-	public void newPersonnel() {
-		// TODO Auto-generated method stub
-		List<Personnel> personnel = personnelManager.getListePersonnel();
-		
-		personnelModel.loadPersonnel(personnel);
+	public void newPersonnel() throws BLLException {
 	}
 
 	@Override
