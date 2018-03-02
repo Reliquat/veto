@@ -15,22 +15,22 @@ import fr.eni.clinique.common.util.ResourceUtil;
 import fr.eni.clinique.dal.exception.DalException;
 import fr.eni.clinique.dal.factory.MSSQLConnectionFactory;
 
-public class AnimauxDAOJdbcImpl {
+public class AnimalDAOJdbcImpl {
     private final static String SELECT_BY_ID = "SELECT CodeAnimal, NomAnimal, Sexe, Couleur, Race, Espece, CodeClient, Tatouage, Antecedants Archive FROM Personnels WHERE CodeAnimal = ?";
 //    private final static String SELECT_ALL = "SELECT CodePers, Nom, MotPasse, Role, Archive FROM Personnels";
 //    private final static String INSERT_QUERY = "INSERT INTO Personnels(Nom, MotPasse, Role, Archive) VALUES (?, ?, ?, ?);";
 //    private final static String UPDATE_QUERY = "UPDATE Personnels SET Nom = ?, MotPasse = ?, Role = ?, Archive = ? WHERE CodePers = ?;";
 //    private final static String DELETE_QUERY = "DELETE FROM Personnels WHERE @CodePers = ?";
     
-    private static AnimauxDAOJdbcImpl SINGLETON = null;
+    private static AnimalDAOJdbcImpl SINGLETON = null;
     
-    private AnimauxDAOJdbcImpl() {
+    private AnimalDAOJdbcImpl() {
     	
     }
     
-    public static AnimauxDAOJdbcImpl getInstance() {
+    public static AnimalDAOJdbcImpl getInstance() {
         if(SINGLETON == null) {
-            SINGLETON = new AnimauxDAOJdbcImpl();
+            SINGLETON = new AnimalDAOJdbcImpl();
         }
         return SINGLETON;
     }
