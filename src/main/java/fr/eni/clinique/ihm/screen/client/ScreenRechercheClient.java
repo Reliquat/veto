@@ -5,10 +5,16 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
+
+import fr.eni.clinique.ihm.listener.ClientActionListener;
+
 import java.awt.Color;
 import javax.swing.JButton;
 import javax.swing.JTextField;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 import javax.swing.SwingConstants;
 import javax.swing.JList;
 
@@ -16,6 +22,8 @@ public class ScreenRechercheClient {
 
 	private JFrame frmRechercher;
 	private JTextField txtRechercher;
+	
+	private ClientActionListener actionListener;
 
 	/**
 	 * Launch the application.
@@ -57,9 +65,19 @@ public class ScreenRechercheClient {
 		frmRechercher.getContentPane().add(panel);
 		panel.setLayout(null);
 		
-		JButton btnNewButton = new JButton("Rechercher");
-		btnNewButton.setBounds(573, 11, 101, 56);
-		panel.add(btnNewButton);
+		JButton btwRechercher = new JButton("Rechercher");
+		btwRechercher.setBounds(573, 11, 101, 56);
+		//<<
+		btwRechercher.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if(actionListener != null) {
+                	rechercherClient();
+                }
+            }
+        });
+		//>>
+		panel.add(btwRechercher);
 		
 		txtRechercher = new JTextField();
 		txtRechercher.setText("nom du client");
@@ -78,6 +96,13 @@ public class ScreenRechercheClient {
 		JList list = new JList();
 		list.setBounds(10, 11, 664, 328);
 		panel_1.add(list);
+		
+	}
+	
+	private void rechercherClient(){
+		
+		actionListener.RechercherClientScreen();
+		
 	}
 
 }
