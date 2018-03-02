@@ -15,6 +15,7 @@ import java.util.Observer;
 import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableModel;
 
+import fr.eni.clinique.bll.exception.BLLException;
 import fr.eni.clinique.bo.Personnel;
 import fr.eni.clinique.ihm.listener.PersonnelActionListener;
 import java.awt.Color;
@@ -70,12 +71,26 @@ public class adminScreen implements Observer {
 		panel.add(addPersonnel);
 
 		JButton delete = new JButton("Supprimer");
+		delete.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				new ConfirmDelete();
+			}
+		});
 		delete.setIcon(new ImageIcon(adminScreen.class.getResource("/Images/minus.png")));
 		panel.add(delete);
 
-		JButton btnNewButton = new JButton("Réinitialiser");
-		btnNewButton.setIcon(new ImageIcon(adminScreen.class.getResource("/Images/unlock.png")));
-		panel.add(btnNewButton);
+		JButton resetPassword = new JButton("Réinitialiser");
+		resetPassword.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				adminScreen instance = adminScreen.getInstance();
+				
+				new resetPasswordDialog(instance.personnels.get(instance.table.getSelectedRow()));
+			}
+		});
+		resetPassword.setIcon(new ImageIcon(adminScreen.class.getResource("/Images/unlock.png")));
+		panel.add(resetPassword);
 		
 		JPanel panel_1 = new JPanel();
 		panel_1.setBorder(new LineBorder(new Color(0, 0, 0)));
@@ -84,6 +99,7 @@ public class adminScreen implements Observer {
 		panel_1.setLayout(null);
 		String[] identifier = {"Nom", "Role", "Mot de passe"};
 		table = new JTable();
+		table.setBorder(new LineBorder(new Color(0, 0, 0)));
 		table.setBounds(0, 0, 606, 310);
 		this.tableModel = (DefaultTableModel) table.getModel();
 		this.tableModel.setColumnIdentifiers(identifier);
@@ -135,9 +151,31 @@ public class adminScreen implements Observer {
 	}
 	
 	public void addPersonnel(Personnel personnel){
-		ArrayList<Personnel> addReturn = new ArrayList<>();
-		addReturn.addAll(this.personnels);
-		addReturn.add(personnel);
-		this.update(null, addReturn);
+		try {
+			this.personnelListener.newPersonnel(personnel);
+		} catch (BLLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}	
+	}
+	
+	public void deletePersonnel(){
+		try {
+			this.personnelListener.deletePersonnel(this.personnels.get(this.table.getSelectedRow()));
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+	
+	public void resetPassword(Personnel personnel){
+		try {
+			this.personnelListener.resetPwdPersonnel(personnel);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 	}
 }
