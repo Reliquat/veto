@@ -24,10 +24,12 @@ public class PersonnelModel extends Observable {
 
 	public void addPersonnel(Personnel personnel) {
 		personnels.add(personnel);
+		view.update(this, this.personnels);
 	}
 
-	public void removeCurrentPersonnel(int index) {
-		personnels.remove(index);
+	public void removePersonnel(Personnel personnel) {
+		personnels.remove(personnel);
+		view.update(this, personnels);
 	}
 
 	/**
@@ -43,6 +45,16 @@ public class PersonnelModel extends Observable {
 
 	protected void clearDataChanged() {
 		dataChanged = false;
+	}
+
+	public void resetPassword(Personnel personnel) {
+		// TODO Auto-generated method stub
+		for(Personnel oldPersonnel : this.personnels){
+			if (oldPersonnel.getCodePers() == personnel.getCodePers()){
+				oldPersonnel = personnel;
+			}
+		}
+		view.update(this, this.personnels);
 	}
 
 }
