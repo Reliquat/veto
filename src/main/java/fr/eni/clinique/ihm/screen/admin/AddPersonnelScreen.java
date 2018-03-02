@@ -95,6 +95,7 @@ public class AddPersonnelScreen {
 						pwString += car;
 					}
 					newPersonnel.setMotPasse(pwString);
+					newPersonnel.setArchive(false);
 					adminScreen.getInstance().addPersonnel(newPersonnel);
 				}
 			}
