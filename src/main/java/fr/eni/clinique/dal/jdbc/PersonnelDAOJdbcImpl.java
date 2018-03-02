@@ -22,7 +22,7 @@ public class PersonnelDAOJdbcImpl {
     private final static String SELECT_ALL = "SELECT CodePers, Nom, MotPasse, Role, Archive FROM Personnels";
     private final static String INSERT_QUERY = "INSERT INTO Personnels(Nom, MotPasse, Role, Archive) VALUES (?, ?, ?, ?);";
     private final static String UPDATE_QUERY = "UPDATE Personnels SET Nom = ?, MotPasse = ?, Role = ?, Archive = ? WHERE CodePers = ?;";
-    private final static String DELETE_QUERY = "DELETE FROM Personnels WHERE @CodePers = ?";
+    private final static String DELETE_QUERY = "DELETE FROM Personnels WHERE CodePers = ?";
     
     private static PersonnelDAOJdbcImpl SINGLETON = null;
     
@@ -191,13 +191,13 @@ public class PersonnelDAOJdbcImpl {
         ObjectUtil.checkNotNull(CodePers);
         
         Connection connection = null;
-        CallableStatement statement = null;
+        PreparedStatement statement = null;
         
         try {
             connection = MSSQLConnectionFactory.get();
             statement = connection.prepareCall(DELETE_QUERY);
             
-            statement.setInt("CodePers", CodePers);
+            statement.setInt(1, CodePers);
             statement.execute();
             
         } catch (SQLException e) {
