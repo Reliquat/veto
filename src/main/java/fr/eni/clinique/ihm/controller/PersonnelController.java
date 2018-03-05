@@ -1,7 +1,5 @@
 package fr.eni.clinique.ihm.controller;
 
-import java.util.List;
-
 import fr.eni.clinique.bll.exception.BLLException;
 import fr.eni.clinique.bll.manager.PersonnelManager;
 import fr.eni.clinique.bll.manager.impl.PersonnelManagerImpl;
@@ -30,21 +28,21 @@ public class PersonnelController implements PersonnelActionListener{
 	}
 
 	@Override
-	public void newPersonnel() throws BLLException {
+	public void newPersonnel(Personnel personnel) throws BLLException {
+		personnelModel.addPersonnel(personnelManager.addPersonnel(personnel));
 	}
 
 	@Override
-	public void deletePersonnel(PersonnelActionEvent event) throws Exception {
-		// TODO Auto-generated method stub
-		if(event.getPersonnel().getCodePers() != 0){
-			personnelManager.removePersonnel(event.getPersonnel());
-		}
+	public void deletePersonnel(Personnel personnel) throws Exception {
+		personnelManager.removePersonnel(personnel);
+		personnelModel.removePersonnel(personnel);
 	}
 
 	@Override
-	public void resetPwdPersonnel(PersonnelActionEvent event) throws Exception {
+	public void resetPwdPersonnel(Personnel personnel) throws Exception {
 		// TODO Auto-generated method stub
-		
+		personnelManager.updatePersonnel(personnel);
+		personnelModel.resetPassword(personnel);
 	}
 	
 }

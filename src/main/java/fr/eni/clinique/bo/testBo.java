@@ -11,7 +11,8 @@ public class testBo {
 		animal.setCodeAnimal(50);
 		animal.setNomAnimal("Squiky");
 		animal.setSexe("M");
-		animal.setRace(new Race("oiseau", "pinçon"));
+		animal.setRace("oiseau");
+		animal.setEspece("pinçon");
 		animal.setCouleur("Fushia");
 		animal.setTatouage("123A456");
 		animal.setAntecedents("Chiant");

@@ -1,6 +1,7 @@
 package fr.eni.clinique.ihm.listener;
 
 import fr.eni.clinique.bll.exception.BLLException;
+import fr.eni.clinique.bo.Personnel;
 import fr.eni.clinique.ihm.event.PersonnelActionEvent;
 
 public interface PersonnelActionListener {
@@ -9,21 +10,22 @@ public interface PersonnelActionListener {
 
     /**
      * New personnel Notification
+     * @param personnel
      * @throws BLLException 
      */
-    void newPersonnel() throws BLLException;
+    void newPersonnel(Personnel personnel) throws BLLException;
     
     /**
      * Delete personnel Notification.
      * 
      * @param event
      */
-    void deletePersonnel(PersonnelActionEvent event) throws Exception;
+    void deletePersonnel(Personnel personnel) throws Exception;
     
     /**
      * Reset password Notification.
      * 
-     * @param event
+     * @param personnel
      */
-    void resetPwdPersonnel(PersonnelActionEvent event) throws Exception;
+    void resetPwdPersonnel(Personnel personnel) throws Exception;
 }
