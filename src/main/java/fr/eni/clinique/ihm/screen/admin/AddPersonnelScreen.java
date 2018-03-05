@@ -97,6 +97,8 @@ public class AddPersonnelScreen {
 					newPersonnel.setMotPasse(pwString);
 					newPersonnel.setArchive(false);
 					adminScreen.getInstance().addPersonnel(newPersonnel);
+					name.setText("");
+					pw.setText("");
 				}
 			}
 		});

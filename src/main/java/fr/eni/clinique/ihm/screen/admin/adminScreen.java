@@ -101,8 +101,18 @@ public class adminScreen implements Observer {
 		table = new JTable();
 		table.setBorder(new LineBorder(new Color(0, 0, 0)));
 		table.setBounds(0, 0, 606, 310);
-		this.tableModel = (DefaultTableModel) table.getModel();
+		
+		this.tableModel = new DefaultTableModel() {
+
+			   @Override
+			   public boolean isCellEditable(int row, int column) {
+			       
+			       return false;
+			   }
+		};
 		this.tableModel.setColumnIdentifiers(identifier);
+		this.table.setModel(this.tableModel);
+		
 		tableModel.fireTableDataChanged();
 		panel_1.add(table);
 
