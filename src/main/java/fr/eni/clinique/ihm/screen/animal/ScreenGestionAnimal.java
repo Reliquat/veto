@@ -6,17 +6,17 @@ import java.util.Observer;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import java.awt.BorderLayout;
 import javax.swing.border.LineBorder;
 
 import fr.eni.clinique.bo.Animal;
-import fr.eni.clinique.common.AppConstants;
 
 import java.awt.Color;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.JComboBox;
+import javax.swing.border.TitledBorder;
+import javax.swing.UIManager;
 
 public class ScreenGestionAnimal implements Observer {
 
@@ -80,13 +80,9 @@ public class ScreenGestionAnimal implements Observer {
 		
 		JPanel panel_client_name = new JPanel();
 		panel_client_name.setLayout(null);
-		panel_client_name.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
+		panel_client_name.setBorder(new TitledBorder(new LineBorder(new Color(0, 0, 0)), "Client", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
 		panel_client_name.setBounds(10, 57, 414, 65);
 		frame.getContentPane().add(panel_client_name);
-		
-		JLabel label_client = new JLabel("Client :");
-		label_client.setBounds(10, 11, 47, 14);
-		panel_client_name.add(label_client);
 		
 		JPanel panel_2 = new JPanel();
 		panel_2.setLayout(null);
