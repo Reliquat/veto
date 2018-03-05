@@ -12,8 +12,8 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JList;
 import javax.swing.JPanel;
+import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.border.LineBorder;
 
@@ -25,7 +25,6 @@ import fr.eni.clinique.ihm.controller.ClientController;
 import fr.eni.clinique.ihm.event.ClientActionEvent;
 import fr.eni.clinique.ihm.listener.ClientActionListener;
 import fr.eni.clinique.ihm.model.ClientModel;
-import javax.swing.JTable;
 
 public class ScreenClient extends JFrame implements Observer{
 

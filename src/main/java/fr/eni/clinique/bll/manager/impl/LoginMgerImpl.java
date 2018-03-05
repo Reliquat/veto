@@ -1,15 +1,16 @@
 package fr.eni.clinique.bll.manager.impl;
 
+import fr.eni.clinique.bll.exception.BLLException;
 import fr.eni.clinique.bll.manager.LoginMger;
 import fr.eni.clinique.bo.Personnel;
 import fr.eni.clinique.common.util.ObjectUtil;
 import fr.eni.clinique.dal.exception.DalException;
 import fr.eni.clinique.dal.factory.DaoFactory;
-import fr.eni.clinique.dal.jdbc.ConnexionDAOJdbcImpl;
+import fr.eni.clinique.dal.jdbc.LoginDAOJdbcImpl;
 
 public class LoginMgerImpl implements LoginMger{
 
-	private ConnexionDAOJdbcImpl personnelDAO =  DaoFactory.connexionDao();
+	private LoginDAOJdbcImpl loginDAO =  DaoFactory.connexionDao();
 	
 	private static LoginMgerImpl instance;
     
@@ -25,17 +26,17 @@ public class LoginMgerImpl implements LoginMger{
     }
 
 	@Override
-	public Personnel checkLogin(String name, String password) throws DalException {
+	public Personnel checkLogin(String name, String password) throws BLLException{
 
-		Personnel personnel = null;
-		
 		ObjectUtil.checkNotNull(name);
 		ObjectUtil.checkNotNull(password);
 		
-		personnel = personnelDAO.selectByName(name);
+		Personnel personnel = null;
 		
-		if (personnel != null && !personnel.getMotPasse().equals(password)) {
-			personnel = null;
+		try {
+			personnel = loginDAO.login(name, password);
+		} catch (DalException e) {
+			throw new BLLException("Mauvais nom ou mot de passe", e);
 		}
 		
 		return personnel;

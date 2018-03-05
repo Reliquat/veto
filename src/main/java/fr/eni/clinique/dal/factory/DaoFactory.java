@@ -1,7 +1,7 @@
 package fr.eni.clinique.dal.factory;
 
 import fr.eni.clinique.dal.jdbc.ClientDAOJdbcImpl;
-import fr.eni.clinique.dal.jdbc.ConnexionDAOJdbcImpl;
+import fr.eni.clinique.dal.jdbc.LoginDAOJdbcImpl;
 import fr.eni.clinique.dal.jdbc.PersonnelDAOJdbcImpl;
 
 /**
@@ -17,8 +17,8 @@ public class DaoFactory {
      *  
      * @return
      */
-    public static ConnexionDAOJdbcImpl connexionDao() {
-        return ConnexionDAOJdbcImpl.getInstance();
+    public static LoginDAOJdbcImpl connexionDao() {
+        return LoginDAOJdbcImpl.getInstance();
     }
     
     /**

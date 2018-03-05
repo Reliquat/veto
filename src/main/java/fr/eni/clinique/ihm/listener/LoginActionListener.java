@@ -1,7 +1,9 @@
 package fr.eni.clinique.ihm.listener;
 
+import fr.eni.clinique.bo.Personnel;
+
 public interface LoginActionListener {
 
-	void ConnexionPage();
+	Personnel ConnexionPage(String name, String password);
 	
 }

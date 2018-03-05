@@ -1,5 +1,7 @@
 package fr.eni.clinique.common.util;
 
+import fr.eni.clinique.common.AppConstants;
+
 /**
  * Object Utilities.
  * 
@@ -10,6 +12,17 @@ public class ObjectUtil {
 
     private ObjectUtil() {
         
+    }
+    
+    public static final String nullToBlank(String data) {
+        
+        String result = AppConstants.EMPTY;
+        
+        if(data != null) {
+            result = data; 
+        }
+        
+        return result;
     }
     
     /**

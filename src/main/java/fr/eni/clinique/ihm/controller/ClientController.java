@@ -24,7 +24,7 @@ public class ClientController implements ClientActionListener{
 	@Override
 	public void RechercherClientScreen() {
 		
-		clientModel.rechercherClient();
+		clientModel.rechercherClientScreen();
 	}
 
 	@Override
