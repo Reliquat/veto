@@ -1,6 +1,7 @@
 package fr.eni.clinique.bo;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Client {
 	private int codeClient;
@@ -15,7 +16,7 @@ public class Client {
 	private String email;
 	private String remarque;
 	private Boolean archive;
-	private ArrayList<Animal> animaux;
+	private List<Animal> animaux;
 	
 	public Client() {
 		super();
@@ -110,11 +111,11 @@ public class Client {
 	public void setArchive(Boolean archive) {
 		this.archive = archive;
 	}
-	public ArrayList<Animal> getAnimaux() {
+	public List<Animal> getAnimaux() {
 		return animaux;
 	}
-	public void setAnimaux(ArrayList<Animal> animaux) {
-		this.animaux = animaux;
+	public void setAnimaux(List<Animal> list) {
+		this.animaux = list;
 	}
 	@Override
 	public String toString() {

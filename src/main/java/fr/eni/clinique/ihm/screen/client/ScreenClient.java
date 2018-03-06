@@ -1,10 +1,7 @@
 package fr.eni.clinique.ihm.screen.client;
 
 import java.awt.Color;
-import java.awt.EventQueue;
 import java.awt.Font;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -16,15 +13,17 @@ import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.border.LineBorder;
+import javax.swing.table.DefaultTableModel;
 
+import fr.eni.clinique.bo.Animal;
 import fr.eni.clinique.bo.Client;
 import fr.eni.clinique.common.AppConstants;
 import fr.eni.clinique.common.util.ObjectUtil;
-import fr.eni.clinique.dal.exception.DalException;
-import fr.eni.clinique.ihm.controller.ClientController;
-import fr.eni.clinique.ihm.event.ClientActionEvent;
 import fr.eni.clinique.ihm.listener.ClientActionListener;
-import fr.eni.clinique.ihm.model.ClientModel;
+import fr.eni.clinique.ihm.screen.animal.ScreenGestionAnimal;
+
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class ScreenClient extends JFrame implements Observer{
 
@@ -33,6 +32,7 @@ public class ScreenClient extends JFrame implements Observer{
 	 */
 	private static final long serialVersionUID = -6111367380790098404L;
 	
+	private static ScreenClient activeInstance;
 	private JFrame frmClient;
 	private JPanel panel;
 	private JLabel lblVille;
@@ -55,35 +55,11 @@ public class ScreenClient extends JFrame implements Observer{
 	private JTextField codeCliTxt;
 	
 	private JLabel lblCodePostal;
-	private int codeCli;
-
-
 	private ClientActionListener actionListener;
 	private JTable tableAnimaux;
+	private Client client;
+	private DefaultTableModel tableModel;
 	
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					
-					ClientModel clientModel = new ClientModel();
-					ClientController clientController = new ClientController(clientModel);
-					
-					ScreenClient window = new ScreenClient(AppConstants.APP_NAME);
-					window.frmClient.setVisible(true);
-					
-					window.setActionListener(clientController);
-					
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
 	/**
 	 * Create the application.
 	 */
@@ -91,9 +67,13 @@ public class ScreenClient extends JFrame implements Observer{
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setResizable(false);
         setTitle(title);
+        activeInstance = this;
         initialize();
     }
 
+    public static ScreenClient getInstance(){
+    	return activeInstance;
+    }
 	/**
 	 * Initialize the contents of the frame.
 	 */
@@ -101,7 +81,7 @@ public class ScreenClient extends JFrame implements Observer{
 		frmClient = new JFrame();
 		frmClient.setResizable(false);
 		frmClient.setTitle("Client");
-		frmClient.setBounds(10, 11, 1080, 720);
+		frmClient.setBounds(10, 11, 1074, 711);
 		frmClient.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmClient.getContentPane().setLayout(null);
 		
@@ -112,74 +92,32 @@ public class ScreenClient extends JFrame implements Observer{
 		panel.setLayout(null);
 		
 		JButton btnRechercher = new JButton("Rechercher");
+		btnRechercher.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				new ScreenRechercheClient(actionListener);
+			}
+		});
 		btnRechercher.setBounds(10, 11, 100, 78);
-		//<<
-		btnRechercher.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if(actionListener != null) {
-                	rechercherClient();
-                }
-            }
-        });
-		//>>
+
 		panel.add(btnRechercher);
 		
 		btnAjouter = new JButton("Ajouter");
 		btnAjouter.setIcon(new ImageIcon(ScreenClient.class.getResource("/Images/plus.png")));
 		btnAjouter.setBounds(407, 11, 100, 78);
-		//<<
-		btnAjouter.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if(actionListener != null) {
-                	ajouterClient();
-                }
-            }
-        });
-		//>>
+
 		panel.add(btnAjouter);
 		
 		btnSupprimer = new JButton("Supprimer");
 		btnSupprimer.setBounds(516, 11, 100, 78);
-		//<<
-		btnSupprimer.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if(actionListener != null) {
-                	supprimerClient();
-                }
-            }
-        });
-		//>>
 		panel.add(btnSupprimer);
 		
 		btnAnnuler = new JButton("Annuler");
 		btnAnnuler.setBounds(956, 11, 100, 78);
-		//<<
-		btnAnnuler.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if(actionListener != null) {
-                	annulerClient();
-                }
-            }
-        });
-		//>>
 		panel.add(btnAnnuler);
 		
 		btnValider = new JButton("Valider");
 		btnValider.setBounds(846, 11, 100, 78);
-		//<<
-		btnValider.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if(actionListener != null) {
-                	validerClient();
-                }
-            }
-        });
-		//>>
 		panel.add(btnValider);
 		
 		lblVille = new JLabel("Ville");
@@ -199,6 +137,12 @@ public class ScreenClient extends JFrame implements Observer{
 		panel_1.setLayout(null);
 		
 		JButton btnNewButton_1 = new JButton("Editer");
+		btnNewButton_1.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				new ScreenGestionAnimal(client.getAnimaux().get(tableAnimaux.getSelectedRow()));
+			}
+		});
 		btnNewButton_1.setBounds(461, 362, 73, 43);
 		panel_1.add(btnNewButton_1);
 		
@@ -213,6 +157,22 @@ public class ScreenClient extends JFrame implements Observer{
 		
 		tableAnimaux = new JTable();
 		tableAnimaux.setBounds(10, 11, 524, 342);
+		
+		this.tableModel = new DefaultTableModel(
+				new Object[][] {
+				},
+				new String[] {
+					"Numéro", "Nom", "Sexe", "Couleur", "Race", "Espece", "Tatouage"
+				}
+			){
+			@Override
+			   public boolean isCellEditable(int row, int column) {
+			       
+			       return false;
+			   }
+		};
+		tableAnimaux.setModel(this.tableModel);
+		
 		panel_1.add(tableAnimaux);
 		
 		JLabel lblAdresse_1 = new JLabel("Adresse");
@@ -254,6 +214,7 @@ public class ScreenClient extends JFrame implements Observer{
 		frmClient.getContentPane().add(lblCode);
 		
 		codeCliTxt = new JTextField();
+		codeCliTxt.setEditable(false);
 		codeCliTxt.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		codeCliTxt.setColumns(10);
 		codeCliTxt.setBounds(220, 122, 150, 25);
@@ -319,36 +280,20 @@ public class ScreenClient extends JFrame implements Observer{
 		remarqueTxt.setColumns(10);
 		remarqueTxt.setBounds(220, 482, 150, 25);
 		frmClient.getContentPane().add(remarqueTxt);
+		frmClient.setVisible(true);
 	}
 	
-    private void rechercherClient() {
+    private void ajouterClient(Client client) {
 
-    	actionListener.RechercherClientScreen();
-    }
-    
-    private void ajouterClient() {
-
-    	actionListener.AjouterClient();
+    	actionListener.AjouterClient(client);
     }
     
     private void supprimerClient() {
 
-    	try {
-			actionListener.SupprimerClient(new ClientActionEvent(readClient()));
-		} catch (DalException e) {
-			
-			e.printStackTrace();
-		}
     }
     
     private void validerClient() {
 
-    	try {
-			actionListener.ValiderClient(new ClientActionEvent(readClient()));
-		} catch (DalException e) {
-			
-			e.printStackTrace();
-		}
     }
     
     private void annulerClient() {
@@ -366,16 +311,6 @@ public class ScreenClient extends JFrame implements Observer{
         remarqueTxt.setText(AppConstants.EMPTY);
     }
     
-    /*private void editerAnimal() {
-
-    	try {
-			actionListener.Editer(new ClientActionEvent(readClient()));
-		} catch (DalException e) {
-			
-			e.printStackTrace();
-		}
-    }*/
-    
     public void setActionListener(ClientActionListener actionListener) {
         
         if(actionListener != null) {
@@ -391,12 +326,8 @@ public class ScreenClient extends JFrame implements Observer{
 	@Override
 	public void update(Observable arg0, Object arg1) {
 		// TODO Auto-generated method stub
+		this.client = (Client) arg1;
 		
-	}
-	
-    public void showClient(Client client) {
-        
-        codeCli = client.getCodeClient();
         nomTxt.setText(ObjectUtil.nullToBlank(client.getNomClient().trim()));
         prenomTxt.setText(ObjectUtil.nullToBlank(client.getPrenomClient()).trim());
         adresse1Txt.setText(ObjectUtil.nullToBlank(client.getAdresse1()).trim());
@@ -407,24 +338,13 @@ public class ScreenClient extends JFrame implements Observer{
         assuranceTxt.setText(ObjectUtil.nullToBlank(client.getAssurance().trim()));
         emailTxt.setText(ObjectUtil.nullToBlank(client.getEmail().trim()));
         remarqueTxt.setText(ObjectUtil.nullToBlank(client.getRemarque().trim()));
-    }
-	
-    private Client readClient() {
         
-    	Client client = null;
+        for(Animal animal : client.getAnimaux()){
+        	this.tableModel.addRow(new String[]{String.valueOf(animal.getCodeAnimal()), animal.getNomAnimal(), animal.getSexe(), animal.getCouleur(), animal.getRace(), animal.getEspece(), animal.getTatouage()});
+        }
         
-        client.setCodeClient(codeCli);
-        client.setNomClient(nomTxt.getText().trim());
-        client.setPrenomClient(prenomTxt.getText().trim());
-        client.setAdresse1(adresse1Txt.getText().trim());
-        client.setAdresse2(adresse2Txt.getText().trim());
-        client.setCodePostal(cpTxt.getText().trim());
-        client.setVille(villeTxt.getText().trim());
-        client.setNumTel(numtelTxt.getText().trim());
-        client.setAssurance(assuranceTxt.getText().trim());
-        client.setEmail(emailTxt.getText().trim());
-        client.setRemarque(remarqueTxt.getText().trim());
+        this.tableAnimaux.setModel(this.tableModel);
         
-        return client;
-    }
+        this.tableModel.fireTableDataChanged();
+	}
 }

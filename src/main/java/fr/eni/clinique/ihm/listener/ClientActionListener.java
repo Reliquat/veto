@@ -1,23 +1,20 @@
 package fr.eni.clinique.ihm.listener;
 
+import fr.eni.clinique.bo.Client;
 import fr.eni.clinique.dal.exception.DalException;
 import fr.eni.clinique.ihm.event.ClientActionEvent;
+import fr.eni.clinique.ihm.screen.client.ScreenRechercheClient;
 
 public interface ClientActionListener {
 
-	void RechercherClientScreen();
+	void RechercherClientScreen(String nom);
 	
-	void RechercherClient(String name);
-	
-	void AjouterClient();
+	void AjouterClient(Client client);
 	
 	void SupprimerClient(ClientActionEvent event) throws DalException;
 
 	void ValiderClient(ClientActionEvent event) throws DalException;
 	
-	void ValiderAjoutClient(ClientActionEvent event) throws DalException;
-	
-	void EditerClient(ClientActionEvent event) throws DalException;
-	
-	void init();
+	void setRecherche(ScreenRechercheClient screen);
+
 }

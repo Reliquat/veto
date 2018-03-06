@@ -12,26 +12,19 @@ public class ClientModel extends Observable{
 
 	private List<Client> clients = new ArrayList<>();
     public boolean dataChanged;
+	private ScreenRechercheClient rechercheScreen;
 	
-    public void rechercherClientScreen() {
-    	ScreenRechercheClient.main();
-    }
-    
-    public void rechercherClient() {
-    	
+    public void rechercherClient(List<Client> clients) {
+    	System.out.println(this.getClass()+" "+clients);
+    	this.rechercheScreen.setResult(clients);
     }
 	
-	public void ajouterClient() {
-		ScreenAjoutClient.main();
+	public void ajouterClient(Client client) {
+		clients.add(client);
 	}
     
     public void loadClient(List<Client> clients) {
     	this.clients = clients;
-    }
-
-    
-    public void addClient(Client Client) {
-    	clients.add(Client);
     }
 
     public void removeCurrentClient(int index) {
@@ -52,5 +45,10 @@ public class ClientModel extends Observable{
     protected void clearDataChanged() {
         dataChanged = false;
     }
+
+	public void getRechercheScreen(ScreenRechercheClient screen) {
+		// TODO Auto-generated method stub
+		this.rechercheScreen = screen; 
+	}
 	
 }

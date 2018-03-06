@@ -52,7 +52,7 @@ public class ClientDAOJdbcImpl {
         client.setEmail(resultSet.getString("Email"));
         client.setRemarque(resultSet.getString("Remarque"));
         client.setArchive(resultSet.getBoolean("Archive"));
-        
+        System.out.println(client);
         return client;
     }
     
@@ -83,12 +83,12 @@ public class ClientDAOJdbcImpl {
         return client;
     }
     
-    public Client selectByName(String name) throws DalException {
+    public List<Client> selectByName(String name) throws DalException {
     	
     	Connection connection = null;
         PreparedStatement statement = null;
         ResultSet resultSet = null;
-        Client client = null;
+        ArrayList<Client> clients = new ArrayList<>();
         
         try {
             connection = MSSQLConnectionFactory.get();
@@ -98,8 +98,9 @@ public class ClientDAOJdbcImpl {
             
             resultSet = statement.executeQuery();
             
-            if(resultSet.next()) {
-            	client = createClient(resultSet);
+            while(resultSet.next()) {
+            	
+            	clients.add(createClient(resultSet));
             }
             
         } catch (SQLException e) {
@@ -107,7 +108,7 @@ public class ClientDAOJdbcImpl {
         } finally {
             ResourceUtil.safeClose(connection, statement, resultSet);
         }
-        return client;
+        return clients;
     }
     
     public Client insertClient (Client client) throws DalException {
