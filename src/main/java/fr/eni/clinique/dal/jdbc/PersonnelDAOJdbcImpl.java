@@ -19,6 +19,7 @@ public class PersonnelDAOJdbcImpl {
 
     private final static String SELECT_BY_NAME = "SELECT CodePers, Nom, MotPasse, Role, Archive FROM Personnels WHERE Nom = ?";
     private final static String SELECT_BY_ID = "SELECT CodePers, Nom, MotPasse, Role, Archive FROM Personnels WHERE CodePers = ?";
+    private final static String SELECT_BY_ROLE = "SELECT CodePers, Nom, MotPasse, Role, Archive FROM Personnels WHERE Role = ?";
     private final static String SELECT_ALL = "SELECT CodePers, Nom, MotPasse, Role, Archive FROM Personnels";
     private final static String INSERT_QUERY = "INSERT INTO Personnels(Nom, MotPasse, Role, Archive) VALUES (?, ?, ?, ?);";
     private final static String UPDATE_QUERY = "UPDATE Personnels SET Nom = ?, MotPasse = ?, Role = ?, Archive = ? WHERE CodePers = ?;";
@@ -97,6 +98,33 @@ public class PersonnelDAOJdbcImpl {
             
         } catch (SQLException e) {
             throw new DalException("Erreur d'execution de la requete SELECT BY NAME Personnel", e);
+        } finally {
+            ResourceUtil.safeClose(connection, statement, resultSet);
+        }
+        return personnel;
+    }
+    
+    public Personnel selectByRole(String role) throws DalException {
+    	
+    	Connection connection = null;
+        PreparedStatement statement = null;
+        ResultSet resultSet = null;
+        Personnel personnel = null;
+        
+        try {
+            connection = MSSQLConnectionFactory.get();
+            statement = connection.prepareStatement(SELECT_BY_ROLE);
+            
+            statement.setString(1, role);
+            
+            resultSet = statement.executeQuery();
+            
+            if(resultSet.next()) {
+                personnel = createPersonnel(resultSet);
+            }
+            
+        } catch (SQLException e) {
+            throw new DalException("Erreur d'execution de la requete SELECT BY ROLE Personnel", e);
         } finally {
             ResourceUtil.safeClose(connection, statement, resultSet);
         }

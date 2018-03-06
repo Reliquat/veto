@@ -1,5 +1,6 @@
 package fr.eni.clinique.dal.factory;
 
+import fr.eni.clinique.dal.jdbc.AgendaDAOJdbcImpl;
 import fr.eni.clinique.dal.jdbc.AnimalDAOJdbcImpl;
 import fr.eni.clinique.dal.jdbc.ClientDAOJdbcImpl;
 import fr.eni.clinique.dal.jdbc.LoginDAOJdbcImpl;
@@ -36,5 +37,9 @@ public class DaoFactory {
     
     public static AnimalDAOJdbcImpl animalDao(){
     	return AnimalDAOJdbcImpl.getInstance();
+    }
+    
+    public static AgendaDAOJdbcImpl agendaDao(){
+    	return AgendaDAOJdbcImpl.getInstance();
     }
 }

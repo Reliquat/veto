@@ -41,9 +41,15 @@ public class PersonnelController implements PersonnelActionListener{
 
 	@Override
 	public void resetPwdPersonnel(Personnel personnel) throws Exception {
-		// TODO Auto-generated method stub
+		
 		personnelManager.updatePersonnel(personnel);
 		personnelModel.resetPassword(personnel);
 	}
-	
+
+	@Override
+	public void getListeVeto(Personnel personnel) throws Exception {
+		
+		personnelManager.getListeVeto();
+		
+	}
 }

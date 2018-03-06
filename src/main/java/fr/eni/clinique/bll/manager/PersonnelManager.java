@@ -15,4 +15,5 @@ public interface PersonnelManager {
     
     void removePersonnel(Personnel personnel) throws BLLException;
 	
+    Personnel getListeVeto() throws BLLException;
 }
