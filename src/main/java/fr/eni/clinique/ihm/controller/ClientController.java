@@ -3,34 +3,58 @@ package fr.eni.clinique.ihm.controller;
 import java.util.List;
 
 import fr.eni.clinique.bll.exception.BLLException;
+import fr.eni.clinique.bll.manager.AnimalManager;
 import fr.eni.clinique.bll.manager.ClientManager;
+import fr.eni.clinique.bll.manager.impl.AnimalManagerImpl;
 import fr.eni.clinique.bll.manager.impl.ClientManagerImpl;
 import fr.eni.clinique.bo.Client;
 import fr.eni.clinique.dal.exception.DalException;
 import fr.eni.clinique.ihm.event.ClientActionEvent;
 import fr.eni.clinique.ihm.listener.ClientActionListener;
 import fr.eni.clinique.ihm.model.ClientModel;
+import fr.eni.clinique.ihm.screen.client.ScreenRechercheClient;
 
 public class ClientController implements ClientActionListener{
 
 	private ClientModel clientModel;
 	private ClientManager clientManager = ClientManagerImpl.getInstance();
+	private List<Client> clients;
+	private AnimalManager animalManager = new AnimalManagerImpl();
 	
     public ClientController(ClientModel model) {
         super();
         this.clientModel = model;
+        
+        try {
+			this.clients = clientManager.getListeClient();
+		} catch (BLLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        
+        this.clientModel.loadClient(this.clients);
     }
-	
+    
 	@Override
-	public void RechercherClientScreen() {
+	public void RechercherClientScreen(String nom) {
 		
-		clientModel.rechercherClientScreen();
+		try {
+			List<Client> searchClient = clientManager.getByName(nom);
+			
+			for(Client client : searchClient){
+				client.setAnimaux(this.animalManager.getAnimauxOfClient(client));
+			}
+			clientModel.rechercherClient(searchClient);
+		} catch (BLLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	@Override
-	public void AjouterClient() {
+	public void AjouterClient(Client client) {
 		
-		clientModel.ajouterClient();
+		clientModel.ajouterClient(client);
 	}
 
 	@Override
@@ -49,47 +73,15 @@ public class ClientController implements ClientActionListener{
 	@Override
 	public void ValiderClient(ClientActionEvent event) {
 		
-		
-	}
-
-	@Override
-	public void EditerClient(ClientActionEvent event) {
-		
-		
-	}
-
-	@Override
-	public void init() {
-		
-		
-	}
-
-	@Override
-	public void ValiderAjoutClient(ClientActionEvent event) throws DalException {
-		
-		List<Client> client;
-		try {
-			client = clientManager.getListeClient();
-			clientModel.loadClient(client);	
-		} catch (BLLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 	
-	public Client getByName(String name) throws BLLException {
-		return clientManager.getByName(name);
+	public void fireRechercheClient(ScreenRechercheClient screen){
+		this.clientModel.getRechercheScreen(screen);
 	}
 
 	@Override
-	public void RechercherClient(String name) {
-		
-		try {
-			clientManager.getByName(name);
-		} catch (BLLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
+	public void setRecherche(ScreenRechercheClient screen) {
+		// TODO Auto-generated method stub
+		this.clientModel.getRechercheScreen(screen);
 	}
 }

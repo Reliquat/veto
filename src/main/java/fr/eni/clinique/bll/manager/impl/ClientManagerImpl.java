@@ -1,5 +1,6 @@
 package fr.eni.clinique.bll.manager.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import fr.eni.clinique.bll.exception.BLLException;
@@ -31,10 +32,10 @@ public class ClientManagerImpl implements ClientManager{
 	@Override
 	public List<Client> getListeClient() throws BLLException {
 		List<Client> clients = null;
-        
+        System.out.println("test");
         try {
             clients = clientDAO.selectAll();
-            
+             
         } catch (DalException e) {
             throw new BLLException("Erreur récupération liste client", e);
         }
@@ -118,16 +119,17 @@ public class ClientManagerImpl implements ClientManager{
     	return client;
     }
     
-    public Client getByName(String name) throws BLLException {
+    public List<Client> getByName(String name) throws BLLException {
     	
-    	Client client = null;
-    	
+    	List<Client> client = new ArrayList<>();
+    	System.out.println("test2");
     	try {
 			client = clientDAO.selectByName(name);
 		} catch (DalException e) {
 			// TODO Auto-generated catch block
 			throw new BLLException(e.getMessage(), e);
 		}
+    	System.out.println("Après retour recherche.");
     	return client;
     }
 }
