@@ -89,34 +89,11 @@ public class Animal {
 	public void setArchive(boolean archive) {
 		this.archive = archive;
 	}
-	
 	@Override
 	public String toString() {
-		
-		StringBuilder builder = new StringBuilder();
-		
-		builder.append("Animal [codeAnimal=")
-		       .append(codeAnimal)
-		       .append(", client=")
-		   	   .append(client)
-			   .append(", nomAnimal=")
-			   .append(nomAnimal)
-			   .append(", sexe=")
-			   .append(sexe)
-			   .append(", couleur=")
-			   .append(couleur)
-			   .append(", espece=")
-			   .append(espece)
-			   .append(", race=")
-			   .append(race)
-			   .append(", tatouage=")
-			   .append(tatouage)
-			   .append(", antecedents=")
-			   .append(antecedents)
-			   .append(", archive=")
-			   .append(archive)
-			   .append("]");
-		
-		return builder.toString();
+		return "Animal [codeAnimal=" + codeAnimal + ", client n°" + client.getCodeClient() + ", nomAnimal=" + nomAnimal + ", sexe=" + sexe
+				+ ", couleur=" + couleur + ", espece=" + espece + ", race=" + race + ", tatouage=" + tatouage
+				+ ", antecedents=" + antecedents + ", archive=" + archive + "]";
 	}
+
 }

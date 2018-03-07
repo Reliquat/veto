@@ -6,6 +6,7 @@ import java.util.Observable;
 
 import fr.eni.clinique.bo.Client;
 import fr.eni.clinique.ihm.screen.client.ScreenAjoutClient;
+import fr.eni.clinique.ihm.screen.client.ScreenClient;
 import fr.eni.clinique.ihm.screen.client.ScreenRechercheClient;
 
 public class ClientModel extends Observable{
@@ -13,14 +14,14 @@ public class ClientModel extends Observable{
 	private List<Client> clients = new ArrayList<>();
     public boolean dataChanged;
 	private ScreenRechercheClient rechercheScreen;
-	
+	private ScreenClient screenClient = ScreenClient.getInstance();
     public void rechercherClient(List<Client> clients) {
-    	System.out.println(this.getClass()+" "+clients);
+    	//System.out.println(this.getClass()+" "+clients);
     	this.rechercheScreen.setResult(clients);
     }
 	
 	public void ajouterClient(Client client) {
-		clients.add(client);
+		this.screenClient.update(this, client);
 	}
     
     public void loadClient(List<Client> clients) {
