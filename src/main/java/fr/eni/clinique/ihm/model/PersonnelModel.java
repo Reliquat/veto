@@ -18,7 +18,12 @@ public class PersonnelModel extends Observable {
 	}
 
 	public void loadPersonnel(List<Personnel> personnels) {
-		this.personnels = personnels;
+		this.personnels.clear();
+		for(Personnel personnel : personnels){
+			if(!personnel.isArchive()){
+				this.personnels.add(personnel);
+			}
+		}
 		view.update(this, this.personnels);
 	}
 

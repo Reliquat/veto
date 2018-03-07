@@ -17,5 +17,5 @@ public interface ClientManager {
 	
     Client getById(int id) throws BLLException;
     
-    Client getByName(String name) throws BLLException;
+    List<Client> getByName(String name) throws BLLException;
 }

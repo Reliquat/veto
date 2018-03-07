@@ -16,7 +16,7 @@ public class DalTest {
 
 	public static void main(String[] args) throws DalException {
 
-		LoginDAOJdbcImpl connexionDao = DaoFactory.connexionDao();
+		LoginDAOJdbcImpl loginDao = DaoFactory.connexionDao();
 		PersonnelDAOJdbcImpl personnelDao = DaoFactory.personnelDao();
 		AnimalDAOJdbcImpl animalDao = DaoFactory.animalDao();
 		ClientDAOJdbcImpl clientDao = DaoFactory.clientDao();

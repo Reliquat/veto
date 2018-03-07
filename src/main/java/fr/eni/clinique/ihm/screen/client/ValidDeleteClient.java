@@ -1,4 +1,4 @@
-package fr.eni.clinique.ihm.screen.admin;
+package fr.eni.clinique.ihm.screen.client;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
@@ -7,31 +7,30 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import fr.eni.clinique.bo.Client;
+
 import javax.swing.JLabel;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-public class ConfirmDelete extends JDialog {
+public class ValidDeleteClient extends JDialog {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -3330276356188474713L;
-	private static ConfirmDelete currentInstance;
 	private final JPanel contentPanel = new JPanel();
+
 	/**
 	 * Create the dialog.
 	 */
-	public ConfirmDelete() {
-		currentInstance = this;
+	public ValidDeleteClient(Client client) {
+		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		getContentPane().setLayout(new BorderLayout());
+		contentPanel.setLayout(new FlowLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
-		getContentPane().add(contentPanel, BorderLayout.CENTER);
-		contentPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+		getContentPane().add(contentPanel, BorderLayout.NORTH);
 		{
-			JLabel lblSouhaitezVousVraiment = new JLabel("Souhaitez vous vraiment supprimer cette personne ?");
-			contentPanel.add(lblSouhaitezVousVraiment);
+			JLabel message = new JLabel("\u00CAtes-vous sur de vouloir supprimer le client : ");
+			contentPanel.add(message);
 		}
 		{
 			JPanel buttonPane = new JPanel();
@@ -42,8 +41,8 @@ public class ConfirmDelete extends JDialog {
 				okButton.addMouseListener(new MouseAdapter() {
 					@Override
 					public void mouseClicked(MouseEvent arg0) {
-						adminScreen.getInstance().deletePersonnel();
-						ConfirmDelete.getInstance().dispose();
+						ScreenClient.getInstance().supprimerClient();
+						dispose();
 					}
 				});
 				okButton.setActionCommand("OK");
@@ -54,19 +53,23 @@ public class ConfirmDelete extends JDialog {
 				JButton cancelButton = new JButton("Cancel");
 				cancelButton.addMouseListener(new MouseAdapter() {
 					@Override
-					public void mouseClicked(MouseEvent arg0) {
-						ConfirmDelete.getInstance().dispose();
+					public void mouseClicked(MouseEvent e) {
+						dispose();
 					}
 				});
 				cancelButton.setActionCommand("Cancel");
 				buttonPane.add(cancelButton);
 			}
 		}
-		this.setVisible(true);
-	}
-	
-	public static ConfirmDelete getInstance(){
-		return currentInstance;
+		{
+			JPanel panel = new JPanel();
+			getContentPane().add(panel, BorderLayout.CENTER);
+			{
+				JLabel nomComplet = new JLabel("New label");
+				nomComplet.setText(client.getNomClient() + " " + client.getPrenomClient());
+				panel.add(nomComplet);
+			}
+		}
 	}
 
 }

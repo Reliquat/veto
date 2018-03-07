@@ -28,4 +28,6 @@ public interface PersonnelActionListener {
      * @param personnel
      */
     void resetPwdPersonnel(Personnel personnel) throws Exception;
+    
+    void getListeVeto(Personnel personnel) throws Exception;
 }

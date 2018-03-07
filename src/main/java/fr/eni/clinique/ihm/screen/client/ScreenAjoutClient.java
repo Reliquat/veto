@@ -1,12 +1,8 @@
 package fr.eni.clinique.ihm.screen.client;
 
 import java.awt.Color;
-import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.Window.Type;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -14,18 +10,15 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.LineBorder;
 
+import fr.eni.clinique.bo.Animal;
 import fr.eni.clinique.bo.Client;
-import fr.eni.clinique.common.util.ObjectUtil;
-import fr.eni.clinique.dal.exception.DalException;
-import fr.eni.clinique.ihm.controller.ClientController;
-import fr.eni.clinique.ihm.event.ClientActionEvent;
-import fr.eni.clinique.ihm.listener.ClientActionListener;
-import fr.eni.clinique.ihm.model.ClientModel;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 
 public class ScreenAjoutClient {
 
 	private JFrame frmAjouterDesClients;
-	private JTextField codeCliTxt;
 	private JTextField nomClientTxt;
 	private JTextField prenomClientTxt;
 	private JTextField adresse1Txt;
@@ -36,32 +29,7 @@ public class ScreenAjoutClient {
 	private JTextField assuranceTxt;
 	private JTextField emailTxt;
 	private JTextField remarqueTxt;
-	private int codeCli;
 	
-	private ClientActionListener actionListener;
-
-
-	/**
-	 * Launch the application.
-	 */
-	public static void main() {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					ClientModel clientModel = new ClientModel();
-					ClientController clientController = new ClientController(clientModel);
-					
-					ScreenAjoutClient window = new ScreenAjoutClient();
-					window.frmAjouterDesClients.setVisible(true);
-					
-					window.setActionListener(clientController);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
 	/**
 	 * Create the application.
 	 */
@@ -89,38 +57,37 @@ public class ScreenAjoutClient {
 		panel.setLayout(null);
 		
 		JButton btnAnnuler = new JButton("Annuler");
+		btnAnnuler.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				frmAjouterDesClients.dispose();
+			}
+		});
 		btnAnnuler.setBounds(585, 11, 89, 79);
-		//<<
-		btnAnnuler.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if(actionListener != null) {
-                	annulerAjoutClient();
-                }
-            }
-        });
-		//>>
 		panel.add(btnAnnuler);
 		
 		JButton btnValider = new JButton("Valider");
+		btnValider.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				Client newClient = new Client();
+				newClient.setNomClient(nomClientTxt.getText());
+				newClient.setPrenomClient(prenomClientTxt.getText());
+				newClient.setAdresse1(adresse1Txt.getText());
+				newClient.setAdresse2(adresse2Txt.getText());
+				newClient.setCodePostal(cpTxt.getText());
+				newClient.setVille(villeTxt.getText());
+				newClient.setNumTel(numtelTxt.getText());
+				newClient.setEmail(emailTxt.getText());
+				newClient.setAssurance(assuranceTxt.getText());
+				newClient.setRemarque(remarqueTxt.getText());
+				newClient.setArchive(false);
+				newClient.setAnimaux(new ArrayList<Animal>());
+				ScreenClient.getInstance().addClient(newClient);
+			}
+		});
 		btnValider.setBounds(486, 11, 89, 79);
-		//<<
-		btnValider.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if(actionListener != null) {
-                	validerClient();
-                }
-            }
-        });
-		//>>
 		panel.add(btnValider);
-		
-		codeCliTxt = new JTextField();
-		codeCliTxt.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		codeCliTxt.setBounds(363, 123, 160, 31);
-		frmAjouterDesClients.getContentPane().add(codeCliTxt);
-		codeCliTxt.setColumns(10);
 		
 		nomClientTxt = new JTextField();
 		nomClientTxt.setFont(new Font("Tahoma", Font.PLAIN, 20));
@@ -157,11 +124,6 @@ public class ScreenAjoutClient {
 		villeTxt.setColumns(10);
 		villeTxt.setBounds(363, 375, 160, 31);
 		frmAjouterDesClients.getContentPane().add(villeTxt);
-		
-		JLabel lblNewLabel = new JLabel("Code");
-		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		lblNewLabel.setBounds(153, 123, 200, 31);
-		frmAjouterDesClients.getContentPane().add(lblNewLabel);
 		
 		JLabel lblNom = new JLabel("Nom");
 		lblNom.setFont(new Font("Tahoma", Font.PLAIN, 20));
@@ -231,67 +193,6 @@ public class ScreenAjoutClient {
 		remarqueTxt.setColumns(10);
 		remarqueTxt.setBounds(363, 542, 160, 31);
 		frmAjouterDesClients.getContentPane().add(remarqueTxt);
+		frmAjouterDesClients.setVisible(true);
 	}
-	
-	public void validerClient() {
-		
-		
-		System.out.println("Yup");
-		try {
-			actionListener.ValiderClient(new ClientActionEvent(readClient()));
-		} catch (DalException e) {
-			
-			e.printStackTrace();
-		}
-		
-	}
-	
-    private void annulerAjoutClient() {
-
-    	this.frmAjouterDesClients.dispose();
-    	
-    }
-	
-	public void showClient(Client client) {
-        
-        codeCli = client.getCodeClient();
-        nomClientTxt.setText(ObjectUtil.nullToBlank(client.getNomClient().trim()));
-        prenomClientTxt.setText(ObjectUtil.nullToBlank(client.getPrenomClient()).trim());
-        adresse1Txt.setText(ObjectUtil.nullToBlank(client.getAdresse1()).trim());
-        adresse2Txt.setText(ObjectUtil.nullToBlank(client.getAdresse2()).trim());
-        cpTxt.setText(ObjectUtil.nullToBlank(client.getCodePostal().trim()));
-        villeTxt.setText(ObjectUtil.nullToBlank(client.getVille().trim()));
-        numtelTxt.setText(ObjectUtil.nullToBlank(client.getNumTel().trim()));
-        assuranceTxt.setText(ObjectUtil.nullToBlank(client.getAssurance().trim()));
-        emailTxt.setText(ObjectUtil.nullToBlank(client.getEmail().trim()));
-        remarqueTxt.setText(ObjectUtil.nullToBlank(client.getRemarque().trim()));
-    }
-	
-    private Client readClient() {
-        
-    	Client client = null;
-        
-        client.setCodeClient(codeCli);
-        client.setNomClient(nomClientTxt.getText().trim());
-        client.setPrenomClient(prenomClientTxt.getText().trim());
-        client.setAdresse1(adresse1Txt.getText().trim());
-        client.setAdresse2(adresse2Txt.getText().trim());
-        client.setCodePostal(cpTxt.getText().trim());
-        client.setVille(villeTxt.getText().trim());
-        client.setNumTel(numtelTxt.getText().trim());
-        client.setAssurance(assuranceTxt.getText().trim());
-        client.setEmail(emailTxt.getText().trim());
-        client.setRemarque(remarqueTxt.getText().trim());
-        
-        return client;
-    }
-
-    public void setActionListener(ClientActionListener actionListener) {
-        
-        if(actionListener != null) {
-            
-            this.actionListener = actionListener;
-        }
-    }
-    
 }
