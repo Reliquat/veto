@@ -31,10 +31,12 @@ public class Main {
 	                
 	                custScreen.main(args);*/
 	            	
+	            	AgendaScreen agendaScreen = new AgendaScreen();
+	            	
 	            	AgendaModel agendaModel = new AgendaModel();
 	            	AgendaController agendaController = new AgendaController(agendaModel);
 	            	
-	            	AgendaScreen agendaScreen = new AgendaScreen();
+	            	agendaScreen.setActionListener(agendaController);
 	            	
 	            	agendaScreen.frmAgenda.setVisible(true);
 	            	agendaScreen.frmAgenda.setLocationRelativeTo(null);
