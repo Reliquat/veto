@@ -1,9 +1,5 @@
 package fr.eni.clinique.ihm.screen.animal;
 
-import java.awt.EventQueue;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
@@ -31,7 +27,7 @@ public class ScreenGestionAnimal {
 	private JComboBox comboBox_espece;
 	private JComboBox comboBox_race;
 	private Animal animal;
-	private AnimalController animalController = new AnimalController();
+	private AnimalController animalController;
 	
 	/**
 	 * Launch the application.
@@ -41,8 +37,9 @@ public class ScreenGestionAnimal {
 	/**
 	 * Create the application.
 	 */
-	public ScreenGestionAnimal() {
-		initialize(null);
+	public ScreenGestionAnimal(AnimalController animalController, Animal animal) {
+		this.animalController = animalController;
+		initialize(animal);
 	}
 
 	/**
@@ -133,7 +130,7 @@ public class ScreenGestionAnimal {
 		textField_nom.setBounds(92, 33, 332, 20);
 		panel_animal_form.add(textField_nom);
 		
-		String[] genres = {"Male", "Femelle", "Hermaphrodite"};
+		String[] genres = {"M", "F", "H"};
 		comboBox_sexe = new JComboBox(genres);
 		comboBox_sexe.setBounds(278, 8, 146, 20);
 		comboBox_sexe.setSelectedIndex(0);
@@ -145,7 +142,7 @@ public class ScreenGestionAnimal {
 		textField_couleur.setBounds(92, 58, 332, 20);
 		panel_animal_form.add(textField_couleur);
 		
-		String[] especes = {"hgn", "jhgj", "errg"};
+		String[] especes = {"espece", "jhgj", "errg"};
 		comboBox_espece = new JComboBox(especes);
 		comboBox_espece.setBounds(92, 83, 141, 20);
 		panel_animal_form.add(comboBox_espece);
@@ -154,7 +151,7 @@ public class ScreenGestionAnimal {
 		label_race.setBounds(243, 86, 32, 14);
 		panel_animal_form.add(label_race);
 
-		String[] races = {"yjbg", "zebg", "cvxdhg"};
+		String[] races = {"race", "zebg", "cvxdhg"};
 		comboBox_race = new JComboBox(races);
 		comboBox_race.setBounds(278, 83, 146, 20);
 		panel_animal_form.add(comboBox_race);
@@ -174,7 +171,6 @@ public class ScreenGestionAnimal {
 	private Animal readAnimal() {
 		
 		Animal animal = new Animal();
-		System.out.println("code : " + label_code_value.getText().trim());
 		animal.setCodeAnimal(Integer.valueOf(label_code_value.getText().trim()));
 		animal.setClient(this.animal.getClient());
     	animal.setNomAnimal(textField_nom.getText().trim());
@@ -187,5 +183,9 @@ public class ScreenGestionAnimal {
     	animal.setArchive(false);
 		
 		return animal;
+	}
+	
+	public void hide() {
+		this.frame.setVisible(false);
 	}
 }

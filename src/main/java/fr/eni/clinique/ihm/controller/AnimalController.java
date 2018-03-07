@@ -3,7 +3,8 @@ package fr.eni.clinique.ihm.controller;
 import java.util.List;
 
 import fr.eni.clinique.bll.exception.BLLException;
-import fr.eni.clinique.bll.manager.impl.AnimalManagerImpl;
+import fr.eni.clinique.bll.factory.ManagerFactory;
+import fr.eni.clinique.bll.manager.AnimalManager;
 import fr.eni.clinique.bo.Animal;
 import fr.eni.clinique.bo.Client;
 import fr.eni.clinique.ihm.screen.animal.ScreenGestionAnimal;
@@ -11,11 +12,21 @@ import fr.eni.clinique.ihm.screen.client.ScreenClient;
 
 public class AnimalController {
 
-	private AnimalManagerImpl animalManager = new AnimalManagerImpl();
-	private ScreenGestionAnimal screenGestionAnimal = new ScreenGestionAnimal();
+	private AnimalManager animalManager;
+	ScreenGestionAnimal screenGestionAnimal;
+	
+	private static AnimalController instance;
+	
+    public static AnimalController getInstance() {
+        if(instance == null) {
+            instance = new AnimalController();
+        }
+        return instance;
+    }
 	
 	public AnimalController() {
 		
+		animalManager = ManagerFactory.animalManager();
 	}
 	
 	public List<Animal> getAnimauxOfClient(Client client) {
@@ -36,39 +47,50 @@ public class AnimalController {
 		Animal animal = new Animal();
 		animal.setCodeAnimal(-1);
 		animal.setClient(client);
-		screenGestionAnimal.initialize(animal);
+		screenGestionAnimal = new ScreenGestionAnimal(this, animal);
 	}
 	
 	public void createAnimalSubmit(Animal animal) {
 		
 		try {
+			System.out.println(animal);
 			animal = animalManager.insertAnimal(animal);
 		} catch (BLLException e) {
 			e.printStackTrace();
 		}
 		
-		ScreenClient.getInstance().update(null, animal.getClient());
+		Client client = animal.getClient();
+		try {
+			client.setAnimaux(animalManager.getAnimauxOfClient(client));
+		} catch (BLLException e) {
+			e.printStackTrace();
+		}
 		
+		ScreenClient.getInstance().update(null, animal.getClient());
+		screenGestionAnimal.hide();
 	}
 	
 	public void updateAnimalScreen(Animal animal) {
 
-		screenGestionAnimal.initialize(animal);
+		screenGestionAnimal = new ScreenGestionAnimal(this, animal);
 	}
 	
-	public Animal updateAnimalSubmit(Animal animal) {
+	public void updateAnimalSubmit(Animal animal) {
 		
 		try {
-			animal = animalManager.updateAnimal(animal);
+			animalManager.updateAnimal(animal);
 		} catch (BLLException e) {
 			e.printStackTrace();
 		}
 		
 		Client client = animal.getClient();
-		client.setAnimaux(animalManager.getAnimauxOfClient(client));
-		List<Animal> animaux = animalManager.getAnimauxOfClient(animal.getClient());
-		animal.getClient().setAnimaux(animaux);
-		ScreenClient.getInstance().update(null, animal.getClient().);
+		try {
+			client.setAnimaux(animalManager.getAnimauxOfClient(client));
+		} catch (BLLException e) {
+			e.printStackTrace();
+		}
+		ScreenClient.getInstance().update(null, client);
+		screenGestionAnimal.hide();
 	}
 	
 	public void deleteAnimal(Animal animal) {

@@ -64,6 +64,6 @@ public class DalTest {
 		Client client = clientDao.selectById(2);
 		List<Animal> animauxClient = animalDao.getAnimauxOfClient(client);
 		
-		System.out.println(animauxClient);
+		//System.out.println(animauxClient);
 	}
 }

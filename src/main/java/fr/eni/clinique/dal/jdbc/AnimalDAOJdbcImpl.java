@@ -16,10 +16,11 @@ import fr.eni.clinique.dal.exception.DalException;
 import fr.eni.clinique.dal.factory.MSSQLConnectionFactory;
 
 public class AnimalDAOJdbcImpl {
+	
     private final static String SELECT_BY_ID = "SELECT CodeAnimal, NomAnimal, Sexe, Couleur, Race, Espece, CodeClient, Tatouage, Antecedents, Archive FROM Animaux WHERE CodeAnimal = ?";
     private final static String SELECT_BY_CLIENT = "SELECT CodeAnimal, NomAnimal, Sexe, Couleur, Race, Espece, CodeClient, Tatouage, Antecedents, Archive FROM Animaux WHERE CodeClient = ?";
-    private final static String INSERT_QUERY = "INSERT INTO Animaux(NomAnimal, Sexe, Couleur, Race, Espece, CodeClient, Tatouage, Antecedents, Archive) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);";
-    private final static String UPDATE_QUERY = "UPDATE Animaux SET NomAnimal = ?, Sexe = ?, Couleur = ?, Race = ?, Espece = ?, CodeClient = ?, Tatouage = ?, Antecedents = ?, Archive = ? WHERE CodeAnimal = ?;";
+    private final static String INSERT_QUERY = "INSERT INTO Animaux(NomAnimal, Sexe, Couleur, Race, Espece, CodeClient, Tatouage, Antecedents, Archive) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    private final static String UPDATE_QUERY = "UPDATE Animaux SET NomAnimal = ?, Sexe = ?, Couleur = ?, Race = ?, Espece = ?, CodeClient = ?, Tatouage = ?, Antecedents = ?, Archive = ? WHERE CodeAnimal = ?";
     private final static String DELETE_QUERY = "DELETE FROM Animaux WHERE CodeAnimal = ?";
     
     private static AnimalDAOJdbcImpl SINGLETON = null;
@@ -38,6 +39,7 @@ public class AnimalDAOJdbcImpl {
     private Animal createAnimal(ResultSet resultSet, Client client) throws SQLException {
         
     	Animal animal = new Animal();
+    	animal.setCodeAnimal(resultSet.getInt("CodeAnimal"));
     	animal.setClient(client);
     	animal.setNomAnimal(resultSet.getString("NomAnimal"));
     	animal.setSexe(resultSet.getString("Sexe"));
@@ -60,19 +62,29 @@ public class AnimalDAOJdbcImpl {
         ResultSet resultSet = null;
         
         try {
+        	System.out.println("requete");
             connection = MSSQLConnectionFactory.get();
             
             statement = connection.prepareStatement(INSERT_QUERY, Statement.RETURN_GENERATED_KEYS);
 
             statement.setString(1, animal.getNomAnimal());
+        	System.out.println(animal.getNomAnimal());
             statement.setString(2, animal.getSexe());
+        	System.out.println(animal.getSexe());
             statement.setString(3, animal.getCouleur());
+        	System.out.println(animal.getCouleur());
             statement.setString(4, animal.getRace());
+        	System.out.println(animal.getRace());
             statement.setString(5, animal.getEspece());
+        	System.out.println(animal.getEspece());
             statement.setInt(6, animal.getClient().getCodeClient());
+        	System.out.println(animal.getClient().getCodeClient());
             statement.setString(7, animal.getTatouage());
+        	System.out.println(animal.getTatouage());
             statement.setString(8, animal.getAntecedents());
+        	System.out.println(animal.getAntecedents());
             statement.setBoolean(9, animal.isArchive());
+        	System.out.println(animal.isArchive());
             
             if (statement.executeUpdate() == 1) {
                 resultSet = statement.getGeneratedKeys();
@@ -89,13 +101,12 @@ public class AnimalDAOJdbcImpl {
         return animal;
     }
     
-    public Animal updateAnimal(Animal animal) throws DalException {
+    public void updateAnimal(Animal animal) throws DalException {
     	
     	ObjectUtil.checkNotNull(animal);
     	
     	Connection connection = null;
         PreparedStatement statement = null;
-        ResultSet resultSet = null;
         
         try {
             connection = MSSQLConnectionFactory.get();
@@ -112,18 +123,13 @@ public class AnimalDAOJdbcImpl {
             statement.setBoolean(9, animal.isArchive());
             statement.setInt(10, animal.getCodeAnimal());
             
-            resultSet = statement.executeQuery();
-            
-            if(resultSet.next()) {
-                animal = createAnimal(resultSet, animal.getClient());
-            }
-            
+            statement.executeQuery();
+
         } catch (SQLException e) {
             throw new DalException("Erreur d'execution de la requete UPDATE_QUERY Animal", e);
         } finally {
-            ResourceUtil.safeClose(connection, statement, resultSet);
+            ResourceUtil.safeClose(connection, statement);
         }
-        return animal;
     }
     
     public void deleteAnimal(Animal animal) throws DalException {

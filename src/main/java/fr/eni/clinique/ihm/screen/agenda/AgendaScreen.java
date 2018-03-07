@@ -178,7 +178,7 @@ public class AgendaScreen implements Observer {
 	
 	private void rechercheRdv(){
 		
-		System.out.println(listeVeto.getSelectedItem().toString()+" "+datePicker.getJFormattedTextField().getText());
+		//System.out.println(listeVeto.getSelectedItem().toString()+" "+datePicker.getJFormattedTextField().getText());
 		
 	}
 }

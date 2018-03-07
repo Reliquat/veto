@@ -12,7 +12,7 @@ public interface AnimalManager {
 	
 	Animal insertAnimal(Animal animal) throws BLLException;
 	
-	Animal updateAnimal(Animal animal) throws BLLException;
+	void updateAnimal(Animal animal) throws BLLException;
 	
 	void deleteAnimal(Animal animal) throws BLLException;
 }

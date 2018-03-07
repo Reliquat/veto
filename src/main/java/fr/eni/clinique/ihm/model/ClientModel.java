@@ -16,7 +16,7 @@ public class ClientModel extends Observable{
 	private ScreenRechercheClient rechercheScreen;
 	private ScreenClient screenClient = ScreenClient.getInstance();
     public void rechercherClient(List<Client> clients) {
-    	System.out.println(this.getClass()+" "+clients);
+    	//System.out.println(this.getClass()+" "+clients);
     	this.rechercheScreen.setResult(clients);
     }
 	
