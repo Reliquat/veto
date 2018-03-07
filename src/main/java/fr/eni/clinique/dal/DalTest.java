@@ -9,14 +9,14 @@ import fr.eni.clinique.dal.exception.DalException;
 import fr.eni.clinique.dal.factory.DaoFactory;
 import fr.eni.clinique.dal.jdbc.AnimalDAOJdbcImpl;
 import fr.eni.clinique.dal.jdbc.ClientDAOJdbcImpl;
-import fr.eni.clinique.dal.jdbc.ConnexionDAOJdbcImpl;
+import fr.eni.clinique.dal.jdbc.LoginDAOJdbcImpl;
 import fr.eni.clinique.dal.jdbc.PersonnelDAOJdbcImpl;
 
 public class DalTest {
 
 	public static void main(String[] args) throws DalException {
 
-		ConnexionDAOJdbcImpl connexionDao = DaoFactory.connexionDao();
+		LoginDAOJdbcImpl connexionDao = DaoFactory.connexionDao();
 		PersonnelDAOJdbcImpl personnelDao = DaoFactory.personnelDao();
 		AnimalDAOJdbcImpl animalDao = DaoFactory.animalDao();
 		ClientDAOJdbcImpl clientDao = DaoFactory.clientDao();

@@ -18,7 +18,6 @@ import fr.eni.clinique.dal.factory.MSSQLConnectionFactory;
 public class AnimalDAOJdbcImpl {
     private final static String SELECT_BY_ID = "SELECT CodeAnimal, NomAnimal, Sexe, Couleur, Race, Espece, CodeClient, Tatouage, Antecedents, Archive FROM Animaux WHERE CodeAnimal = ?";
     private final static String SELECT_BY_CLIENT = "SELECT CodeAnimal, NomAnimal, Sexe, Couleur, Race, Espece, CodeClient, Tatouage, Antecedents, Archive FROM Animaux WHERE CodeClient = ?";
-//    private final static String SELECT_ALL = "SELECT CodePers, Nom, MotPasse, Role, Archive FROM Personnels";
     private final static String INSERT_QUERY = "INSERT INTO Animaux(NomAnimal, Sexe, Couleur, Race, Espece, CodeClient, Tatouage, Antecedents, Archive) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);";
     private final static String UPDATE_QUERY = "UPDATE Animaux SET NomAnimal = ?, Sexe = ?, Couleur = ?, Race = ?, Espece = ?, CodeClient = ?, Tatouage = ?, Antecedents = ?, Archive = ? WHERE CodeAnimal = ?;";
     private final static String DELETE_QUERY = "DELETE FROM Animaux WHERE CodeAnimal = ?";
@@ -36,10 +35,10 @@ public class AnimalDAOJdbcImpl {
         return SINGLETON;
     }
     
-    private Animal createAnimal(ResultSet resultSet) throws SQLException {
+    private Animal createAnimal(ResultSet resultSet, Client client) throws SQLException {
         
     	Animal animal = new Animal();
-    	//animal.setClient(resultSet.get);
+    	animal.setClient(client);
     	animal.setNomAnimal(resultSet.getString("NomAnimal"));
     	animal.setSexe(resultSet.getString("Sexe"));
     	animal.setCouleur(resultSet.getString("Couleur"));
@@ -116,7 +115,7 @@ public class AnimalDAOJdbcImpl {
             resultSet = statement.executeQuery();
             
             if(resultSet.next()) {
-                animal = createAnimal(resultSet);
+                animal = createAnimal(resultSet, animal.getClient());
             }
             
         } catch (SQLException e) {
@@ -145,7 +144,7 @@ public class AnimalDAOJdbcImpl {
         }
     }
     
-    public Animal selectById(int CodeAnimal) throws DalException {
+    public Animal selectById(int CodeAnimal, Client client) throws DalException {
     	
     	Connection connection = null;
         PreparedStatement statement = null;
@@ -161,7 +160,7 @@ public class AnimalDAOJdbcImpl {
             resultSet = statement.executeQuery();
             
             if(resultSet.next()) {
-                animal = createAnimal(resultSet);
+                animal = createAnimal(resultSet, client);
             }
             
         } catch (SQLException e) {
@@ -187,7 +186,7 @@ public class AnimalDAOJdbcImpl {
             resultSet = statement.executeQuery();
             
             while (resultSet.next()) {
-                liste.add(createAnimal(resultSet));
+                liste.add(createAnimal(resultSet, client));
             }
 
         } catch(SQLException e) {
