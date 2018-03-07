@@ -98,4 +98,18 @@ public class PersonnelManagerImpl implements PersonnelManager{
             throw new TechnicalException(e.getMessage(), e);
         }
     }
+
+	@Override
+	public Personnel getListeVeto() throws BLLException {
+		Personnel personnel = new Personnel();
+        
+        try {
+            personnel = personnelDAO.selectByRole("vet");
+            
+        } catch (DalException e) {
+            throw new BLLException("Erreur récupération liste personnel", e);
+        }
+        
+        return personnel;
+	}
 }

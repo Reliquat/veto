@@ -2,11 +2,10 @@ package fr.eni.clinique;
 
 import javax.swing.SwingUtilities;
 
-import fr.eni.clinique.common.AppConstants;
 import fr.eni.clinique.common.exception.TechnicalException;
-import fr.eni.clinique.ihm.controller.LoginController;
-import fr.eni.clinique.ihm.model.LoginModel;
-import fr.eni.clinique.ihm.screen.login.LoginScreen;
+import fr.eni.clinique.ihm.controller.AgendaController;
+import fr.eni.clinique.ihm.model.AgendaModel;
+import fr.eni.clinique.ihm.screen.agenda.AgendaScreen;
 
 public class Main {
 	public static void main(String[] args) {
@@ -16,10 +15,10 @@ public class Main {
 	            @Override
 	            public void run() {
 	            	
-	            	LoginScreen.main(args);
+	            	/*LoginScreen.main(args);
 	            	
 	            	
-	            	/*LoginModel loginModel = new LoginModel();
+	            	LoginModel loginModel = new LoginModel();
 	            	LoginController loginController = new LoginController(loginModel);
 	            	
 	            	LoginScreen logScreen = new LoginScreen(AppConstants.APP_NAME);
@@ -31,6 +30,15 @@ public class Main {
 	                ScreenClient custScreen = new ScreenClient(AppConstants.APP_NAME);
 	                
 	                custScreen.main(args);*/
+	            	
+	            	AgendaModel agendaModel = new AgendaModel();
+	            	AgendaController agendaController = new AgendaController(agendaModel);
+	            	
+	            	AgendaScreen agendaScreen = new AgendaScreen();
+	            	
+	            	agendaScreen.frmAgenda.setVisible(true);
+	            	agendaScreen.frmAgenda.setLocationRelativeTo(null);
+	            	
 	            }
 	        });
 	    } catch (Exception e) {
