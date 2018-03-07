@@ -11,7 +11,7 @@ public interface ClientActionListener {
 	
 	void AjouterClient(Client client);
 	
-	void SupprimerClient(ClientActionEvent event) throws DalException;
+	void SupprimerClient(Client client) throws DalException;
 
 	void ValiderClient(ClientActionEvent event) throws DalException;
 	

@@ -54,19 +54,22 @@ public class ClientController implements ClientActionListener{
 	@Override
 	public void AjouterClient(Client client) {
 		
-		clientModel.ajouterClient(client);
+		try {
+			this.clientModel.ajouterClient(clientManager.addClient(client));
+		} catch (BLLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	@Override
-	public void SupprimerClient(ClientActionEvent event) throws DalException {
+	public void SupprimerClient(Client client) throws DalException {
 		
-		if(event.getClient().getCodeClient() != 0){
-			try {
-				clientManager.removeClient(event.getClient());
-			} catch (BLLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+		try {
+			this.clientManager.updateClient(client);
+		} catch (BLLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 

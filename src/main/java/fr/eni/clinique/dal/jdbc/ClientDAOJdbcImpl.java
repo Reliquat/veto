@@ -17,7 +17,7 @@ import fr.eni.clinique.dal.factory.MSSQLConnectionFactory;
 
 public class ClientDAOJdbcImpl {
 
-	private final static String SELECT_BY_NAME = "SELECT CodeClient, NomClient, PrenomClient, Adresse1, Adresse2, CodePostal, Ville, NumTel, Assurance, Email, Remarque, Archive FROM Clients WHERE NomClient = ?";
+	private final static String SELECT_BY_NAME = "SELECT CodeClient, NomClient, PrenomClient, Adresse1, Adresse2, CodePostal, Ville, NumTel, Assurance, Email, Remarque, Archive FROM Clients WHERE UPPER(NomClient) LIKE ?";
     private final static String SELECT_BY_ID = "SELECT CodeClient, NomClient, PrenomClient, Adresse1, Adresse2, CodePostal, Ville, NumTel, Assurance, Email, Remarque, Archive FROM Clients WHERE CodeClient = ?";
     private final static String SELECT_ALL = "SELECT CodeClient, NomClient, PrenomClient, Adresse1, Adresse2, CodePostal, Ville, NumTel, Assurance, Email, Remarque, Archive FROM Clients";
     private final static String INSERT_QUERY = "INSERT INTO Clients(NomClient, PrenomClient, Adresse1, Adresse2, CodePostal, Ville, NumTel, Assurance, Email, Remarque, Archive) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
@@ -94,7 +94,7 @@ public class ClientDAOJdbcImpl {
             connection = MSSQLConnectionFactory.get();
             statement = connection.prepareStatement(SELECT_BY_NAME);
             
-            statement.setString(1, name);
+            statement.setString(1, "%"+name.toUpperCase()+"%");
             
             resultSet = statement.executeQuery();
             
@@ -118,7 +118,7 @@ public class ClientDAOJdbcImpl {
     	Connection connection = null;
         PreparedStatement statement = null;
         ResultSet resultSet = null;
-        
+        System.out.println(client);
         try {
             connection = MSSQLConnectionFactory.get();
             statement = connection.prepareStatement(INSERT_QUERY, Statement.RETURN_GENERATED_KEYS);
