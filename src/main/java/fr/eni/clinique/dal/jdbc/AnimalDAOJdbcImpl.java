@@ -22,6 +22,7 @@ public class AnimalDAOJdbcImpl {
     private final static String INSERT_QUERY = "INSERT INTO Animaux(NomAnimal, Sexe, Couleur, Race, Espece, CodeClient, Tatouage, Antecedents, Archive) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
     private final static String UPDATE_QUERY = "UPDATE Animaux SET NomAnimal = ?, Sexe = ?, Couleur = ?, Race = ?, Espece = ?, CodeClient = ?, Tatouage = ?, Antecedents = ?, Archive = ? WHERE CodeAnimal = ?";
     private final static String DELETE_QUERY = "DELETE FROM Animaux WHERE CodeAnimal = ?";
+    private final static String SELECT_RACES = "SELECT DISTINCT Race FROM Races";
     
     private static AnimalDAOJdbcImpl SINGLETON = null;
     
@@ -150,7 +151,7 @@ public class AnimalDAOJdbcImpl {
         }
     }
     
-    public Animal selectById(int CodeAnimal, Client client) throws DalException {
+    public Animal selectById(int CodeAnimal) throws DalException {
     	
     	Connection connection = null;
         PreparedStatement statement = null;
@@ -166,6 +167,8 @@ public class AnimalDAOJdbcImpl {
             resultSet = statement.executeQuery();
             
             if(resultSet.next()) {
+            	Client client = new Client();
+            	client.setCodeClient(resultSet.getInt("CodeClient"));
                 animal = createAnimal(resultSet, client);
             }
             
