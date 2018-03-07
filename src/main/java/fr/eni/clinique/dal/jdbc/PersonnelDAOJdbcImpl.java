@@ -104,31 +104,29 @@ public class PersonnelDAOJdbcImpl {
         return personnel;
     }
     
-    public Personnel selectByRole(String role) throws DalException {
+    public List<Personnel> selectByRole(String role) throws DalException {
     	
     	Connection connection = null;
-        PreparedStatement statement = null;
+    	PreparedStatement statement = null;
         ResultSet resultSet = null;
-        Personnel personnel = null;
+        List<Personnel> liste = new ArrayList<Personnel>();
         
         try {
             connection = MSSQLConnectionFactory.get();
             statement = connection.prepareStatement(SELECT_BY_ROLE);
-            
             statement.setString(1, role);
-            
             resultSet = statement.executeQuery();
-            
-            if(resultSet.next()) {
-                personnel = createPersonnel(resultSet);
+
+            while (resultSet.next()) {
+                liste.add(createPersonnel(resultSet));
             }
-            
-        } catch (SQLException e) {
-            throw new DalException("Erreur d'execution de la requete SELECT BY ROLE Personnel", e);
+        } catch(SQLException e) {
+            throw new DalException(e.getMessage(), e);
         } finally {
             ResourceUtil.safeClose(connection, statement, resultSet);
         }
-        return personnel;
+        
+        return liste;
     }
     
     public List<Personnel> selectAll() throws DalException {

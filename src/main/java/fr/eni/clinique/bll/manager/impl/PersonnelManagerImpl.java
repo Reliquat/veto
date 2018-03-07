@@ -100,16 +100,16 @@ public class PersonnelManagerImpl implements PersonnelManager{
     }
 
 	@Override
-	public Personnel getListeVeto() throws BLLException {
-		Personnel personnel = new Personnel();
+	public List<Personnel> getListeVeto() throws BLLException {
+		List<Personnel> personnels = null;
         
         try {
-            personnel = personnelDAO.selectByRole("vet");
+            personnels = personnelDAO.selectByRole("vet");
             
         } catch (DalException e) {
             throw new BLLException("Erreur récupération liste personnel", e);
         }
         
-        return personnel;
+        return personnels;
 	}
 }

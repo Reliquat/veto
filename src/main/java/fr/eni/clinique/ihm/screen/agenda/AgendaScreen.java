@@ -8,11 +8,14 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.Properties;
 
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFormattedTextField.AbstractFormatter;
@@ -30,9 +33,9 @@ import org.jdatepicker.impl.JDatePanelImpl;
 import org.jdatepicker.impl.JDatePickerImpl;
 import org.jdatepicker.impl.UtilDateModel;
 
-import fr.eni.clinique.dal.jdbc.PersonnelDAOJdbcImpl;
-import fr.eni.clinique.ihm.controller.PersonnelController;
-import fr.eni.clinique.ihm.model.PersonnelModel;
+import fr.eni.clinique.bll.exception.BLLException;
+import fr.eni.clinique.bo.Personnel;
+import fr.eni.clinique.ihm.listener.AgendaActionListener;
 
 public class AgendaScreen implements Observer {
 	
@@ -45,9 +48,9 @@ public class AgendaScreen implements Observer {
 	private JDatePanelImpl datePanel;
 	private JDatePickerImpl datePicker;
 	private JComboBox listeVeto;
-	private PersonnelDAOJdbcImpl personnelDao;
-	private PersonnelModel personnelModel;
-	private PersonnelController personnelControl;
+	private AgendaActionListener agendaActionListener;
+	private List<Personnel> liste;
+	private int row;
 
 	/**
 	 * Launch the application.
@@ -65,6 +68,7 @@ public class AgendaScreen implements Observer {
 	 * Create the frame.
 	 */
 	private void initialize() {
+		
 		frmAgenda = new JFrame();
 		frmAgenda.setTitle("Agenda");
 		frmAgenda.setResizable(false);
@@ -74,9 +78,6 @@ public class AgendaScreen implements Observer {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		frmAgenda.setContentPane(contentPane);
 		contentPane.setLayout(null);
-		
-		personnelModel = new PersonnelModel();
-		personnelControl = new PersonnelController(personnelModel);
 		
 		JPanel panel = new JPanel();
 		FlowLayout flowLayout = (FlowLayout) panel.getLayout();
@@ -88,17 +89,13 @@ public class AgendaScreen implements Observer {
 		
 		JLabel lblNewLabel = new JLabel("V\u00E9t\u00E9rinaire");
 		panel.add(lblNewLabel);
-		
-		
-		
-		String[] test = {"oui","non","wesh"};
+
 		listeVeto = new JComboBox();
-		listeVeto.add(string);
 		listeVeto.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				
-				rechercheRdv();
+				System.out.println(listeVeto.getSelectedItem().toString()+" "+datePicker.getJFormattedTextField().getText());
 			}
 		});
 		
@@ -106,7 +103,6 @@ public class AgendaScreen implements Observer {
 		
 		JLabel lblDate = new JLabel("Date");
 		panel.add(lblDate);
-		
 		
 		this.tableModel = new AbstractFormatter() {
 			
@@ -137,7 +133,7 @@ public class AgendaScreen implements Observer {
         datePicker.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				rechercheRdv();
+				System.out.println(listeVeto.getSelectedItem().toString()+" "+datePicker.getJFormattedTextField().getText());
 			}
 		});
         
@@ -162,7 +158,7 @@ public class AgendaScreen implements Observer {
 		btnDossierMedical.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-				System.out.println("Dossier medical");
+				
 				DossierMedicalScreen dossierScreen = new DossierMedicalScreen();
 				dossierScreen.frmDossierMedical.setVisible(true);
 			}
@@ -172,13 +168,38 @@ public class AgendaScreen implements Observer {
 
 	@Override
 	public void update(Observable arg0, Object arg1) {
-		// TODO Auto-generated method stub
+
+		try {
+			liste = agendaActionListener.getListeVeto();
+		} catch (BLLException e) {
+			e.printStackTrace();
+		}
 		
+		List<String> listeNomP = new ArrayList();
+		
+		listeVeto.removeAllItems();
+		
+		for(Personnel p : liste)
+		{
+			listeVeto.addItem(p.getNom());
+		}
 	}
 	
-	private void rechercheRdv(){
-		
-		System.out.println(listeVeto.getSelectedItem().toString()+" "+datePicker.getJFormattedTextField().getText());
-		
+	public void setActionListener(AgendaActionListener agendaListener) {
+
+		if (agendaListener != null) {
+
+			this.agendaActionListener = agendaListener;
+
+			try {
+
+				// Fire Initialisation Event.
+				this.agendaActionListener.init();
+
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+
 	}
 }
