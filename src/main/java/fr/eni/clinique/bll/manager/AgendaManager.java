@@ -10,5 +10,7 @@ import fr.eni.clinique.bo.Personnel;
 public interface AgendaManager {
 
 	List<Agenda> getAgendaOfPersonnel(Personnel personnel, Date dateRdv) throws BLLException;
+
+	void ajoutRdv(Agenda agenda, Personnel personnel) throws BLLException;
 	
 }

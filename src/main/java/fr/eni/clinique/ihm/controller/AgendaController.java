@@ -9,10 +9,10 @@ import fr.eni.clinique.bll.manager.AgendaManager;
 import fr.eni.clinique.bll.manager.PersonnelManager;
 import fr.eni.clinique.bll.manager.impl.AgendaManagerImpl;
 import fr.eni.clinique.bll.manager.impl.PersonnelManagerImpl;
+import fr.eni.clinique.bo.Agenda;
 import fr.eni.clinique.bo.Personnel;
 import fr.eni.clinique.ihm.listener.AgendaActionListener;
 import fr.eni.clinique.ihm.model.AgendaModel;
-import fr.eni.clinique.ihm.model.PersonnelModel;
 
 public class AgendaController implements AgendaActionListener{
 
@@ -42,9 +42,16 @@ public class AgendaController implements AgendaActionListener{
 	}
 
 	@Override
-	public void getAgendaOfPersonnel(Personnel personnel, Date dateRdv) throws BLLException{
+	public List<Agenda> getAgendaOfPersonnel(Personnel personnel, Date dateRdv) throws BLLException{
 		
-		agendaManager.getAgendaOfPersonnel(personnel, dateRdv);
+		return agendaManager.getAgendaOfPersonnel(personnel, dateRdv);
+		
+	}
+
+	@Override
+	public List<Personnel> selectByName(String name) throws BLLException {
+		
+		return personnelManager.selectByName(name);
 		
 	}	
 }

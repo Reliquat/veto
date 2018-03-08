@@ -77,12 +77,14 @@ public class PersonnelDAOJdbcImpl {
         return personnel;
     }
     
-    public Personnel selectByName(String name) throws DalException {
+    public List<Personnel> selectByName(String name) throws DalException {
+    	
+    	System.out.println("Test 1");
     	
     	Connection connection = null;
         PreparedStatement statement = null;
         ResultSet resultSet = null;
-        Personnel personnel = null;
+        List<Personnel> personnels = new ArrayList<>();
         
         try {
             connection = MSSQLConnectionFactory.get();
@@ -93,7 +95,7 @@ public class PersonnelDAOJdbcImpl {
             resultSet = statement.executeQuery();
             
             if(resultSet.next()) {
-                personnel = createPersonnel(resultSet);
+                personnels.add(createPersonnel(resultSet));
             }
             
         } catch (SQLException e) {
@@ -101,7 +103,7 @@ public class PersonnelDAOJdbcImpl {
         } finally {
             ResourceUtil.safeClose(connection, statement, resultSet);
         }
-        return personnel;
+        return personnels;
     }
     
     public List<Personnel> selectByRole(String role) throws DalException {

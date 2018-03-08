@@ -1,9 +1,9 @@
 package fr.eni.clinique.bll.manager.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import fr.eni.clinique.bll.exception.BLLException;
-import fr.eni.clinique.bll.manager.LoginMger;
 import fr.eni.clinique.bll.manager.PersonnelManager;
 import fr.eni.clinique.bo.Personnel;
 import fr.eni.clinique.common.exception.TechnicalException;
@@ -108,6 +108,21 @@ public class PersonnelManagerImpl implements PersonnelManager{
             
         } catch (DalException e) {
             throw new BLLException("Erreur récupération liste personnel", e);
+        }
+        
+        return personnels;
+	}
+
+	@Override
+	public List<Personnel> selectByName(String name) throws BLLException {
+		System.out.println("Test 1");
+		List<Personnel> personnels = new ArrayList<>();
+        
+        try {
+            personnels = personnelDAO.selectByName(name);
+            
+        } catch (DalException e) {
+            throw new BLLException("Erreur récupération personnel", e);
         }
         
         return personnels;

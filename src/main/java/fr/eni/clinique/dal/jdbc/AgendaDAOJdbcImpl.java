@@ -19,6 +19,7 @@ import fr.eni.clinique.dal.factory.MSSQLConnectionFactory;
 public class AgendaDAOJdbcImpl {
 
     private final static String SELECT_BY_PERSONNEL_DATERDV = "SELECT CodeVeto, DateRdv, CodeAnimal FROM Agenda WHERE CodeVeto = ? AND convert(DATE,DateRdv) = ?";
+    private final static String INSERT_QUERY = "INSERT INTO Agenda(CodeVeto, DateRdv, CodeAnimal) VALUES (?, ?, ?);";
             
     private static AgendaDAOJdbcImpl SINGLETON = null;
     
@@ -33,7 +34,7 @@ public class AgendaDAOJdbcImpl {
         return SINGLETON;
     }
     
-    private Agenda createAgenda(ResultSet resultSet) throws SQLException {
+    public Agenda createAgenda(ResultSet resultSet) throws SQLException {
         
     	AnimalDAOJdbcImpl animalDao = DaoFactory.animalDao();
         Animal animal = new Animal();
@@ -45,9 +46,30 @@ public class AgendaDAOJdbcImpl {
 		} catch (DalException e) {
 			e.printStackTrace();
 		}
-    	agenda.setCodeAnimal(animal);
+    	agenda.setAnimal(animal);
 
         return agenda;
+    }
+    
+    public void ajoutAgenda(Agenda agenda, Personnel personnel) throws DalException {
+    	
+    	Connection connection = null;
+        PreparedStatement statement = null;
+        ResultSet resultSet = null;
+        
+        try {
+            connection = MSSQLConnectionFactory.get();
+            statement = connection.prepareStatement(INSERT_QUERY);
+            
+            statement.setInt(1, personnel.getCodePers());
+            statement.setDate(2, (java.sql.Date) agenda.getDateRdv());
+            statement.setInt(3, agenda.getAnimal().getCodeAnimal());
+            resultSet = statement.executeQuery();
+        } catch(SQLException e) {
+        	throw new DalException("Erreur d'execution de la requete SELECT BY PERSONNEL Agenda", e);
+        } finally {
+            ResourceUtil.safeClose(connection, statement, resultSet);
+        }
     }
 
     public List<Agenda> getAgendaOfPersonnel(Personnel personnel, Date dateRdv) throws DalException {

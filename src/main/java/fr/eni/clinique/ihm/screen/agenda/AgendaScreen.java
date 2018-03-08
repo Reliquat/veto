@@ -6,6 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -15,7 +16,6 @@ import java.util.Observable;
 import java.util.Observer;
 import java.util.Properties;
 
-import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFormattedTextField.AbstractFormatter;
@@ -34,7 +34,9 @@ import org.jdatepicker.impl.JDatePickerImpl;
 import org.jdatepicker.impl.UtilDateModel;
 
 import fr.eni.clinique.bll.exception.BLLException;
+import fr.eni.clinique.bo.Agenda;
 import fr.eni.clinique.bo.Personnel;
+import fr.eni.clinique.ihm.controller.PersonnelController;
 import fr.eni.clinique.ihm.listener.AgendaActionListener;
 
 public class AgendaScreen implements Observer {
@@ -43,12 +45,14 @@ public class AgendaScreen implements Observer {
 	public JFrame frmAgenda;
 	private JPanel contentPane;
 	private JTable rdvTable;
-	private AbstractFormatter tableModel;
+	private AbstractFormatter tableAbstract;
+	private DefaultTableModel tableModel;
 	private UtilDateModel model;
 	private JDatePanelImpl datePanel;
 	private JDatePickerImpl datePicker;
 	private JComboBox listeVeto;
 	private AgendaActionListener agendaActionListener;
+	private PersonnelController personnelController;
 	private List<Personnel> liste;
 	private int row;
 
@@ -94,7 +98,7 @@ public class AgendaScreen implements Observer {
 		listeVeto.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				
+				update(null,null);
 				System.out.println(listeVeto.getSelectedItem().toString()+" "+datePicker.getJFormattedTextField().getText());
 			}
 		});
@@ -104,7 +108,7 @@ public class AgendaScreen implements Observer {
 		JLabel lblDate = new JLabel("Date");
 		panel.add(lblDate);
 		
-		this.tableModel = new AbstractFormatter() {
+		this.tableAbstract = new AbstractFormatter() {
 			
 			private String datePattern = "yyyy-MM-dd";
 		    private SimpleDateFormat dateFormatter = new SimpleDateFormat(datePattern);
@@ -118,7 +122,6 @@ public class AgendaScreen implements Observer {
 		            Calendar cal = (Calendar) value;
 		            return dateFormatter.format(cal.getTime());
 		        }
-
 		        return "";
 		    }
 		};
@@ -129,10 +132,11 @@ public class AgendaScreen implements Observer {
 		p.put("text.month", "Month");
 		p.put("text.year", "Year");
         datePanel = new JDatePanelImpl(model, p);
-        datePicker = new JDatePickerImpl(datePanel, this.tableModel);
+        datePicker = new JDatePickerImpl(datePanel, this.tableAbstract);
         datePicker.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
+				update(null,null);
 				System.out.println(listeVeto.getSelectedItem().toString()+" "+datePicker.getJFormattedTextField().getText());
 			}
 		});
@@ -169,13 +173,14 @@ public class AgendaScreen implements Observer {
 	@Override
 	public void update(Observable arg0, Object arg1) {
 
+		List<Agenda> listeRdv = new ArrayList<>();
+		List<Personnel> personnels = new ArrayList<>();
+		
 		try {
 			liste = agendaActionListener.getListeVeto();
 		} catch (BLLException e) {
 			e.printStackTrace();
 		}
-		
-		List<String> listeNomP = new ArrayList();
 		
 		listeVeto.removeAllItems();
 		
@@ -183,7 +188,33 @@ public class AgendaScreen implements Observer {
 		{
 			listeVeto.addItem(p.getNom());
 		}
+		
+		
+		try {
+			System.out.println(listeVeto.getSelectedItem().toString());
+			personnels = agendaActionListener.selectByName(listeVeto.getSelectedItem().toString());
+			for(Personnel p : personnels){
+				System.out.println(datePicker.getJFormattedTextField().getText());
+				listeRdv = agendaActionListener.getAgendaOfPersonnel(p, Date.valueOf(datePicker.getJFormattedTextField().getText()));
+			}
+			
+		} catch (BLLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		this.tableModel.setRowCount(0);
+		for (Agenda agenda : listeRdv) {
+			this.tableModel.addRow(
+					new String[] { String.valueOf(agenda.getDateRdv()), agenda.getAnimal().getClient().getNomClient(), agenda.getAnimal().getNomAnimal(),
+							agenda.getAnimal().getRace()});
+		}
+		this.rdvTable.setModel(this.tableModel);
 	}
+
 	
 	public void setActionListener(AgendaActionListener agendaListener) {
 
@@ -193,7 +224,6 @@ public class AgendaScreen implements Observer {
 
 			try {
 
-				// Fire Initialisation Event.
 				this.agendaActionListener.init();
 
 			} catch (Exception e) {

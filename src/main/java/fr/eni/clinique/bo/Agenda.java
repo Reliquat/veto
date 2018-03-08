@@ -22,10 +22,10 @@ public class Agenda {
 	public void setDateRdv(Date dateRdv) {
 		this.dateRdv = dateRdv;
 	}
-	public Animal getCodeAnimal() {
+	public Animal getAnimal() {
 		return animal;
 	}
-	public void setCodeAnimal(Animal animal) {
+	public void setAnimal(Animal animal) {
 		this.animal = animal;
 	}
 
