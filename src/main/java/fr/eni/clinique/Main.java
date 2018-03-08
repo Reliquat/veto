@@ -41,6 +41,14 @@ public class Main {
 	            	agendaScreen.frmAgenda.setVisible(true);
 	            	agendaScreen.frmAgenda.setLocationRelativeTo(null);
 	            	
+	            	/*ScreenClient screenClient = new ScreenClient("Clients");
+	        		
+	        		ClientModel clientModel = new ClientModel();
+	        		ClientController clientController = new ClientController(clientModel);
+	        		
+	        		screenClient.setActionListener(clientController);*/
+	            	
+	            	
 	            }
 	        });
 	    } catch (Exception e) {

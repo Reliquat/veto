@@ -10,6 +10,7 @@ import fr.eni.clinique.ihm.screen.agenda.AgendaScreen;
 public class AgendaModel extends Observable{
 
 	private List<Personnel> personnels = new ArrayList<>();
+	
 	private AgendaScreen view = AgendaScreen.getInstance();
 	
 	public void loadPersonnel(List<Personnel> personnels) {

@@ -18,8 +18,10 @@ import fr.eni.clinique.dal.factory.MSSQLConnectionFactory;
 
 public class AgendaDAOJdbcImpl {
 
-    private final static String SELECT_BY_PERSONNEL_DATERDV = "SELECT CodeVeto, DateRdv, CodeAnimal FROM Agenda WHERE CodeVeto = ? AND convert(DATE,DateRdv) = ?";
-            
+    private final static String SELECT_BY_PERSONNEL_DATERDV = "SELECT CodeVeto, DateRdv, CodeAnimal FROM Agendas WHERE CodeVeto = ? AND DateRdv = CONVERT(SMALLDATETIME, ?, 102)";
+    private final static String INSERT_QUERY = "INSERT INTO Agendas(CodeVeto, DateRdv, CodeAnimal) VALUES (?, ?, ?);";
+    private final static String DELETE_QUERY = "DELETE FROM Agendas WHERE CodePers = ? AND CONVERT(SMALLDATETIME, DateRdv, 102) = ? AND CodeAnimal = ?";        
+    
     private static AgendaDAOJdbcImpl SINGLETON = null;
     
     private AgendaDAOJdbcImpl() {
@@ -33,7 +35,7 @@ public class AgendaDAOJdbcImpl {
         return SINGLETON;
     }
     
-    private Agenda createAgenda(ResultSet resultSet) throws SQLException {
+    public Agenda createAgenda(ResultSet resultSet) throws SQLException {
         
     	AnimalDAOJdbcImpl animalDao = DaoFactory.animalDao();
         Animal animal = new Animal();
@@ -45,12 +47,35 @@ public class AgendaDAOJdbcImpl {
 		} catch (DalException e) {
 			e.printStackTrace();
 		}
-    	agenda.setCodeAnimal(animal);
+    	agenda.setAnimal(animal);
 
         return agenda;
     }
+    
+    public void ajoutRdv(Agenda agenda, Personnel personnel) throws DalException {
+    	
+    	Connection connection = null;
+        PreparedStatement statement = null;
+        ResultSet resultSet = null;
+        
+        try {
+            connection = MSSQLConnectionFactory.get();
+            statement = connection.prepareStatement(INSERT_QUERY);
+            
+            statement.setInt(1, personnel.getCodePers());
+            statement.setDate(2,(Date) agenda.getDateRdv());
+            statement.setInt(3, agenda.getAnimal().getCodeAnimal());
+            resultSet = statement.executeQuery();
+        } catch(SQLException e) {
+        	throw new DalException("Erreur d'execution de la requete INSERT QUERY Agenda", e);
+        } finally {
+            ResourceUtil.safeClose(connection, statement, resultSet);
+        }
+    }
+    
+    
 
-    public List<Agenda> getAgendaOfPersonnel(Personnel personnel, Date dateRdv) throws DalException {
+    public List<Agenda> getRdvOfPersonnel(Personnel personnel, String dateRdv) throws DalException {
         
         Connection connection = null;
         PreparedStatement statement = null;
@@ -62,7 +87,7 @@ public class AgendaDAOJdbcImpl {
             statement = connection.prepareStatement(SELECT_BY_PERSONNEL_DATERDV);
             
             statement.setInt(1, personnel.getCodePers());
-            statement.setDate(2, dateRdv);
+            statement.setString(2, dateRdv);
             resultSet = statement.executeQuery();
             
             while (resultSet.next()) {
@@ -77,4 +102,26 @@ public class AgendaDAOJdbcImpl {
         
         return liste;
     }
+    
+    public void deleteRdv(Agenda agenda, Personnel personnel) throws DalException {
+    	
+        Connection connection = null;
+        PreparedStatement statement = null;
+        
+        try {
+            connection = MSSQLConnectionFactory.get();
+            statement = connection.prepareStatement(DELETE_QUERY);
+            statement.setInt(1, personnel.getCodePers());
+            statement.setDate(2,(Date) agenda.getDateRdv());
+            statement.setInt(3, agenda.getAnimal().getCodeAnimal());
+            statement.executeQuery();
+            
+        } catch(SQLException e) {
+        	throw new DalException("Erreur d'execution de la requete DELETE Agenda", e);
+        } finally {
+            ResourceUtil.safeClose(connection, statement);
+        }
+    	
+    }
+    
 }
