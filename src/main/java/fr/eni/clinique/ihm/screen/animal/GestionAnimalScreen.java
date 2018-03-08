@@ -20,7 +20,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
 
-public class ScreenGestionAnimal {
+public class GestionAnimalScreen {
 
 	private JFrame frame;
 	private JTextField textField_nom;
@@ -37,16 +37,11 @@ public class ScreenGestionAnimal {
 	private AnimalController animalController;
 	private String[] races;
 	private String[] especes;
-	
-	/**
-	 * Launch the application.
-	 */
-
 
 	/**
 	 * Create the application.
 	 */
-	public ScreenGestionAnimal(AnimalController animalController, Animal animal, List<String> races) {
+	public GestionAnimalScreen(AnimalController animalController, Animal animal, List<String> races) {
 		
 		this.animalController = animalController;
 		this.races = races.toArray(new String[races.size()]);
@@ -66,7 +61,6 @@ public class ScreenGestionAnimal {
 		
 		frame = new JFrame();
 		frame.setBounds(100, 100, 450, 316);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		frame.setResizable(false);
 		frame.setTitle("Ajouter/modifier un animal");

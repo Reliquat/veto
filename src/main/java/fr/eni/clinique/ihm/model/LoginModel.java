@@ -2,13 +2,13 @@ package fr.eni.clinique.ihm.model;
 
 import java.util.Observable;
 
-import fr.eni.clinique.ihm.screen.admin.adminScreen;
+import fr.eni.clinique.ihm.screen.admin.AdminScreen;
 
 public class LoginModel extends Observable{
 
 	public void ConnexionPage(){
 		
-		adminScreen adminScreen = new adminScreen();
+		AdminScreen adminScreen = new AdminScreen();
 		adminScreen.frmGestionDuPersonnel.setVisible(true);
 		
 		

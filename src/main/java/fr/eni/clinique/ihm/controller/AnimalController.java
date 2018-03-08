@@ -8,13 +8,13 @@ import fr.eni.clinique.bll.factory.ManagerFactory;
 import fr.eni.clinique.bll.manager.AnimalManager;
 import fr.eni.clinique.bo.Animal;
 import fr.eni.clinique.bo.Client;
-import fr.eni.clinique.ihm.screen.animal.ScreenGestionAnimal;
+import fr.eni.clinique.ihm.screen.animal.GestionAnimalScreen;
 import fr.eni.clinique.ihm.screen.client.ScreenClient;
 
 public class AnimalController {
 
 	private AnimalManager animalManager;
-	private ScreenGestionAnimal screenGestionAnimal;
+	private GestionAnimalScreen gestionAnimalScreen;
 	private List<String> races;
 	
 	private static AnimalController instance;
@@ -50,7 +50,7 @@ public class AnimalController {
 		animal.setCodeAnimal(-1);
 		animal.setClient(client);
 		races = getRaces();
-		screenGestionAnimal = new ScreenGestionAnimal(this, animal, races);
+		gestionAnimalScreen = new GestionAnimalScreen(this, animal, races);
 	}
 	
 	public void createAnimalSubmit(Animal animal) {
@@ -70,13 +70,13 @@ public class AnimalController {
 		}
 		
 		ScreenClient.getInstance().update(null, animal.getClient());
-		screenGestionAnimal.hide();
+		gestionAnimalScreen.hide();
 	}
 	
 	public void updateAnimalScreen(Animal animal) {
 
 		races = getRaces();
-		screenGestionAnimal = new ScreenGestionAnimal(this, animal, races);
+		gestionAnimalScreen = new GestionAnimalScreen(this, animal, races);
 	}
 	
 	public void updateAnimalSubmit(Animal animal) {
@@ -94,7 +94,7 @@ public class AnimalController {
 			e.printStackTrace();
 		}
 		ScreenClient.getInstance().update(null, client);
-		screenGestionAnimal.hide();
+		gestionAnimalScreen.hide();
 	}
 	
 	public void deleteAnimal(Animal animal) {
@@ -133,6 +133,6 @@ public class AnimalController {
 	}
 	
 	public void exitScreen() {
-		screenGestionAnimal.hide();
+		gestionAnimalScreen.hide();
 	}
 }

@@ -21,7 +21,7 @@ import fr.eni.clinique.common.util.ObjectUtil;
 import fr.eni.clinique.dal.exception.DalException;
 import fr.eni.clinique.ihm.controller.AnimalController;
 import fr.eni.clinique.ihm.listener.ClientActionListener;
-import fr.eni.clinique.ihm.screen.animal.ScreenGestionAnimal;
+import fr.eni.clinique.ihm.screen.animal.GestionAnimalScreen;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -67,7 +67,6 @@ public class ScreenClient extends JFrame implements Observer {
 	 * Create the application.
 	 */
 	public ScreenClient(String title) {
-		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setResizable(false);
 		setTitle(title);
 		activeInstance = this;
@@ -87,7 +86,6 @@ public class ScreenClient extends JFrame implements Observer {
 		frmClient.setResizable(false);
 		frmClient.setTitle("Client");
 		frmClient.setBounds(10, 11, 1074, 711);
-		frmClient.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmClient.getContentPane().setLayout(null);
 
 		panel = new JPanel();

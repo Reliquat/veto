@@ -72,7 +72,6 @@ public class AgendaScreen implements Observer {
 		frmAgenda = new JFrame();
 		frmAgenda.setTitle("Agenda");
 		frmAgenda.setResizable(false);
-		frmAgenda.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmAgenda.setBounds(100, 100, 673, 487);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));

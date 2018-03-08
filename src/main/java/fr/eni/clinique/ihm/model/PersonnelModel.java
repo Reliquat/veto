@@ -5,12 +5,12 @@ import java.util.List;
 import java.util.Observable;
 
 import fr.eni.clinique.bo.Personnel;
-import fr.eni.clinique.ihm.screen.admin.adminScreen;
+import fr.eni.clinique.ihm.screen.admin.AdminScreen;
 
 public class PersonnelModel extends Observable {
 
 	private List<Personnel> personnels = new ArrayList<>();
-	private adminScreen view = adminScreen.getInstance();
+	private AdminScreen view = AdminScreen.getInstance();
 	public boolean dataChanged;
 
 	public PersonnelModel() {

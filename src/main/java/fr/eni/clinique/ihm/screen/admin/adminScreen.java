@@ -20,9 +20,9 @@ import fr.eni.clinique.bo.Personnel;
 import fr.eni.clinique.ihm.listener.PersonnelActionListener;
 import java.awt.Color;
 
-public class adminScreen implements Observer {
+public class AdminScreen implements Observer {
 
-	private static adminScreen actualInstance;
+	private static AdminScreen actualInstance;
 	public JFrame frmGestionDuPersonnel;
 	private JTable table;
 	private DefaultTableModel tableModel;
@@ -32,12 +32,12 @@ public class adminScreen implements Observer {
 	/**
 	 * Create the application.
 	 */
-	public adminScreen() {
+	public AdminScreen() {
 		actualInstance = this;
 		initialize();
 	}
 	
-	public static adminScreen getInstance(){
+	public static AdminScreen getInstance(){
 		return actualInstance;
 	}
 	
@@ -46,7 +46,6 @@ public class adminScreen implements Observer {
 	 */
 	private void initialize() {
 		frmGestionDuPersonnel = new JFrame();
-		frmGestionDuPersonnel.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmGestionDuPersonnel.setResizable(false);
 		frmGestionDuPersonnel.setTitle("Gestion du personnel");
 		frmGestionDuPersonnel.setBounds(100, 100, 632, 520);
@@ -67,7 +66,7 @@ public class adminScreen implements Observer {
 				addScreen.frmAjouterDuPersonnel.setVisible(true);
 			}
 		});
-		addPersonnel.setIcon(new ImageIcon(adminScreen.class.getResource("/Images/plus.png")));
+		addPersonnel.setIcon(new ImageIcon(AdminScreen.class.getResource("/Images/plus.png")));
 		panel.add(addPersonnel);
 
 		JButton delete = new JButton("Supprimer");
@@ -77,19 +76,19 @@ public class adminScreen implements Observer {
 				new ConfirmDelete();
 			}
 		});
-		delete.setIcon(new ImageIcon(adminScreen.class.getResource("/Images/minus.png")));
+		delete.setIcon(new ImageIcon(AdminScreen.class.getResource("/Images/minus.png")));
 		panel.add(delete);
 
 		JButton resetPassword = new JButton("Réinitialiser");
 		resetPassword.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				adminScreen instance = adminScreen.getInstance();
+				AdminScreen instance = AdminScreen.getInstance();
 				
 				new resetPasswordDialog(instance.personnels.get(instance.table.getSelectedRow()));
 			}
 		});
-		resetPassword.setIcon(new ImageIcon(adminScreen.class.getResource("/Images/unlock.png")));
+		resetPassword.setIcon(new ImageIcon(AdminScreen.class.getResource("/Images/unlock.png")));
 		panel.add(resetPassword);
 		
 		JPanel panel_1 = new JPanel();

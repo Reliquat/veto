@@ -58,7 +58,7 @@ public class resetPasswordDialog extends JDialog {
 					@Override
 					public void mouseClicked(MouseEvent e) {
 						resetPasswordDialog currentInstance = resetPasswordDialog.getInstance();
-						adminScreen mainViewInstance = adminScreen.getInstance();
+						AdminScreen mainViewInstance = AdminScreen.getInstance();
 
 						if (!(currentInstance.newPassword.getPassword().length == 0)) {
 							String newPwString = "";

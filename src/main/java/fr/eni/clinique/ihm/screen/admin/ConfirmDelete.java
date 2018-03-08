@@ -42,7 +42,7 @@ public class ConfirmDelete extends JDialog {
 				okButton.addMouseListener(new MouseAdapter() {
 					@Override
 					public void mouseClicked(MouseEvent arg0) {
-						adminScreen.getInstance().deletePersonnel();
+						AdminScreen.getInstance().deletePersonnel();
 						ConfirmDelete.getInstance().dispose();
 					}
 				});

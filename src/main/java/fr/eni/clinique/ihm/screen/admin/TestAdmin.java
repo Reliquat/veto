@@ -26,7 +26,7 @@ try {
                     PersonnelController personnelController = new PersonnelController(personnelModel);
                     
                     // Create A admin View
-                    adminScreen screen = new adminScreen();
+                    AdminScreen screen = new AdminScreen();
                     
                     // The View Observes the Model.
                     personnelModel.addObserver(screen);
