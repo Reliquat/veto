@@ -1,14 +1,11 @@
 package fr.eni.clinique.ihm.screen.animal;
 
-import java.awt.EventQueue;
-import java.util.Observable;
-import java.util.Observer;
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
 
 import fr.eni.clinique.bo.Animal;
+import fr.eni.clinique.ihm.controller.AnimalController;
 
 import java.awt.Color;
 import javax.swing.JButton;
@@ -16,50 +13,57 @@ import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.JComboBox;
 import javax.swing.border.TitledBorder;
-import javax.swing.UIManager;
 
-public class ScreenGestionAnimal implements Observer {
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.List;
 
-	@Override
-	public void update(Observable o, Object arg) {
-
-		
-	}
+public class ScreenGestionAnimal {
 
 	private JFrame frame;
 	private JTextField textField_nom;
 	private JTextField textField_couleur;
 	private JTextField textField_tatouage;
-
+	private JLabel label_code_value;
+	@SuppressWarnings("rawtypes")
+	private JComboBox comboBox_sexe;
+	@SuppressWarnings("rawtypes")
+	private JComboBox comboBox_espece;
+	@SuppressWarnings("rawtypes")
+	private JComboBox comboBox_race;
+	private Animal animal;
+	private AnimalController animalController;
+	private String[] races;
+	private String[] especes;
+	
 	/**
 	 * Launch the application.
 	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					Animal animal = new Animal();
-					
-					ScreenGestionAnimal window = new ScreenGestionAnimal(animal);
-					window.frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+
 
 	/**
 	 * Create the application.
 	 */
-	public ScreenGestionAnimal(Animal animal) {
+	public ScreenGestionAnimal(AnimalController animalController, Animal animal, List<String> races) {
+		
+		this.animalController = animalController;
+		this.races = races.toArray(new String[races.size()]);
+		List<String> especesList = animalController.getEspecesFromRace(races.get(0));
+		this.especes = especesList.toArray(new String[especesList.size()]);
+		
 		initialize(animal);
 	}
 
 	/**
 	 * Initialize the contents of the frame.
 	 */
-	private void initialize(Animal animal) {
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	public void initialize(Animal animal) {
+
+		this.animal = animal;
+		
 		frame = new JFrame();
 		frame.setBounds(100, 100, 450, 316);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -73,9 +77,26 @@ public class ScreenGestionAnimal implements Observer {
 		frame.getContentPane().add(panel_buttons);
 		
 		JButton button_valider = new JButton("Valider");
+		button_valider.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				Animal animal = readAnimal();
+		        if (animal.getCodeAnimal() == -1) {
+		        	animalController.createAnimalSubmit(animal);
+		        } else {
+		        	animalController.updateAnimalSubmit(animal);
+		        }
+			}
+		});
 		panel_buttons.add(button_valider);
 		
 		JButton button_annuler = new JButton("Annuler");
+		button_annuler.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				animalController.exitScreen();
+			}
+		});
 		panel_buttons.add(button_annuler);
 		
 		JPanel panel_client_name = new JPanel();
@@ -90,7 +111,7 @@ public class ScreenGestionAnimal implements Observer {
 		panel_2.setBounds(10, 30, 394, 24);
 		panel_client_name.add(panel_2);
 		
-		JLabel label_client_value = new JLabel(String.valueOf(animal.getCodeAnimal()));
+		JLabel label_client_value = new JLabel(animal.getClient().getNomClient());
 		label_client_value.setBounds(10, 0, 39, 24);
 		panel_2.add(label_client_value);
 		
@@ -112,14 +133,14 @@ public class ScreenGestionAnimal implements Observer {
 		panel_animal_form.add(label_code);
 		
 		JLabel label_espece = new JLabel("Esp\u00E8ce");
-		label_espece.setBounds(10, 86, 72, 14);
+		label_espece.setBounds(243, 86, 32, 14);
 		panel_animal_form.add(label_espece);
 		
 		JLabel label_tatouage = new JLabel("Tatouage");
 		label_tatouage.setBounds(10, 111, 72, 14);
 		panel_animal_form.add(label_tatouage);
 		
-		JLabel label_code_value = new JLabel("50");
+		label_code_value = new JLabel(String.valueOf(animal.getCodeAnimal()));
 		label_code_value.setBounds(92, 11, 46, 14);
 		panel_animal_form.add(label_code_value);
 		
@@ -129,8 +150,8 @@ public class ScreenGestionAnimal implements Observer {
 		textField_nom.setBounds(92, 33, 332, 20);
 		panel_animal_form.add(textField_nom);
 		
-		String[] genres = {"Male", "Femelle", "Hermaphrodite"};
-		JComboBox comboBox_sexe = new JComboBox(genres);
+		String[] genres = {"M", "F", "H"};
+		comboBox_sexe = new JComboBox(genres);
 		comboBox_sexe.setBounds(278, 8, 146, 20);
 		comboBox_sexe.setSelectedIndex(0);
 		panel_animal_form.add(comboBox_sexe);
@@ -141,16 +162,28 @@ public class ScreenGestionAnimal implements Observer {
 		textField_couleur.setBounds(92, 58, 332, 20);
 		panel_animal_form.add(textField_couleur);
 		
-		JComboBox comboBox_espece = new JComboBox();
-		comboBox_espece.setBounds(92, 83, 141, 20);
+		//String[] especes = {"espece", "jhgj", "errg"};
+		comboBox_espece = new JComboBox(especes);
+		comboBox_espece.setBounds(278, 83, 146, 20);
 		panel_animal_form.add(comboBox_espece);
 		
 		JLabel label_race = new JLabel("Race");
-		label_race.setBounds(243, 86, 32, 14);
+		label_race.setBounds(10, 86, 72, 14);
 		panel_animal_form.add(label_race);
-		
-		JComboBox comboBox_race = new JComboBox();
-		comboBox_race.setBounds(278, 83, 146, 20);
+
+		//String[] races = {"race", "zebg", "cvxdhg"};
+		comboBox_race = new JComboBox(races);
+		comboBox_race.setBounds(92, 83, 141, 20);
+		comboBox_race.addActionListener (new ActionListener () {
+		    public void actionPerformed(ActionEvent e) {
+		    	List<String> especesList = animalController.getEspecesFromRace(comboBox_race.getSelectedItem().toString().trim());
+		    	especes = especesList.toArray(new String[especesList.size()]);
+		    	comboBox_espece.removeAllItems();
+		    	for (String item : especes) {
+		    		comboBox_espece.addItem(item);
+		        }
+		    }
+		});
 		panel_animal_form.add(comboBox_race);
 		
 		JLabel label_sexe = new JLabel("Sexe");
@@ -161,5 +194,28 @@ public class ScreenGestionAnimal implements Observer {
 		textField_tatouage.setColumns(10);
 		textField_tatouage.setBounds(92, 108, 332, 20);
 		panel_animal_form.add(textField_tatouage);
+		
+		this.frame.setVisible(true);
+	}
+	
+	private Animal readAnimal() {
+		
+		Animal animal = new Animal();
+		animal.setCodeAnimal(Integer.valueOf(label_code_value.getText().trim()));
+		animal.setClient(this.animal.getClient());
+    	animal.setNomAnimal(textField_nom.getText().trim());
+    	animal.setSexe(comboBox_sexe.getSelectedItem().toString().trim());
+    	animal.setCouleur(textField_couleur.getText().trim());
+    	animal.setRace(comboBox_race.getSelectedItem().toString().trim());
+    	animal.setEspece(comboBox_espece.getSelectedItem().toString().trim());
+    	animal.setTatouage(textField_tatouage.getText().trim());
+    	//animal.setAntecedents("");
+    	animal.setArchive(false);
+		
+		return animal;
+	}
+	
+	public void hide() {
+		this.frame.setVisible(false);
 	}
 }

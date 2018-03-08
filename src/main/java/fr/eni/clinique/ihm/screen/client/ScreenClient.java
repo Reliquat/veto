@@ -191,7 +191,7 @@ public class ScreenClient extends JFrame implements Observer {
 		btnAjouter_1.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				new AnimalController().insertAnimalScreen(client);
+				new AnimalController().createAnimalScreen(client);
 			}
 		});
 		btnAjouter_1.setIcon(new ImageIcon(ScreenClient.class.getResource("/Images/plus.png")));

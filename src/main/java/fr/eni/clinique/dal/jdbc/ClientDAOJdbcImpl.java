@@ -52,7 +52,7 @@ public class ClientDAOJdbcImpl {
         client.setEmail(resultSet.getString("Email"));
         client.setRemarque(resultSet.getString("Remarque"));
         client.setArchive(resultSet.getBoolean("Archive"));
-        System.out.println(client);
+        //System.out.println(client);
         return client;
     }
     
@@ -118,7 +118,7 @@ public class ClientDAOJdbcImpl {
     	Connection connection = null;
         PreparedStatement statement = null;
         ResultSet resultSet = null;
-        System.out.println(client);
+        //System.out.println(client);
         try {
             connection = MSSQLConnectionFactory.get();
             statement = connection.prepareStatement(INSERT_QUERY, Statement.RETURN_GENERATED_KEYS);
@@ -174,7 +174,7 @@ public class ClientDAOJdbcImpl {
             statement.setString(10, client.getRemarque());
             statement.setBoolean(11, client.getArchive());
             
-            statement.executeUpdate();
+            statement.executeQuery();
             
         } catch (SQLException e) {
             throw new DalException("Erreur d'execution de la requete SELECT BY NAME Client", e);

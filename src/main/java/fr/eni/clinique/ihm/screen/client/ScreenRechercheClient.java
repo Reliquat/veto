@@ -123,7 +123,7 @@ public class ScreenRechercheClient {
 		this.resultSearch = clients;
 		this.tableModel.setRowCount(0);
 		
-		System.out.println(this.getClass()+" "+clients);
+		//System.out.println(this.getClass()+" "+clients);
 		
 		for(Client client : this.resultSearch){
 			System.out.println("Dans le for.");

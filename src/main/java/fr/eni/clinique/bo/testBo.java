@@ -47,10 +47,10 @@ public class testBo {
 		client.setArchive(false);
 		client.setAnimaux(nanimaux);
 		
-		System.out.println(client);
-		System.out.println(nanimaux);
-		System.out.println(rdv);
-		System.out.println(personnel);
+//		System.out.println(client);
+//		System.out.println(nanimaux);
+//		System.out.println(rdv);
+//		System.out.println(personnel);
 	}
 
 }

@@ -19,7 +19,7 @@ import fr.eni.clinique.dal.factory.MSSQLConnectionFactory;
 public class AgendaDAOJdbcImpl {
 
     private final static String SELECT_BY_PERSONNEL_DATERDV = "SELECT CodeVeto, DateRdv, CodeAnimal FROM Agenda WHERE CodeVeto = ? AND convert(DATE,DateRdv) = ?";
-
+            
     private static AgendaDAOJdbcImpl SINGLETON = null;
     
     private AgendaDAOJdbcImpl() {

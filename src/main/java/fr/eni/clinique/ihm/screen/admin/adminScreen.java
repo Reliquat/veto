@@ -134,7 +134,7 @@ public class adminScreen implements Observer {
 		this.personnels.addAll(personnels);
 		this.tableModel.setRowCount(0);
 		for (Personnel personnel : this.personnels) {
-			System.out.println(personnel);
+			//System.out.println(personnel);
 			String[] dataTable = { personnel.getNom(), personnel.getRole(), personnel.getMotPasse() };
 			this.tableModel.addRow(dataTable);
 		}
