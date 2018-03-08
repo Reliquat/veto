@@ -19,8 +19,7 @@ import org.jdatepicker.impl.JDatePanelImpl;
 import org.jdatepicker.impl.JDatePickerImpl;
 import org.jdatepicker.impl.UtilDateModel;
 
-
-
+import fr.eni.clinique.bo.Agenda;
 import fr.eni.clinique.bo.Client;
 import fr.eni.clinique.bo.Personnel;
 
@@ -40,6 +39,10 @@ public class ScreenRdv extends JFrame {
 	private JTable table;
 	private List<Client> clients;
 	private List<Personnel> vetos;
+	private DefaultTableModel tableModel;
+	private JComboBox vetoCombo;
+	private JComboBox animalCombo;
+	private JComboBox clientCombo;
 	private static ScreenRdv curInstance;
 
 	/**
@@ -82,7 +85,7 @@ public class ScreenRdv extends JFrame {
 		contentPane.add(panel);
 		panel.setLayout(null);
 		
-		JComboBox clientCombo = new JComboBox();
+		clientCombo = new JComboBox();
 		clientCombo.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				
@@ -99,7 +102,7 @@ public class ScreenRdv extends JFrame {
 		lblAnimal.setBounds(47, 85, 46, 14);
 		panel.add(lblAnimal);
 		
-		JComboBox animalCombo = new JComboBox();
+		animalCombo = new JComboBox();
 		animalCombo.setBounds(47, 98, 28, 20);
 		panel.add(animalCombo);
 		
@@ -121,7 +124,7 @@ public class ScreenRdv extends JFrame {
 		lblVtrinaire.setBounds(37, 46, 58, 14);
 		panel_1.add(lblVtrinaire);
 		
-		JComboBox vetoCombo = new JComboBox();
+		vetoCombo = new JComboBox();
 		vetoCombo.setBounds(37, 60, 28, 20);
 		panel_1.add(vetoCombo);
 		
@@ -138,6 +141,9 @@ public class ScreenRdv extends JFrame {
 		UtilDateModel model = new UtilDateModel();
 		//model.setDate(20,04,2014);
 		// Need this...
+		System.out.println(Calendar.YEAR);
+		model.setDate(Calendar.getInstance().get(Calendar.YEAR), Calendar.MONTH, Calendar.DAY_OF_MONTH);
+		model.setSelected(true);
 		Properties p = new Properties();
 		p.put("text.today", "Today");
 		p.put("text.month", "Month");
@@ -146,11 +152,7 @@ public class ScreenRdv extends JFrame {
 		// Don't know about the formatter, but there it is...
 		AbstractFormatter labelFormatter = new AbstractFormatter(){
 
-			/**
-			 * 
-			 */
-			private static final long serialVersionUID = 1L;
-			private String datePattern = "yyyy-MM-dd";
+			private String datePattern = "dd/MM/yyyy";
 		    private SimpleDateFormat dateFormatter = new SimpleDateFormat(datePattern);
 
 		    @Override
@@ -181,7 +183,7 @@ public class ScreenRdv extends JFrame {
 		
 		JComboBox heureCombo = new JComboBox();
 		heureCombo.setModel(new DefaultComboBoxModel(new String[] {"00", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23"}));
-		heureCombo.setBounds(21, 120, 68, 20);
+		heureCombo.setBounds(43, 120, 46, 20);
 		panel_2.add(heureCombo);
 		
 		JLabel lblH = new JLabel("h");
@@ -197,14 +199,15 @@ public class ScreenRdv extends JFrame {
 		scrollPane.setBounds(10, 193, 788, 257);
 		contentPane.add(scrollPane);
 		
+		tableModel = new DefaultTableModel(
+				new Object[][] {
+				},
+				new String[] {
+					"Heure", "Nom du client", "Race", "Animal"
+				}
+			);
 		table = new JTable();
-		table.setModel(new DefaultTableModel(
-			new Object[][] {
-			},
-			new String[] {
-				"Heure", "Nom du client", "Race", "Animal"
-			}
-		));
+		table.setModel(tableModel);
 		scrollPane.setViewportView(table);
 		
 		JPanel panel_3 = new JPanel();
@@ -221,10 +224,33 @@ public class ScreenRdv extends JFrame {
 	public void init(List<Client> clients, List<Personnel> vetos){
 		this.clients = clients;
 		this.vetos = vetos;
+		clientCombo.removeAllItems();
+		for(Client client : clients){
+			clientCombo.addItem(client.getNomClient() + " " + client.getPrenomClient());
+		}
+		
+		vetoCombo.removeAllItems();
+		
+		for(Personnel veto : vetos){
+			vetoCombo.addItem(veto.getNom());
+		}
+		
 	}
 
 	public void setAgenda(Personnel personnel) {
 		// TODO Auto-generated method stub
+		this.tableModel.setRowCount(0);
 		
+		for(Agenda rdv : personnel.getRdv()){
+			this.tableModel.addRow(new String[]{
+				String.valueOf(rdv.getDateRdv().getHours() + ":" +rdv.getDateRdv().getMinutes()),
+				rdv.getCodeAnimal().getClient().getNomClient() + " " + rdv.getCodeAnimal().getClient().getPrenomClient(),
+				rdv.getCodeAnimal().getNomAnimal(),
+				rdv.getCodeAnimal().getEspece()
+			});
+		}
+		
+		this.table.setModel(this.tableModel);
+		this.tableModel.fireTableDataChanged();
 	}
 }

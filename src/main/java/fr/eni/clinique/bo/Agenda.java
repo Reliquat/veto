@@ -1,16 +1,17 @@
 package fr.eni.clinique.bo;
 
+import java.sql.Timestamp;
 import java.util.Date;
 
 public class Agenda {
-	private Date dateRdv;
+	private Timestamp dateRdv;
 	private Animal animal;
 	
 	public Agenda() {
 		super();
 	}
 
-	public Agenda(Date dateRdv, Animal animal) {
+	public Agenda(Timestamp dateRdv, Animal animal) {
 		super();
 		this.dateRdv = dateRdv;
 		this.animal = animal;
@@ -19,7 +20,7 @@ public class Agenda {
 	public Date getDateRdv() {
 		return dateRdv;
 	}
-	public void setDateRdv(Date dateRdv) {
+	public void setDateRdv(Timestamp dateRdv) {
 		this.dateRdv = dateRdv;
 	}
 	public Animal getCodeAnimal() {

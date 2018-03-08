@@ -1,6 +1,7 @@
 package fr.eni.clinique.bo;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Personnel {
 	private int codePers;
@@ -8,7 +9,7 @@ public class Personnel {
 	private String motPasse;
 	private String role;
 	private boolean archive;
-	private ArrayList<Agenda> rdv;
+	private List<Agenda> rdv;
 	
 	public Personnel() {
 		super();
@@ -52,11 +53,11 @@ public class Personnel {
 	public void setArchive(boolean archive) {
 		this.archive = archive;
 	}
-	public ArrayList<Agenda> getRdv() {
+	public List<Agenda> getRdv() {
 		return rdv;
 	}
-	public void setAgenda(ArrayList<Agenda> agenda) {
-		this.rdv = agenda;
+	public void setAgenda(List<Agenda> list) {
+		this.rdv = list;
 	}
 	@Override
 	public String toString() {

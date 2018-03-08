@@ -130,6 +130,7 @@ public class AdminScreen implements Observer {
 
 	private void refresh(ArrayList<Personnel> personnels) {
 		this.personnels.clear();
+		
 		this.personnels.addAll(personnels);
 		this.tableModel.setRowCount(0);
 		for (Personnel personnel : this.personnels) {
