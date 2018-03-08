@@ -13,8 +13,12 @@ import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.JComboBox;
 import javax.swing.border.TitledBorder;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.List;
 
 public class ScreenGestionAnimal {
 
@@ -23,11 +27,16 @@ public class ScreenGestionAnimal {
 	private JTextField textField_couleur;
 	private JTextField textField_tatouage;
 	private JLabel label_code_value;
+	@SuppressWarnings("rawtypes")
 	private JComboBox comboBox_sexe;
+	@SuppressWarnings("rawtypes")
 	private JComboBox comboBox_espece;
+	@SuppressWarnings("rawtypes")
 	private JComboBox comboBox_race;
 	private Animal animal;
 	private AnimalController animalController;
+	private String[] races;
+	private String[] especes;
 	
 	/**
 	 * Launch the application.
@@ -37,14 +46,20 @@ public class ScreenGestionAnimal {
 	/**
 	 * Create the application.
 	 */
-	public ScreenGestionAnimal(AnimalController animalController, Animal animal) {
+	public ScreenGestionAnimal(AnimalController animalController, Animal animal, List<String> races) {
+		
 		this.animalController = animalController;
+		this.races = races.toArray(new String[races.size()]);
+		List<String> especesList = animalController.getEspecesFromRace(races.get(0));
+		this.especes = especesList.toArray(new String[especesList.size()]);
+		
 		initialize(animal);
 	}
 
 	/**
 	 * Initialize the contents of the frame.
 	 */
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public void initialize(Animal animal) {
 
 		this.animal = animal;
@@ -73,10 +88,15 @@ public class ScreenGestionAnimal {
 		        }
 			}
 		});
-
 		panel_buttons.add(button_valider);
 		
 		JButton button_annuler = new JButton("Annuler");
+		button_annuler.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				animalController.exitScreen();
+			}
+		});
 		panel_buttons.add(button_annuler);
 		
 		JPanel panel_client_name = new JPanel();
@@ -113,7 +133,7 @@ public class ScreenGestionAnimal {
 		panel_animal_form.add(label_code);
 		
 		JLabel label_espece = new JLabel("Esp\u00E8ce");
-		label_espece.setBounds(10, 86, 72, 14);
+		label_espece.setBounds(243, 86, 32, 14);
 		panel_animal_form.add(label_espece);
 		
 		JLabel label_tatouage = new JLabel("Tatouage");
@@ -142,18 +162,28 @@ public class ScreenGestionAnimal {
 		textField_couleur.setBounds(92, 58, 332, 20);
 		panel_animal_form.add(textField_couleur);
 		
-		String[] especes = {"espece", "jhgj", "errg"};
+		//String[] especes = {"espece", "jhgj", "errg"};
 		comboBox_espece = new JComboBox(especes);
-		comboBox_espece.setBounds(92, 83, 141, 20);
+		comboBox_espece.setBounds(278, 83, 146, 20);
 		panel_animal_form.add(comboBox_espece);
 		
 		JLabel label_race = new JLabel("Race");
-		label_race.setBounds(243, 86, 32, 14);
+		label_race.setBounds(10, 86, 72, 14);
 		panel_animal_form.add(label_race);
 
-		String[] races = {"race", "zebg", "cvxdhg"};
+		//String[] races = {"race", "zebg", "cvxdhg"};
 		comboBox_race = new JComboBox(races);
-		comboBox_race.setBounds(278, 83, 146, 20);
+		comboBox_race.setBounds(92, 83, 141, 20);
+		comboBox_race.addActionListener (new ActionListener () {
+		    public void actionPerformed(ActionEvent e) {
+		    	List<String> especesList = animalController.getEspecesFromRace(comboBox_race.getSelectedItem().toString().trim());
+		    	especes = especesList.toArray(new String[especesList.size()]);
+		    	comboBox_espece.removeAllItems();
+		    	for (String item : especes) {
+		    		comboBox_espece.addItem(item);
+		        }
+		    }
+		});
 		panel_animal_form.add(comboBox_race);
 		
 		JLabel label_sexe = new JLabel("Sexe");
@@ -179,7 +209,7 @@ public class ScreenGestionAnimal {
     	animal.setRace(comboBox_race.getSelectedItem().toString().trim());
     	animal.setEspece(comboBox_espece.getSelectedItem().toString().trim());
     	animal.setTatouage(textField_tatouage.getText().trim());
-    	animal.setAntecedents("");
+    	//animal.setAntecedents("");
     	animal.setArchive(false);
 		
 		return animal;

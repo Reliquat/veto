@@ -1,5 +1,6 @@
 package fr.eni.clinique.ihm.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import fr.eni.clinique.bll.exception.BLLException;
@@ -13,7 +14,8 @@ import fr.eni.clinique.ihm.screen.client.ScreenClient;
 public class AnimalController {
 
 	private AnimalManager animalManager;
-	ScreenGestionAnimal screenGestionAnimal;
+	private ScreenGestionAnimal screenGestionAnimal;
+	private List<String> races;
 	
 	private static AnimalController instance;
 	
@@ -47,7 +49,8 @@ public class AnimalController {
 		Animal animal = new Animal();
 		animal.setCodeAnimal(-1);
 		animal.setClient(client);
-		screenGestionAnimal = new ScreenGestionAnimal(this, animal);
+		races = getRaces();
+		screenGestionAnimal = new ScreenGestionAnimal(this, animal, races);
 	}
 	
 	public void createAnimalSubmit(Animal animal) {
@@ -72,7 +75,8 @@ public class AnimalController {
 	
 	public void updateAnimalScreen(Animal animal) {
 
-		screenGestionAnimal = new ScreenGestionAnimal(this, animal);
+		races = getRaces();
+		screenGestionAnimal = new ScreenGestionAnimal(this, animal, races);
 	}
 	
 	public void updateAnimalSubmit(Animal animal) {
@@ -100,5 +104,35 @@ public class AnimalController {
 		} catch (BLLException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public List<String> getRaces() {
+		
+		List<String> races = new ArrayList<String>();
+		
+		try {
+			races = animalManager.getRaces();
+		} catch (BLLException e) {
+			e.printStackTrace();
+		}
+		
+		return races;
+	}
+	
+	public List<String> getEspecesFromRace(String race) {
+		
+		List<String> especes = new ArrayList<String>();
+		
+		try {
+			especes = animalManager.getEspecesByRace(race);
+		} catch (BLLException e) {
+			e.printStackTrace();
+		}
+		
+		return especes;
+	}
+	
+	public void exitScreen() {
+		screenGestionAnimal.hide();
 	}
 }
