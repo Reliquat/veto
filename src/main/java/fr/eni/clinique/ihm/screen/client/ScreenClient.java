@@ -20,13 +20,15 @@ import fr.eni.clinique.bo.Client;
 import fr.eni.clinique.common.util.ObjectUtil;
 import fr.eni.clinique.dal.exception.DalException;
 import fr.eni.clinique.ihm.controller.AnimalController;
+import fr.eni.clinique.ihm.controller.ClientController;
 import fr.eni.clinique.ihm.listener.ClientActionListener;
+import fr.eni.clinique.ihm.model.ClientModel;
 import fr.eni.clinique.ihm.screen.animal.ScreenGestionAnimal;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-// TODO 171
+
 
 public class ScreenClient extends JFrame implements Observer {
 
@@ -75,6 +77,12 @@ public class ScreenClient extends JFrame implements Observer {
 	}
 
 	public static ScreenClient getInstance() {
+		if (activeInstance == null){
+			activeInstance = new ScreenClient("Clients");
+			ClientModel clientModel = new ClientModel();
+			ClientController clientController = new ClientController(clientModel);
+			activeInstance.setActionListener(clientController);
+		}
 		return activeInstance;
 	}
 
@@ -397,5 +405,9 @@ public class ScreenClient extends JFrame implements Observer {
 	public void addClient(Client newClient) {
 		this.actionListener.AjouterClient(newClient);
 		
+	}
+	
+	public void setVisible(Boolean visible){
+		this.frmClient.setVisible(visible);
 	}
 }
