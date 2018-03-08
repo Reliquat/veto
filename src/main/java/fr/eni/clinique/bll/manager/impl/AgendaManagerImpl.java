@@ -33,7 +33,7 @@ public class AgendaManagerImpl implements AgendaManager{
     }
 	
 	@Override
-	public List<Agenda> getAgendaOfPersonnel(Personnel personnel, Date dateRdv) throws BLLException {
+	public List<Agenda> getAgendaOfPersonnel(Personnel personnel, String dateRdv) throws BLLException {
 		
 		agendaScreen = AgendaScreen.getInstance();
 		List<Agenda> agenda = null;
@@ -41,7 +41,7 @@ public class AgendaManagerImpl implements AgendaManager{
 		Client client = null;
 		
 		try {
-			agenda = agendaDao.getAgendaOfPersonnel(personnel, dateRdv);
+			agenda = agendaDao.getRdvOfPersonnel(personnel, dateRdv);
 			for(Agenda a : agenda){
 				animal = animalDao.selectById(a.getAnimal().getCodeAnimal());
 				animal.setClient(clientDao.selectById(animal.getClient().getCodeClient()));
@@ -58,13 +58,24 @@ public class AgendaManagerImpl implements AgendaManager{
 	public void ajoutRdv(Agenda agenda, Personnel personnel) throws BLLException {
 		
 		try {
-			agendaDao.ajoutAgenda(agenda, personnel);
+			agendaDao.ajoutRdv(agenda, personnel);
 		} catch (DalException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
 		
+	}
+
+	@Override
+	public void deleteRdv(Agenda agenda, Personnel personnel) throws BLLException {
+		// TODO Auto-generated method stub
+		try {
+			agendaDao.deleteRdv(agenda, personnel);
+		} catch (DalException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	

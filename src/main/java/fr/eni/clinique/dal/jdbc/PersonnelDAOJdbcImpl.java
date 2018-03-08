@@ -79,8 +79,6 @@ public class PersonnelDAOJdbcImpl {
     
     public List<Personnel> selectByName(String name) throws DalException {
     	
-    	System.out.println("Test 1");
-    	
     	Connection connection = null;
         PreparedStatement statement = null;
         ResultSet resultSet = null;

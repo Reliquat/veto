@@ -57,7 +57,6 @@ public class PersonnelController implements PersonnelActionListener{
 
 	@Override
 	public List<Personnel> selectByName(String name) throws Exception {
-		System.out.println("Test 1");
 		List<Personnel> personnels = new ArrayList<>();
 		
 		personnels = personnelManager.selectByName(name);

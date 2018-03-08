@@ -115,7 +115,6 @@ public class PersonnelManagerImpl implements PersonnelManager{
 
 	@Override
 	public List<Personnel> selectByName(String name) throws BLLException {
-		System.out.println("Test 1");
 		List<Personnel> personnels = new ArrayList<>();
         
         try {

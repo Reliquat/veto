@@ -42,7 +42,7 @@ public class AgendaController implements AgendaActionListener{
 	}
 
 	@Override
-	public List<Agenda> getAgendaOfPersonnel(Personnel personnel, Date dateRdv) throws BLLException{
+	public List<Agenda> getAgendaOfPersonnel(Personnel personnel, String dateRdv) throws BLLException{
 		
 		return agendaManager.getAgendaOfPersonnel(personnel, dateRdv);
 		
@@ -53,5 +53,17 @@ public class AgendaController implements AgendaActionListener{
 		
 		return personnelManager.selectByName(name);
 		
+	}
+
+	@Override
+	public void ajoutRdv(Agenda agenda, Personnel personnel) throws BLLException {
+		// TODO Auto-generated method stub
+		agendaManager.ajoutRdv(agenda, personnel);
+	}
+
+	@Override
+	public void deleteRdv(Agenda agenda, Personnel personnel) throws BLLException {
+		// TODO Auto-generated method stub
+		agendaManager.deleteRdv(agenda, personnel);
 	}	
 }

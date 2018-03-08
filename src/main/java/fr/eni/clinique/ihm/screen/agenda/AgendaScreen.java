@@ -53,13 +53,14 @@ public class AgendaScreen implements Observer {
 	private JComboBox listeVeto;
 	private AgendaActionListener agendaActionListener;
 	private PersonnelController personnelController;
-	private List<Personnel> liste;
+	private List<Personnel> liste = new ArrayList<>();
 	private int row;
 
 	/**
 	 * Launch the application.
 	 */
 	public AgendaScreen() {
+		this.tableModel = new DefaultTableModel();
 		actualInstance = this;
 		initialize();
 	}
@@ -99,7 +100,6 @@ public class AgendaScreen implements Observer {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				update(null,null);
-				System.out.println(listeVeto.getSelectedItem().toString()+" "+datePicker.getJFormattedTextField().getText());
 			}
 		});
 		
@@ -137,7 +137,6 @@ public class AgendaScreen implements Observer {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				update(null,null);
-				System.out.println(listeVeto.getSelectedItem().toString()+" "+datePicker.getJFormattedTextField().getText());
 			}
 		});
         
@@ -148,6 +147,7 @@ public class AgendaScreen implements Observer {
 		contentPane.add(scrollPane);
 		
 		rdvTable = new JTable();
+		rdvTable.setFillsViewportHeight(true);
 		rdvTable.setModel(new DefaultTableModel(
 			new Object[][] {
 			},
@@ -177,6 +177,43 @@ public class AgendaScreen implements Observer {
 		List<Personnel> personnels = new ArrayList<>();
 		
 		try {
+			System.out.println(listeVeto.getSelectedItem().toString());
+			personnels = agendaActionListener.selectByName(listeVeto.getSelectedItem().toString());
+			System.out.println(personnels);
+			for(Personnel p : personnels){
+				System.out.println(datePicker.getJFormattedTextField().getText());
+				if (datePicker.getJFormattedTextField().getText() == null) {
+					Calendar today = Calendar.getInstance();
+					listeRdv = agendaActionListener.getAgendaOfPersonnel(p, today.getTime().toString());
+				}
+				else {
+					String date = datePicker.getJFormattedTextField().getText();
+					listeRdv = agendaActionListener.getAgendaOfPersonnel(p,date);
+				}
+			}
+			
+		} catch (BLLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		System.out.println(listeRdv);
+		DefaultTableModel newModel = (DefaultTableModel) rdvTable.getModel();
+		newModel.setRowCount(0);
+		for (Agenda agenda : listeRdv) {
+			newModel.addRow(
+					new String[] { String.valueOf(agenda.getDateRdv()), agenda.getAnimal().getClient().getNomClient(), agenda.getAnimal().getNomAnimal(),
+							agenda.getAnimal().getRace()});
+			System.out.println(String.valueOf(agenda.getDateRdv())+ agenda.getAnimal().getClient().getNomClient()+ agenda.getAnimal().getNomAnimal()+agenda.getAnimal().getRace());
+		}
+		//this.rdvTable.setModel(this.tableModel);
+	}
+
+	public void updateComboVeto(){
+		
+		try {
 			liste = agendaActionListener.getListeVeto();
 		} catch (BLLException e) {
 			e.printStackTrace();
@@ -189,38 +226,14 @@ public class AgendaScreen implements Observer {
 			listeVeto.addItem(p.getNom());
 		}
 		
-		
-		try {
-			System.out.println(listeVeto.getSelectedItem().toString());
-			personnels = agendaActionListener.selectByName(listeVeto.getSelectedItem().toString());
-			for(Personnel p : personnels){
-				System.out.println(datePicker.getJFormattedTextField().getText());
-				listeRdv = agendaActionListener.getAgendaOfPersonnel(p, Date.valueOf(datePicker.getJFormattedTextField().getText()));
-			}
-			
-		} catch (BLLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		this.tableModel.setRowCount(0);
-		for (Agenda agenda : listeRdv) {
-			this.tableModel.addRow(
-					new String[] { String.valueOf(agenda.getDateRdv()), agenda.getAnimal().getClient().getNomClient(), agenda.getAnimal().getNomAnimal(),
-							agenda.getAnimal().getRace()});
-		}
-		this.rdvTable.setModel(this.tableModel);
 	}
-
 	
 	public void setActionListener(AgendaActionListener agendaListener) {
 
 		if (agendaListener != null) {
 
 			this.agendaActionListener = agendaListener;
+			updateComboVeto();
 
 			try {
 
@@ -229,7 +242,7 @@ public class AgendaScreen implements Observer {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-		}
 
+		}
 	}
 }

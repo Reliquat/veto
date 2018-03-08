@@ -13,8 +13,12 @@ public interface AgendaActionListener {
 	
 	List<Personnel> getListeVeto() throws BLLException ;
 	
-	List<Agenda> getAgendaOfPersonnel(Personnel personnel, Date dateRdv) throws BLLException ;
+	List<Agenda> getAgendaOfPersonnel(Personnel personnel, String dateRdv) throws BLLException ;
 	
 	List<Personnel> selectByName(String name) throws BLLException ;
+	
+	void ajoutRdv(Agenda agenda, Personnel personnel) throws BLLException ;
+	
+	void deleteRdv(Agenda agenda, Personnel personnel) throws BLLException ;
 	
 }

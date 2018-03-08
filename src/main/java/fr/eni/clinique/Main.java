@@ -3,12 +3,9 @@ package fr.eni.clinique;
 import javax.swing.SwingUtilities;
 
 import fr.eni.clinique.common.exception.TechnicalException;
-import fr.eni.clinique.ihm.controller.AnimalController;
-import fr.eni.clinique.ihm.controller.ClientController;
-import fr.eni.clinique.ihm.model.AnimalModel;
-import fr.eni.clinique.ihm.model.ClientModel;
-import fr.eni.clinique.ihm.screen.animal.ScreenGestionAnimal;
-import fr.eni.clinique.ihm.screen.client.ScreenClient;
+import fr.eni.clinique.ihm.controller.AgendaController;
+import fr.eni.clinique.ihm.model.AgendaModel;
+import fr.eni.clinique.ihm.screen.agenda.AgendaScreen;
 
 public class Main {
 	public static void main(String[] args) {
@@ -34,7 +31,7 @@ public class Main {
 	                
 	                custScreen.main(args);*/
 	            	
-	            	/*AgendaScreen agendaScreen = new AgendaScreen();
+	            	AgendaScreen agendaScreen = new AgendaScreen();
 	            	
 	            	AgendaModel agendaModel = new AgendaModel();
 	            	AgendaController agendaController = new AgendaController(agendaModel);
@@ -42,14 +39,14 @@ public class Main {
 	            	agendaScreen.setActionListener(agendaController);
 	            	
 	            	agendaScreen.frmAgenda.setVisible(true);
-	            	agendaScreen.frmAgenda.setLocationRelativeTo(null);*/
+	            	agendaScreen.frmAgenda.setLocationRelativeTo(null);
 	            	
-	            	ScreenClient screenClient = new ScreenClient("Clients");
+	            	/*ScreenClient screenClient = new ScreenClient("Clients");
 	        		
 	        		ClientModel clientModel = new ClientModel();
 	        		ClientController clientController = new ClientController(clientModel);
 	        		
-	        		screenClient.setActionListener(clientController);
+	        		screenClient.setActionListener(clientController);*/
 	            	
 	            	
 	            }
