@@ -23,6 +23,7 @@ public class AnimalDAOJdbcImpl {
     private final static String UPDATE_QUERY = "UPDATE Animaux SET NomAnimal = ?, Sexe = ?, Couleur = ?, Race = ?, Espece = ?, CodeClient = ?, Tatouage = ?, Antecedents = ?, Archive = ? WHERE CodeAnimal = ?";
     private final static String DELETE_QUERY = "DELETE FROM Animaux WHERE CodeAnimal = ?";
     private final static String SELECT_RACES = "SELECT DISTINCT Race FROM Races";
+    private final static String SELECT_ESPECES_BY_RACE = "SELECT Espece FROM Races WHERE Race = ?";
     
     private static AnimalDAOJdbcImpl SINGLETON = null;
     
@@ -205,5 +206,58 @@ public class AnimalDAOJdbcImpl {
         }
         
         return liste;
+    }
+    
+    public List<String> getRaces() throws DalException {
+    	
+        Connection connection = null;
+        PreparedStatement statement = null;
+        ResultSet resultSet = null;
+        List<String> races = new ArrayList<String>();
+        
+        try {
+            connection = MSSQLConnectionFactory.get();
+            statement = connection.prepareStatement(SELECT_RACES);
+            
+            resultSet = statement.executeQuery();
+            
+            while (resultSet.next()) {
+                races.add(resultSet.getString("Race"));
+            }
+
+        } catch(SQLException e) {
+        	throw new DalException("Erreur d'execution de la requete SELECT races", e);
+        } finally {
+            ResourceUtil.safeClose(connection, statement, resultSet);
+        }
+        
+        return races;
+    }
+    
+    public List<String> getEspecesByRace(String race) throws DalException {
+    	
+        Connection connection = null;
+        PreparedStatement statement = null;
+        ResultSet resultSet = null;
+        List<String> especes = new ArrayList<String>();
+        
+        try {
+            connection = MSSQLConnectionFactory.get();
+            statement = connection.prepareStatement(SELECT_ESPECES_BY_RACE);
+
+            statement.setString(1, race);
+            resultSet = statement.executeQuery();
+            
+            while (resultSet.next()) {
+            	especes.add(resultSet.getString("Espece"));
+            }
+
+        } catch(SQLException e) {
+        	throw new DalException("Erreur d'execution de la requete SELECT especes by race", e);
+        } finally {
+            ResourceUtil.safeClose(connection, statement, resultSet);
+        }
+        
+        return especes;
     }
 }

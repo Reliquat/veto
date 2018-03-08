@@ -75,4 +75,22 @@ public class AnimalManagerImpl implements AnimalManager {
 		
 		return animal;
 	}
+
+	@Override
+	public List<String> getRaces() throws BLLException {
+		try {
+			return animalDao.getRaces();
+		} catch (DalException e) {
+            throw new BLLException("Erreur get races", e);
+		}
+	}
+
+	@Override
+	public List<String> getEspecesByRace(String race) throws BLLException {
+		try {
+			return animalDao.getEspecesByRace(race);
+		} catch (DalException e) {
+            throw new BLLException("Erreur get races", e);
+		}
+	}
 }
