@@ -1,8 +1,9 @@
 package fr.eni.clinique.ihm.screen.rdv;
 
-import java.awt.BorderLayout;
 import java.awt.EventQueue;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Properties;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -14,20 +15,23 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
-import org.jdatepicker.DateModel;
-import org.jdatepicker.JDatePanel;
 import org.jdatepicker.impl.JDatePanelImpl;
 import org.jdatepicker.impl.JDatePickerImpl;
+import org.jdatepicker.impl.UtilDateModel;
+
+
 
 import fr.eni.clinique.bo.Client;
 import fr.eni.clinique.bo.Personnel;
-import javafx.scene.control.DatePicker;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JFormattedTextField.AbstractFormatter;
 import javax.swing.JLabel;
 import javax.swing.DefaultComboBoxModel;
 import java.awt.event.ActionListener;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.awt.event.ActionEvent;
 
 public class ScreenRdv extends JFrame {
@@ -100,11 +104,11 @@ public class ScreenRdv extends JFrame {
 		panel.add(animalCombo);
 		
 		JButton addClientBtn = new JButton("Plus");
-		addClientBtn.setBounds(170, 53, 51, 23);
+		addClientBtn.setBounds(170, 53, 63, 23);
 		panel.add(addClientBtn);
 		
 		JButton addAnimalButton = new JButton("Plus");
-		addAnimalButton.setBounds(170, 97, 51, 23);
+		addAnimalButton.setBounds(170, 97, 63, 23);
 		panel.add(addAnimalButton);
 		
 		JPanel panel_1 = new JPanel();
@@ -131,24 +135,62 @@ public class ScreenRdv extends JFrame {
 		lblDate.setBounds(43, 37, 46, 14);
 		panel_2.add(lblDate);
 		
+		UtilDateModel model = new UtilDateModel();
+		//model.setDate(20,04,2014);
+		// Need this...
+		Properties p = new Properties();
+		p.put("text.today", "Today");
+		p.put("text.month", "Month");
+		p.put("text.year", "Year");
+		JDatePanelImpl datePanel = new JDatePanelImpl(model, p);
+		// Don't know about the formatter, but there it is...
+		AbstractFormatter labelFormatter = new AbstractFormatter(){
+
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+			private String datePattern = "yyyy-MM-dd";
+		    private SimpleDateFormat dateFormatter = new SimpleDateFormat(datePattern);
+
+		    @Override
+		    public Object stringToValue(String text) throws ParseException {
+		        return dateFormatter.parseObject(text);
+		    }
+
+		    @Override
+		    public String valueToString(Object value) throws ParseException {
+		        if (value != null) {
+		            Calendar cal = (Calendar) value;
+		            return dateFormatter.format(cal.getTime());
+		        }
+
+		        return "";
+		    }
+
+		};
+		JDatePickerImpl datePicker = new JDatePickerImpl(datePanel, labelFormatter);
 		
+		datePicker.setSize(203, 32);
+		datePicker.setLocation(43, 62);
 		
+		panel_2.add(datePicker);
 		JLabel lblHeure = new JLabel("Heure");
 		lblHeure.setBounds(43, 105, 46, 14);
 		panel_2.add(lblHeure);
 		
 		JComboBox heureCombo = new JComboBox();
 		heureCombo.setModel(new DefaultComboBoxModel(new String[] {"00", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23"}));
-		heureCombo.setBounds(43, 120, 37, 20);
+		heureCombo.setBounds(21, 120, 68, 20);
 		panel_2.add(heureCombo);
 		
 		JLabel lblH = new JLabel("h");
-		lblH.setBounds(83, 123, 15, 14);
+		lblH.setBounds(110, 123, 15, 14);
 		panel_2.add(lblH);
 		
 		JComboBox minuteCombo = new JComboBox();
 		minuteCombo.setModel(new DefaultComboBoxModel(new String[] {"00", "15", "30", "45"}));
-		minuteCombo.setBounds(90, 120, 37, 20);
+		minuteCombo.setBounds(135, 120, 46, 20);
 		panel_2.add(minuteCombo);
 		
 		JScrollPane scrollPane = new JScrollPane();
