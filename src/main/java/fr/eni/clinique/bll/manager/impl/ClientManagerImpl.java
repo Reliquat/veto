@@ -32,7 +32,6 @@ public class ClientManagerImpl implements ClientManager{
 	@Override
 	public List<Client> getListeClient() throws BLLException {
 		List<Client> clients = null;
-        System.out.println("test");
         try {
             clients = clientDAO.selectAll();
              
@@ -122,14 +121,12 @@ public class ClientManagerImpl implements ClientManager{
     public List<Client> getByName(String name) throws BLLException {
     	
     	List<Client> client = new ArrayList<>();
-    	System.out.println("test2");
     	try {
 			client = clientDAO.selectByName(name);
 		} catch (DalException e) {
 			// TODO Auto-generated catch block
 			throw new BLLException(e.getMessage(), e);
 		}
-    	System.out.println("Après retour recherche.");
     	return client;
     }
 }
