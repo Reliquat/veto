@@ -14,4 +14,6 @@ public interface AgendaManager {
 	void ajoutRdv(Agenda agenda, Personnel personnel) throws BLLException;
 	
 	void deleteRdv(Agenda agenda, Personnel personnel) throws BLLException;
+	
+	Agenda getAgendaWithRow(int rowNumber) throws BLLException;
 }

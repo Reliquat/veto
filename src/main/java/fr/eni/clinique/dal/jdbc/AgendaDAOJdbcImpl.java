@@ -19,6 +19,7 @@ import fr.eni.clinique.dal.factory.MSSQLConnectionFactory;
 public class AgendaDAOJdbcImpl {
 
     private final static String SELECT_BY_PERSONNEL_DATERDV = "SELECT CodeVeto, DateRdv, CodeAnimal FROM Agendas WHERE CodeVeto = ? AND DateRdv = CONVERT(SMALLDATETIME, ?, 102)";
+    private final static String SELECT_BY_ROW = "SELECT CodeVeto, DateRdv, CodeAnimal FROM Agendas WHERE ROWNUM <= ?";
     private final static String INSERT_QUERY = "INSERT INTO Agendas(CodeVeto, DateRdv, CodeAnimal) VALUES (?, ?, ?);";
     private final static String DELETE_QUERY = "DELETE FROM Agendas WHERE CodePers = ? AND CONVERT(SMALLDATETIME, DateRdv, 102) = ? AND CodeAnimal = ?";        
     
@@ -121,6 +122,34 @@ public class AgendaDAOJdbcImpl {
         } finally {
             ResourceUtil.safeClose(connection, statement);
         }
+    	
+    }
+    
+    public Agenda getAgendaWithRow(int rowNumber) throws DalException {
+    	
+        Connection connection = null;
+        PreparedStatement statement = null;
+        ResultSet resultSet = null;
+        Agenda agenda = null;
+        
+        try {
+            connection = MSSQLConnectionFactory.get();
+            statement = connection.prepareStatement(SELECT_BY_ROW);
+            
+            statement.setInt(1, rowNumber);
+            resultSet = statement.executeQuery();
+            
+            while (resultSet.next()) {
+                agenda = createAgenda(resultSet);
+            }
+
+        } catch(SQLException e) {
+        	throw new DalException("Erreur d'execution de la requete SELECT BY ROW Agenda", e);
+        } finally {
+            ResourceUtil.safeClose(connection, statement, resultSet);
+        }
+        
+        return agenda;
     	
     }
     

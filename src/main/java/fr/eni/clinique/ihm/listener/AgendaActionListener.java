@@ -21,4 +21,6 @@ public interface AgendaActionListener {
 	
 	void deleteRdv(Agenda agenda, Personnel personnel) throws BLLException ;
 	
+	Agenda getAgendaWithRow(int rowNumber) throws BLLException;
+	
 }

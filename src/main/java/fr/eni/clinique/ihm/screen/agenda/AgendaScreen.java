@@ -151,7 +151,7 @@ public class AgendaScreen implements Observer {
 			new Object[][] {
 			},
 			new String[] {
-				"Heure", "Nom du client", "Animal", "Race"
+				"Heure", "Nom du client", "Animal", "Race", "id"
 			}
 		));
 		scrollPane.setViewportView(rdvTable);
@@ -161,8 +161,8 @@ public class AgendaScreen implements Observer {
 		btnDossierMedical.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-				
-				DossierMedicalScreen dossierScreen = new DossierMedicalScreen();
+				System.out.println(Integer.parseInt(rdvTable.getModel().getValueAt(rdvTable.getSelectedRow(), 4).toString()));
+				DossierMedicalScreen dossierScreen = new DossierMedicalScreen(Integer.parseInt(rdvTable.getModel().getValueAt(rdvTable.getSelectedRow(), 4).toString()));
 				dossierScreen.frmDossierMedical.setVisible(true);
 			}
 		});
@@ -176,9 +176,7 @@ public class AgendaScreen implements Observer {
 		List<Personnel> personnels = new ArrayList<>();
 		
 		try {
-			System.out.println(listeVeto.getSelectedItem().toString());
 			personnels = agendaActionListener.selectByName(listeVeto.getSelectedItem().toString());
-			System.out.println(personnels);
 			for(Personnel p : personnels){
 				System.out.println(datePicker.getJFormattedTextField().getText());
 				if (datePicker.getJFormattedTextField().getText() == null) {
@@ -198,13 +196,12 @@ public class AgendaScreen implements Observer {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		System.out.println(listeRdv);
 		DefaultTableModel newModel = (DefaultTableModel) rdvTable.getModel();
 		newModel.setRowCount(0);
 		for (Agenda agenda : listeRdv) {
 			newModel.addRow(
 					new String[] { String.valueOf(agenda.getDateRdv()), agenda.getAnimal().getClient().getNomClient(), agenda.getAnimal().getNomAnimal(),
-							agenda.getAnimal().getRace()});
+							agenda.getAnimal().getRace(), String.valueOf(agenda.getAnimal().getCodeAnimal())});
 			System.out.println(String.valueOf(agenda.getDateRdv())+ agenda.getAnimal().getClient().getNomClient()+ agenda.getAnimal().getNomAnimal()+agenda.getAnimal().getRace());
 		}
 		//this.rdvTable.setModel(this.tableModel);

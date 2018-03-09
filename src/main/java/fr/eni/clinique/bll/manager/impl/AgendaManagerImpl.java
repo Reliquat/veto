@@ -78,6 +78,22 @@ public class AgendaManagerImpl implements AgendaManager{
 		}
 	}
 
+	@Override
+	public Agenda getAgendaWithRow(int rowNumber) throws BLLException {
+
+		Agenda agenda = null;
+		
+		try {
+			agenda = agendaDao.getAgendaWithRow(rowNumber);
+		} catch (DalException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return agenda;
+		
+	}
+
 	
 	
 }

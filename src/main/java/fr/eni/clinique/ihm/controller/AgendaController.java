@@ -65,5 +65,12 @@ public class AgendaController implements AgendaActionListener{
 	public void deleteRdv(Agenda agenda, Personnel personnel) throws BLLException {
 		// TODO Auto-generated method stub
 		agendaManager.deleteRdv(agenda, personnel);
+	}
+
+	@Override
+	public Agenda getAgendaWithRow(int rowNumber) throws BLLException {
+		
+		return agendaManager.getAgendaWithRow(rowNumber);
+		
 	}	
 }
