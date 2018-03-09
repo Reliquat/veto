@@ -21,8 +21,8 @@ public class ClientDAOJdbcImpl implements ClientDAO {
 	private final static String SELECT_BY_NAME = "SELECT CodeClient, NomClient, PrenomClient, Adresse1, Adresse2, CodePostal, Ville, NumTel, Assurance, Email, Remarque, Archive FROM Clients WHERE UPPER(NomClient) LIKE ?";
     private final static String SELECT_BY_ID = "SELECT CodeClient, NomClient, PrenomClient, Adresse1, Adresse2, CodePostal, Ville, NumTel, Assurance, Email, Remarque, Archive FROM Clients WHERE CodeClient = ?";
     private final static String SELECT_ALL = "SELECT CodeClient, NomClient, PrenomClient, Adresse1, Adresse2, CodePostal, Ville, NumTel, Assurance, Email, Remarque, Archive FROM Clients";
-    private final static String INSERT_QUERY = "INSERT INTO Clients(NomClient, PrenomClient, Adresse1, Adresse2, CodePostal, Ville, NumTel, Assurance, Email, Remarque, Archive) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
-    private final static String UPDATE_QUERY = "UPDATE Clients SET NomClient = ?, PrenomClient = ?, Adresse1 = ?, Adresse2 = ?, CodePostal = ?, Ville = ?, NumTel = ?, Assurance = ?, Email = ?, Remarque = ?, Archive = ? WHERE CodeClient = ?;";
+    private final static String INSERT_QUERY = "INSERT INTO Clients(NomClient, PrenomClient, Adresse1, Adresse2, CodePostal, Ville, NumTel, Assurance, Email, Remarque, Archive) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    private final static String UPDATE_QUERY = "UPDATE Clients SET NomClient = ?, PrenomClient = ?, Adresse1 = ?, Adresse2 = ?, CodePostal = ?, Ville = ?, NumTel = ?, Assurance = ?, Email = ?, Remarque = ?, Archive = ? WHERE CodeClient = ?";
     private final static String DELETE_QUERY = "DELETE FROM Clients WHERE @CodeClient = ?";
     
     private static ClientDAOJdbcImpl SINGLETON = null;
@@ -136,6 +136,7 @@ public class ClientDAOJdbcImpl implements ClientDAO {
             statement.setString(10, client.getRemarque());
             statement.setBoolean(11, client.getArchive());
             
+            
             if(statement.executeUpdate() == 1) {
                 resultSet = statement.getGeneratedKeys();
                 if(resultSet.next()) {
@@ -174,11 +175,12 @@ public class ClientDAOJdbcImpl implements ClientDAO {
             statement.setString(9, client.getEmail());
             statement.setString(10, client.getRemarque());
             statement.setBoolean(11, client.getArchive());
+            statement.setInt(12, client.getCodeClient());
             
-            statement.executeQuery();
+            statement.executeUpdate();
             
         } catch (SQLException e) {
-            throw new DalException("Erreur d'execution de la requete SELECT BY NAME Client", e);
+            throw new DalException("Erreur d'execution de la requete UPDATE_QUERY Client", e);
         } finally {
             ResourceUtil.safeClose(connection, statement, resultSet);
         }

@@ -7,6 +7,7 @@ import fr.eni.clinique.bll.manager.AnimalManager;
 import fr.eni.clinique.bll.manager.ClientManager;
 import fr.eni.clinique.bll.manager.impl.AnimalManagerImpl;
 import fr.eni.clinique.bll.manager.impl.ClientManagerImpl;
+import fr.eni.clinique.bo.Animal;
 import fr.eni.clinique.bo.Client;
 import fr.eni.clinique.dal.exception.DalException;
 import fr.eni.clinique.ihm.event.ClientActionEvent;
@@ -86,5 +87,11 @@ public class ClientController implements ClientActionListener{
 	public void setRecherche(ScreenRechercheClient screen) {
 		// TODO Auto-generated method stub
 		this.clientModel.getRechercheScreen(screen);
+	}
+
+	@Override
+	public void supprimerAnimal(Animal animal) {
+		// TODO Auto-generated method stub
+		
 	}
 }

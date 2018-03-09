@@ -12,6 +12,8 @@ import javax.swing.border.LineBorder;
 
 import fr.eni.clinique.bo.Animal;
 import fr.eni.clinique.bo.Client;
+import fr.eni.clinique.ihm.screen.rdv.ScreenRdv;
+
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
@@ -84,6 +86,7 @@ public class ScreenAjoutClient {
 				newClient.setArchive(false);
 				newClient.setAnimaux(new ArrayList<Animal>());
 				ScreenClient.getInstance().addClient(newClient);
+				ScreenRdv.getInstance().addClient(newClient);
 			}
 		});
 		btnValider.setBounds(486, 11, 89, 79);

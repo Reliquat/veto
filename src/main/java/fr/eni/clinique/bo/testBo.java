@@ -1,6 +1,8 @@
 package fr.eni.clinique.bo;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 
 public class testBo {
@@ -18,7 +20,7 @@ public class testBo {
 		animal.setAntecedents("Chiant");
 		animal.setArchive(false);
 		
-		Agenda rdv = new Agenda(new Date(), animal);
+		Agenda rdv = new Agenda(new Timestamp(Calendar.LONG), animal);
 		ArrayList<Agenda> agenda = new ArrayList<Agenda>();
 		agenda.add(rdv);
 		
@@ -36,21 +38,23 @@ public class testBo {
 		Client client = new Client();
 		
 		client.setCodeClient(666);
-		client.setNomClient("Kaunas");
+		client.setNomClient("test");
 		client.setAdresse1("Lituanie");
 		client.setAdresse1("Europe");
 		client.setCodePostal("24589");
 		client.setVille("Kaunas");
 		client.setAssurance("toutatériskes");
-		client.setEmail("cliente@kaunas.li");
-		client.setRemarque("LOL elle s'apelle Kaunas.");
+		client.setEmail("cliente@test.li");
+		client.setRemarque("remarque de test");
 		client.setArchive(false);
 		client.setAnimaux(nanimaux);
 		
-//		System.out.println(client);
-//		System.out.println(nanimaux);
-//		System.out.println(rdv);
-//		System.out.println(personnel);
+		nanimaux.get(0).setClient(client);
+		
+		System.out.println(client);
+		System.out.println(nanimaux);
+		System.out.println(rdv);
+		System.out.println(personnel);
 	}
 
 }

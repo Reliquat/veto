@@ -5,6 +5,7 @@ import java.awt.Font;
 import java.util.Observable;
 import java.util.Observer;
 
+import javax.swing.AbstractButton;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -64,6 +65,12 @@ public class ScreenClient extends JFrame implements Observer {
 	private Client client;
 	private DefaultTableModel tableModel;
 
+	private JButton btnAjouterAnimal;
+
+	private AbstractButton btnDeleteAnimal;
+
+	private JButton btnEditAnimal;
+
 	/**
 	 * Create the application.
 	 */
@@ -87,7 +94,6 @@ public class ScreenClient extends JFrame implements Observer {
 	/**
 	 * Initialize the contents of the frame.
 	 */
-	@SuppressWarnings("serial")
 	private void initialize() {
 		frmClient = new JFrame();
 		frmClient.setResizable(false);
@@ -119,22 +125,24 @@ public class ScreenClient extends JFrame implements Observer {
 				new ScreenAjoutClient();
 			}
 		});
-		btnAjouter.setIcon(new ImageIcon(ScreenClient.class.getResource("/Images/plus.png")));
+		btnAjouter.setIcon(null);
 		btnAjouter.setBounds(407, 11, 100, 78);
 
 		panel.add(btnAjouter);
 
 		btnSupprimer = new JButton("Supprimer");
+		btnSupprimer.setEnabled(false);
 		btnSupprimer.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				new ValidDeleteClient(client);
+				new ValidDeleteClient(client).setVisible(true);
 			}
 		});
 		btnSupprimer.setBounds(516, 11, 100, 78);
 		panel.add(btnSupprimer);
 
 		btnAnnuler = new JButton("Annuler");
+		btnAnnuler.setEnabled(false);
 		btnAnnuler.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -145,6 +153,7 @@ public class ScreenClient extends JFrame implements Observer {
 		panel.add(btnAnnuler);
 
 		btnValider = new JButton("Valider");
+		btnValider.setEnabled(false);
 		btnValider.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -170,30 +179,39 @@ public class ScreenClient extends JFrame implements Observer {
 		frmClient.getContentPane().add(panel_1);
 		panel_1.setLayout(null);
 
-		JButton btnNewButton_1 = new JButton("Editer");
-		btnNewButton_1.addMouseListener(new MouseAdapter() {
+		btnEditAnimal = new JButton("Editer");
+		btnEditAnimal.setEnabled(false);
+		btnEditAnimal.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				new AnimalController().updateAnimalScreen(client.getAnimaux().get(tableAnimaux.getSelectedRow()));
 			}
 		});
-		btnNewButton_1.setBounds(461, 362, 73, 43);
-		panel_1.add(btnNewButton_1);
+		btnEditAnimal.setBounds(448, 362, 86, 43);
+		panel_1.add(btnEditAnimal);
 
-		JButton btnSupprimer_1 = new JButton("Supprimer");
-		btnSupprimer_1.setBounds(378, 362, 73, 43);
-		panel_1.add(btnSupprimer_1);
+		btnDeleteAnimal = new JButton("Supprimer");
+		btnDeleteAnimal.setEnabled(false);
+		btnDeleteAnimal.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				new ValidDeleteAnimal(client.getAnimaux().get(tableAnimaux.getSelectedRow())).setVisible(true);;
+			}
+		});
+		btnDeleteAnimal.setBounds(330, 362, 108, 43);
+		panel_1.add(btnDeleteAnimal);
 
-		JButton btnAjouter_1 = new JButton("Ajouter");
-		btnAjouter_1.addMouseListener(new MouseAdapter() {
+		btnAjouterAnimal = new JButton("Ajouter");
+		btnAjouterAnimal.setEnabled(false);
+		btnAjouterAnimal.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				new AnimalController().createAnimalScreen(client);
 			}
 		});
-		btnAjouter_1.setIcon(new ImageIcon(ScreenClient.class.getResource("/Images/plus.png")));
-		btnAjouter_1.setBounds(295, 362, 73, 43);
-		panel_1.add(btnAjouter_1);
+		btnAjouterAnimal.setIcon(null);
+		btnAjouterAnimal.setBounds(236, 362, 84, 43);
+		panel_1.add(btnAjouterAnimal);
 
 		tableAnimaux = new JTable();
 		tableAnimaux.setBounds(10, 11, 524, 342);
@@ -356,6 +374,9 @@ public class ScreenClient extends JFrame implements Observer {
 		this.cpTxt.setText("");
 		this.assuranceTxt.setText("");
 		this.remarqueTxt.setText("");
+		this.cpTxt.setText("");
+		this.villeTxt.setText("");
+		this.emailTxt.setText("");
 		this.client = null;
 	}
 
@@ -397,6 +418,19 @@ public class ScreenClient extends JFrame implements Observer {
 		this.tableAnimaux.setModel(this.tableModel);
 
 		this.tableModel.fireTableDataChanged();
+		
+		btnAnnuler.setEnabled(true);
+		btnSupprimer.setEnabled(true);
+		btnValider.setEnabled(true);
+		btnAjouterAnimal.setEnabled(true);
+		
+		if (client.getAnimaux().size()>0){
+			btnDeleteAnimal.setEnabled(true);
+			btnEditAnimal.setEnabled(true);
+		} else {
+			btnDeleteAnimal.setEnabled(false);
+			btnEditAnimal.setEnabled(false);
+		}
 	}
 
 	public void addClient(Client newClient) {
@@ -406,5 +440,10 @@ public class ScreenClient extends JFrame implements Observer {
 	
 	public void setVisible(Boolean visible){
 		this.frmClient.setVisible(visible);
+	}
+
+	public void supprimerAnimal(Animal animal) {
+		// TODO Auto-generated method stub
+		new AnimalController().archiveAnimal(animal);
 	}
 }

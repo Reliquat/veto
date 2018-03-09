@@ -36,10 +36,15 @@ public class RdvController implements RdvActionListener {
 		List<Personnel> vetos = new ArrayList<>();
 		try {
 			clients = clientManager.getListeClient();
-			for (Client client : clients){
+			for (Client client : clients) {
 				client.setAnimaux(animalManager.getAnimauxOfClient(client));
 			}
 			vetos = personnelManager.getListeVeto();
+			for (Personnel veto : vetos) {
+				if (veto.isArchive()) {
+					vetos.remove(veto);
+				}
+			}
 		} catch (BLLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -70,7 +75,8 @@ public class RdvController implements RdvActionListener {
 	}
 
 	public void getRdvJour(Personnel veto, Date date) {
-		agendaManager.getAgendaOfPersonnel(veto, date);
+		System.out.println(date);
+		// agendaManager.getRdvOfPersonnel(veto, date);
 	}
 
 	public void deleteRdv(Agenda agenda, Personnel personnel) {
@@ -80,30 +86,30 @@ public class RdvController implements RdvActionListener {
 	@Override
 	public void RechercherClientScreen(String nom) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void AjouterClient(Client client) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void SupprimerClient(Client client) throws DalException {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void ValiderClient(ClientActionEvent event) throws DalException {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void setRecherche(ScreenRechercheClient screen) {
 		// TODO Auto-generated method stub
-		
+
 	}
 }

@@ -69,7 +69,7 @@ public class ClientManagerImpl implements ClientManager{
             clientDAO.updateClient(client);
             
         } catch (DalException e) {
-            throw new BLLException(String.format("Echec updateClient-Client: %s", client), e);
+            throw new BLLException(String.format("Echec updateClient- Client: %s", client), e);
         }
 	}
 

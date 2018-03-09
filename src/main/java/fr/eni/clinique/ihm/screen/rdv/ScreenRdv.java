@@ -23,6 +23,7 @@ import fr.eni.clinique.bo.Animal;
 import fr.eni.clinique.bo.Client;
 import fr.eni.clinique.bo.Personnel;
 import fr.eni.clinique.ihm.listener.RdvActionListener;
+import fr.eni.clinique.ihm.screen.client.ScreenAjoutClient;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -35,6 +36,8 @@ import java.text.SimpleDateFormat;
 import java.awt.event.ActionEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.ItemEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 
 @SuppressWarnings({ "unchecked", "rawtypes" })
@@ -102,6 +105,12 @@ public class ScreenRdv extends JFrame {
 		panel.add(animalCombo);
 
 		JButton addClientBtn = new JButton("Plus");
+		addClientBtn.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				new ScreenAjoutClient();
+			}
+		});
 		addClientBtn.setBounds(170, 53, 63, 23);
 		panel.add(addClientBtn);
 
@@ -121,22 +130,7 @@ public class ScreenRdv extends JFrame {
 		panel_1.add(lblVtrinaire);
 
 		vetoCombo = new JComboBox();
-		vetoCombo.addItemListener(new ItemListener() {
-			public void itemStateChanged(ItemEvent arg0) {
-				if (arg0.getStateChange() == ItemEvent.SELECTED) {
-					try {
-						System.out.println(vetoCombo.getSelectedIndex());
-						System.out.println(vetos);
-						System.out.println(vetos.get(vetoCombo.getSelectedIndex()));
-						actionListener.getRdvJour(vetos.get(vetoCombo.getSelectedIndex()),
-								dateFormatter.parse(datePicker.getJFormattedTextField().getText()));
-					} catch (ParseException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-				}
-			}
-		});
+		
 
 		vetoCombo.setBounds(37, 60, 120, 20);
 		panel_1.add(vetoCombo);
@@ -250,6 +244,22 @@ public class ScreenRdv extends JFrame {
 			this.vetoCombo.addItem(veto.getNom());
 		}
 		refreshAnimalCombo(this.clients.get(1));
+		vetoCombo.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent arg0) {
+				if (arg0.getStateChange() == ItemEvent.SELECTED) {
+					try {
+						System.out.println(vetoCombo.getSelectedIndex());
+						System.out.println(vetos);
+						System.out.println(vetos.get(vetoCombo.getSelectedIndex()));
+						actionListener.getRdvJour(vetos.get(vetoCombo.getSelectedIndex()),
+								dateFormatter.parse(datePicker.getJFormattedTextField().getText()));
+					} catch (ParseException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+			}
+		});
 	}
 
 	public void setAgenda(Personnel personnel) {
@@ -257,9 +267,9 @@ public class ScreenRdv extends JFrame {
 		this.tableModel.setRowCount(0);
 		for (Agenda rdv : personnel.getRdv()) {
 			String[] infoRdv = { rdv.getDateRdv().getHours() + ":" + rdv.getDateRdv().getMinutes(),
-					rdv.getCodeAnimal().getClient().getNomClient() + " "
-							+ rdv.getCodeAnimal().getClient().getPrenomClient(),
-					rdv.getCodeAnimal().getRace(), rdv.getCodeAnimal().getNomAnimal() };
+					rdv.getAnimal().getClient().getNomClient() + " "
+							+ rdv.getAnimal().getClient().getPrenomClient(),
+					rdv.getAnimal().getRace(), rdv.getAnimal().getNomAnimal() };
 			this.tableModel.addRow(infoRdv);
 		}
 		this.table.setModel(this.tableModel);
@@ -276,5 +286,10 @@ public class ScreenRdv extends JFrame {
 		for (Animal animal : client.getAnimaux()) {
 			this.animalCombo.addItem(animal.getNomAnimal());
 		}
+	}
+	public void addClient(Client client){
+		this.clientCombo.addItem(client.getNomClient() + " " +client.getPrenomClient());
+		this.clientCombo.setSelectedIndex(this.clients.size());
+		this.clients.add(client);
 	}
 }
