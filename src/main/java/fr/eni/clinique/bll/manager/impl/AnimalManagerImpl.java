@@ -93,4 +93,13 @@ public class AnimalManagerImpl implements AnimalManager {
             throw new BLLException("Erreur get races", e);
 		}
 	}
+
+	@Override
+	public Animal getAnimalById(int id) throws BLLException {
+		try {
+			return animalDao.selectById(id);
+		} catch (DalException e) {
+            throw new BLLException("Erreur get animal by id", e);
+		}
+	}
 }

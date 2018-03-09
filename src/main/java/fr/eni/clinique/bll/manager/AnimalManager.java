@@ -19,4 +19,6 @@ public interface AnimalManager {
 	List<String> getRaces() throws BLLException;
 	
 	List<String> getEspecesByRace(String race) throws BLLException;
+	
+	Animal getAnimalById(int id) throws BLLException;
 }
