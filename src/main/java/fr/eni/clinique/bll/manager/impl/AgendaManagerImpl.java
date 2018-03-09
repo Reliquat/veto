@@ -33,7 +33,7 @@ public class AgendaManagerImpl implements AgendaManager{
     }
 	
 	@Override
-	public List<Agenda> getAgendaOfPersonnel(Personnel personnel, String dateRdv) throws BLLException {
+	public List<Agenda> getRdvOfPersonnel(Personnel personnel, String dateRdv) throws BLLException {
 		
 		agendaScreen = AgendaScreen.getInstance();
 		List<Agenda> agenda = null;

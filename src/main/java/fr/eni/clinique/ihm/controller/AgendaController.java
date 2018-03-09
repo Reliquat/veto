@@ -44,7 +44,7 @@ public class AgendaController implements AgendaActionListener{
 	@Override
 	public List<Agenda> getAgendaOfPersonnel(Personnel personnel, String dateRdv) throws BLLException{
 		
-		return agendaManager.getAgendaOfPersonnel(personnel, dateRdv);
+		return agendaManager.getRdvOfPersonnel(personnel, dateRdv);
 		
 	}
 

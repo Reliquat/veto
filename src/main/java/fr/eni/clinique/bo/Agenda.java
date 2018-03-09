@@ -1,25 +1,26 @@
 package fr.eni.clinique.bo;
 
-import java.util.Date;
+import java.sql.Timestamp;
+
 
 public class Agenda {
-	private Date dateRdv;
+	private Timestamp dateRdv;
 	private Animal animal;
 	
 	public Agenda() {
 		super();
 	}
 
-	public Agenda(Date dateRdv, Animal animal) {
+	public Agenda(Timestamp dateRdv, Animal animal) {
 		super();
 		this.dateRdv = dateRdv;
 		this.animal = animal;
 	}
 	
-	public Date getDateRdv() {
+	public Timestamp getDateRdv() {
 		return dateRdv;
 	}
-	public void setDateRdv(Date dateRdv) {
+	public void setDateRdv(Timestamp dateRdv) {
 		this.dateRdv = dateRdv;
 	}
 	public Animal getAnimal() {
