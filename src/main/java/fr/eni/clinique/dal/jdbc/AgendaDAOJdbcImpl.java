@@ -5,6 +5,7 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,7 +20,7 @@ import fr.eni.clinique.dal.factory.MSSQLConnectionFactory;
 
 public class AgendaDAOJdbcImpl implements AgendaDAO {
 
-    private final static String SELECT_BY_PERSONNEL_DATERDV = "SELECT CodeVeto, DateRdv, CodeAnimal FROM Agendas WHERE CodeVeto = ? AND DateRdv = CONVERT(SMALLDATETIME, ?, 102)";
+    private final static String SELECT_BY_PERSONNEL_DATERDV = "SELECT CodeVeto, DateRdv, CodeAnimal FROM Agendas WHERE CodeVeto = ? AND CAST(DateRdv AS DATE) = CAST(? AS DATE)";
     private final static String SELECT_BY_ROW = "SELECT CodeVeto, DateRdv, CodeAnimal FROM Agendas WHERE ROWNUM <= ?";
     private final static String INSERT_QUERY = "INSERT INTO Agendas(CodeVeto, DateRdv, CodeAnimal) VALUES (?, ?, ?);";
     private final static String DELETE_QUERY = "DELETE FROM Agendas WHERE CodePers = ? AND CONVERT(SMALLDATETIME, DateRdv, 102) = ? AND CodeAnimal = ?";        
@@ -42,7 +43,7 @@ public class AgendaDAOJdbcImpl implements AgendaDAO {
     	AnimalDAOJdbcImpl animalDao = DaoFactory.animalDao();
         Animal animal = new Animal();
     	Agenda agenda = new Agenda();
-    	agenda.setDateRdv(resultSet.getDate("DateRdv"));
+    	agenda.setDateRdv(resultSet.getTimestamp("DateRdv"));
     	
     	try {
 			animal = animalDao.selectById(resultSet.getInt("CodeAnimal"));
@@ -65,7 +66,7 @@ public class AgendaDAOJdbcImpl implements AgendaDAO {
             statement = connection.prepareStatement(INSERT_QUERY);
             
             statement.setInt(1, personnel.getCodePers());
-            statement.setDate(2,(Date) agenda.getDateRdv());
+            statement.setTimestamp(2,(Timestamp) agenda.getDateRdv());
             statement.setInt(3, agenda.getAnimal().getCodeAnimal());
             resultSet = statement.executeQuery();
         } catch(SQLException e) {
@@ -83,13 +84,14 @@ public class AgendaDAOJdbcImpl implements AgendaDAO {
         PreparedStatement statement = null;
         ResultSet resultSet = null;
         List<Agenda> liste = new ArrayList<Agenda>();
-        
+        System.out.println(dateRdv);
         try {
             connection = MSSQLConnectionFactory.get();
             statement = connection.prepareStatement(SELECT_BY_PERSONNEL_DATERDV);
             
             statement.setInt(1, personnel.getCodePers());
-            statement.setString(2, dateRdv);
+            
+            statement.setTimestamp(2, Timestamp.valueOf(dateRdv + " 00:00:00"));
             resultSet = statement.executeQuery();
             
             while (resultSet.next()) {
@@ -114,7 +116,7 @@ public class AgendaDAOJdbcImpl implements AgendaDAO {
             connection = MSSQLConnectionFactory.get();
             statement = connection.prepareStatement(DELETE_QUERY);
             statement.setInt(1, personnel.getCodePers());
-            statement.setDate(2,(Date) agenda.getDateRdv());
+            statement.setTimestamp(2,agenda.getDateRdv());
             statement.setInt(3, agenda.getAnimal().getCodeAnimal());
             statement.executeQuery();
             
@@ -152,6 +154,5 @@ public class AgendaDAOJdbcImpl implements AgendaDAO {
         
         return agenda;
     	
-    }
-    
+    }    
 }

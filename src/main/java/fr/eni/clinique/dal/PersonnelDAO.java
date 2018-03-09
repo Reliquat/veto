@@ -9,7 +9,7 @@ public interface PersonnelDAO {
 
 	Personnel selectById(int id) throws DalException;
 	
-	Personnel selectByName(String name) throws DalException;
+	List<Personnel> selectByName(String name) throws DalException;
 	
 	List<Personnel> selectByRole(String role) throws DalException;
 	
