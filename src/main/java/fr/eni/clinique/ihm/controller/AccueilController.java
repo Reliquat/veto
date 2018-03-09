@@ -24,6 +24,6 @@ public class AccueilController {
 	}
 	
 	public void openClientScreen() {
-		clientScreen = new ScreenClient("client");
+		clientScreen = ScreenClient.getInstance();
 	}
 }

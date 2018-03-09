@@ -1,6 +1,5 @@
 package fr.eni.clinique.dal.jdbc;
 
-import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -12,10 +11,11 @@ import java.util.List;
 import fr.eni.clinique.bo.Personnel;
 import fr.eni.clinique.common.util.ObjectUtil;
 import fr.eni.clinique.common.util.ResourceUtil;
+import fr.eni.clinique.dal.PersonnelDAO;
 import fr.eni.clinique.dal.exception.DalException;
 import fr.eni.clinique.dal.factory.MSSQLConnectionFactory;
 
-public class PersonnelDAOJdbcImpl {
+public class PersonnelDAOJdbcImpl implements PersonnelDAO {
 
     private final static String SELECT_BY_NAME = "SELECT CodePers, Nom, MotPasse, Role, Archive FROM Personnels WHERE Nom = ?";
     private final static String SELECT_BY_ID = "SELECT CodePers, Nom, MotPasse, Role, Archive FROM Personnels WHERE CodePers = ?";
@@ -77,12 +77,12 @@ public class PersonnelDAOJdbcImpl {
         return personnel;
     }
     
-    public Personnel selectByName(String name) throws DalException {
+    public List<Personnel> selectByName(String name) throws DalException {
     	
     	Connection connection = null;
         PreparedStatement statement = null;
         ResultSet resultSet = null;
-        Personnel personnel = null;
+        List<Personnel> personnels = new ArrayList<>();
         
         try {
             connection = MSSQLConnectionFactory.get();
@@ -93,7 +93,7 @@ public class PersonnelDAOJdbcImpl {
             resultSet = statement.executeQuery();
             
             if(resultSet.next()) {
-                personnel = createPersonnel(resultSet);
+                personnels.add(createPersonnel(resultSet));
             }
             
         } catch (SQLException e) {
@@ -101,7 +101,7 @@ public class PersonnelDAOJdbcImpl {
         } finally {
             ResourceUtil.safeClose(connection, statement, resultSet);
         }
-        return personnel;
+        return personnels;
     }
     
     public List<Personnel> selectByRole(String role) throws DalException {

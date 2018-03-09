@@ -30,7 +30,7 @@ public class AccueilScreen {
 	 */
 	private void initialize() {
 		frame = new JFrame();
-		frame.setBounds(100, 100, 600, 400);
+		frame.setBounds(320, 350, 600, 400);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		
@@ -69,10 +69,22 @@ public class AccueilScreen {
 		
 		JButton btnDeconnexion = new JButton("D\u00E9connexion");
 		btnDeconnexion.setBounds(0, 0, 131, 23);
+		btnDeconnexion.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				accueilController.openAdminScreen();
+			}
+		});
 		panel_main.add(btnDeconnexion);
 		
 		JButton btnFermer = new JButton("Fermer");
 		btnFermer.setBounds(0, 22, 131, 23);
+		btnFermer.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				System.exit(0);
+			}
+		});
 		panel_main.add(btnFermer);
 		
 		JButton btnPriseDeRdv = new JButton("Prise de RDV");

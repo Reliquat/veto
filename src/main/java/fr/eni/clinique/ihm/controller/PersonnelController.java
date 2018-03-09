@@ -1,10 +1,12 @@
 package fr.eni.clinique.ihm.controller;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import fr.eni.clinique.bll.exception.BLLException;
 import fr.eni.clinique.bll.manager.PersonnelManager;
 import fr.eni.clinique.bll.manager.impl.PersonnelManagerImpl;
 import fr.eni.clinique.bo.Personnel;
-import fr.eni.clinique.ihm.event.PersonnelActionEvent;
 import fr.eni.clinique.ihm.listener.PersonnelActionListener;
 import fr.eni.clinique.ihm.model.PersonnelModel;
 
@@ -51,5 +53,14 @@ public class PersonnelController implements PersonnelActionListener{
 		
 		personnelManager.getListeVeto();
 		
+	}
+
+	@Override
+	public List<Personnel> selectByName(String name) throws Exception {
+		List<Personnel> personnels = new ArrayList<>();
+		
+		personnels = personnelManager.selectByName(name);
+		
+		return personnels;
 	}
 }

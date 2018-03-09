@@ -6,6 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -15,7 +16,6 @@ import java.util.Observable;
 import java.util.Observer;
 import java.util.Properties;
 
-import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFormattedTextField.AbstractFormatter;
@@ -34,7 +34,9 @@ import org.jdatepicker.impl.JDatePickerImpl;
 import org.jdatepicker.impl.UtilDateModel;
 
 import fr.eni.clinique.bll.exception.BLLException;
+import fr.eni.clinique.bo.Agenda;
 import fr.eni.clinique.bo.Personnel;
+import fr.eni.clinique.ihm.controller.PersonnelController;
 import fr.eni.clinique.ihm.listener.AgendaActionListener;
 
 public class AgendaScreen implements Observer {
@@ -43,19 +45,22 @@ public class AgendaScreen implements Observer {
 	public JFrame frmAgenda;
 	private JPanel contentPane;
 	private JTable rdvTable;
-	private AbstractFormatter tableModel;
+	private AbstractFormatter tableAbstract;
+	private DefaultTableModel tableModel;
 	private UtilDateModel model;
 	private JDatePanelImpl datePanel;
 	private JDatePickerImpl datePicker;
 	private JComboBox listeVeto;
 	private AgendaActionListener agendaActionListener;
-	private List<Personnel> liste;
+	private PersonnelController personnelController;
+	private List<Personnel> liste = new ArrayList<>();
 	private int row;
 
 	/**
 	 * Launch the application.
 	 */
 	public AgendaScreen() {
+		this.tableModel = new DefaultTableModel();
 		actualInstance = this;
 		initialize();
 	}
@@ -93,8 +98,7 @@ public class AgendaScreen implements Observer {
 		listeVeto.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				
-				System.out.println(listeVeto.getSelectedItem().toString()+" "+datePicker.getJFormattedTextField().getText());
+				update(null,null);
 			}
 		});
 		
@@ -103,7 +107,7 @@ public class AgendaScreen implements Observer {
 		JLabel lblDate = new JLabel("Date");
 		panel.add(lblDate);
 		
-		this.tableModel = new AbstractFormatter() {
+		this.tableAbstract = new AbstractFormatter() {
 			
 			private String datePattern = "yyyy-MM-dd";
 		    private SimpleDateFormat dateFormatter = new SimpleDateFormat(datePattern);
@@ -117,7 +121,6 @@ public class AgendaScreen implements Observer {
 		            Calendar cal = (Calendar) value;
 		            return dateFormatter.format(cal.getTime());
 		        }
-
 		        return "";
 		    }
 		};
@@ -128,11 +131,11 @@ public class AgendaScreen implements Observer {
 		p.put("text.month", "Month");
 		p.put("text.year", "Year");
         datePanel = new JDatePanelImpl(model, p);
-        datePicker = new JDatePickerImpl(datePanel, this.tableModel);
+        datePicker = new JDatePickerImpl(datePanel, this.tableAbstract);
         datePicker.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				System.out.println(listeVeto.getSelectedItem().toString()+" "+datePicker.getJFormattedTextField().getText());
+				update(null,null);
 			}
 		});
         
@@ -143,11 +146,12 @@ public class AgendaScreen implements Observer {
 		contentPane.add(scrollPane);
 		
 		rdvTable = new JTable();
+		rdvTable.setFillsViewportHeight(true);
 		rdvTable.setModel(new DefaultTableModel(
 			new Object[][] {
 			},
 			new String[] {
-				"Heure", "Nom du client", "Animal", "Race"
+				"Heure", "Nom du client", "Animal", "Race", "id"
 			}
 		));
 		scrollPane.setViewportView(rdvTable);
@@ -157,8 +161,8 @@ public class AgendaScreen implements Observer {
 		btnDossierMedical.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-				
-				DossierMedicalScreen dossierScreen = new DossierMedicalScreen();
+				System.out.println(Integer.parseInt(rdvTable.getModel().getValueAt(rdvTable.getSelectedRow(), 4).toString()));
+				DossierMedicalScreen dossierScreen = new DossierMedicalScreen(Integer.parseInt(rdvTable.getModel().getValueAt(rdvTable.getSelectedRow(), 4).toString()));
 				dossierScreen.frmDossierMedical.setVisible(true);
 			}
 		});
@@ -168,13 +172,59 @@ public class AgendaScreen implements Observer {
 	@Override
 	public void update(Observable arg0, Object arg1) {
 
+		List<Agenda> listeRdv = new ArrayList<>();
+		List<Personnel> personnels = new ArrayList<>();
+		SimpleDateFormat dateFormater = new SimpleDateFormat("yyyy-MM-dd");
+		try {
+			personnels = agendaActionListener.selectByName(listeVeto.getSelectedItem().toString());
+			for(Personnel p : personnels){
+				System.out.println("*"+datePicker.getJFormattedTextField().getText()+"*");
+				if (datePicker.getJFormattedTextField().getText().equals("")) {
+					Calendar today = Calendar.getInstance();
+					System.out.println(today.getTime().toString());
+					
+					listeRdv = agendaActionListener.getAgendaOfPersonnel(p, dateFormater.format(today.getTime()).toString());
+				}
+				else {
+					String date = datePicker.getJFormattedTextField().getText();
+					System.out.println(dateFormater.parse(date).toString());
+					listeRdv = agendaActionListener.getAgendaOfPersonnel(p,date);
+					System.out.println(listeRdv);
+				}
+			}
+			
+		} catch (BLLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		DefaultTableModel newModel = (DefaultTableModel) rdvTable.getModel();
+		newModel.setRowCount(0);
+		
+		for (Agenda agenda : listeRdv) {
+			String min="";
+			if (agenda.getDateRdv().getMinutes() < 10){
+				min = "0"+agenda.getDateRdv().getMinutes(); 
+			} else {
+				min = ""+agenda.getDateRdv().getMinutes(); 
+			}
+			newModel.addRow(
+					new String[] { agenda.getDateRdv().getHours()+"h"+min, agenda.getAnimal().getClient().getNomClient(), agenda.getAnimal().getNomAnimal(),
+							agenda.getAnimal().getRace(), String.valueOf(agenda.getAnimal().getCodeAnimal())});
+			System.out.println(String.valueOf(agenda.getDateRdv())+ agenda.getAnimal().getClient().getNomClient()+ agenda.getAnimal().getNomAnimal()+agenda.getAnimal().getRace());
+		}
+		//this.rdvTable.setModel(this.tableModel);
+	}
+
+	public void updateComboVeto(){
+		
 		try {
 			liste = agendaActionListener.getListeVeto();
 		} catch (BLLException e) {
 			e.printStackTrace();
 		}
-		
-		List<String> listeNomP = new ArrayList();
 		
 		listeVeto.removeAllItems();
 		
@@ -182,6 +232,7 @@ public class AgendaScreen implements Observer {
 		{
 			listeVeto.addItem(p.getNom());
 		}
+		
 	}
 	
 	public void setActionListener(AgendaActionListener agendaListener) {
@@ -189,16 +240,16 @@ public class AgendaScreen implements Observer {
 		if (agendaListener != null) {
 
 			this.agendaActionListener = agendaListener;
+			updateComboVeto();
 
 			try {
 
-				// Fire Initialisation Event.
 				this.agendaActionListener.init();
 
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-		}
 
+		}
 	}
 }

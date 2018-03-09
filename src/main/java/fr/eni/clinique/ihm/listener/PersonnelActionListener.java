@@ -1,5 +1,7 @@
 package fr.eni.clinique.ihm.listener;
 
+import java.util.List;
+
 import fr.eni.clinique.bll.exception.BLLException;
 import fr.eni.clinique.bo.Personnel;
 import fr.eni.clinique.ihm.event.PersonnelActionEvent;
@@ -30,4 +32,6 @@ public interface PersonnelActionListener {
     void resetPwdPersonnel(Personnel personnel) throws Exception;
     
     void getListeVeto(Personnel personnel) throws Exception;
+    
+    List<Personnel> selectByName(String name) throws Exception;
 }

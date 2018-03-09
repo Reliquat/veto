@@ -6,6 +6,7 @@ import java.util.List;
 import fr.eni.clinique.bll.exception.BLLException;
 import fr.eni.clinique.bll.factory.ManagerFactory;
 import fr.eni.clinique.bll.manager.AnimalManager;
+import fr.eni.clinique.bll.manager.ClientManager;
 import fr.eni.clinique.bo.Animal;
 import fr.eni.clinique.bo.Client;
 import fr.eni.clinique.ihm.screen.animal.GestionAnimalScreen;
@@ -14,6 +15,7 @@ import fr.eni.clinique.ihm.screen.client.ScreenClient;
 public class AnimalController {
 
 	private AnimalManager animalManager;
+	private ClientManager clientManager;
 	private GestionAnimalScreen gestionAnimalScreen;
 	private List<String> races;
 	
@@ -29,6 +31,7 @@ public class AnimalController {
 	public AnimalController() {
 		
 		animalManager = ManagerFactory.animalManager();
+		clientManager = ManagerFactory.clientManager();
 	}
 	
 	public List<Animal> getAnimauxOfClient(Client client) {
@@ -134,5 +137,20 @@ public class AnimalController {
 	
 	public void exitScreen() {
 		gestionAnimalScreen.hide();
+	}
+	
+	public Animal getAnimalById(int id) {
+		
+		Animal animal = null;
+		
+		try {
+			animal = animalManager.getAnimalById(id);
+			animal.setClient(clientManager.getById(animal.getClient().getCodeClient()));
+			
+		} catch (BLLException e) {
+			e.printStackTrace();
+		}
+		
+		return animal;
 	}
 }

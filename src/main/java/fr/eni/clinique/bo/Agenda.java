@@ -1,7 +1,11 @@
 package fr.eni.clinique.bo;
 
 import java.sql.Timestamp;
+<<<<<<< HEAD
 import java.sql.Date;
+=======
+import java.util.Date;
+>>>>>>> branch 'master' of https://github.com/Reliquat/veto.git
 
 public class Agenda {
 	private Timestamp dateRdv;
@@ -19,16 +23,16 @@ public class Agenda {
 		this.animal = animal;
 	}
 	
-	public Date getDateRdv() {
+	public Timestamp getDateRdv() {
 		return dateRdv;
 	}
-	public void setDateRdv(Date dateRdv) {
+	public void setDateRdv(Timestamp dateRdv) {
 		this.dateRdv = dateRdv;
 	}
-	public Animal getCodeAnimal() {
+	public Animal getAnimal() {
 		return animal;
 	}
-	public void setCodeAnimal(Animal animal) {
+	public void setAnimal(Animal animal) {
 		this.animal = animal;
 	}
 

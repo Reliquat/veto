@@ -9,10 +9,10 @@ import fr.eni.clinique.bll.manager.AgendaManager;
 import fr.eni.clinique.bll.manager.PersonnelManager;
 import fr.eni.clinique.bll.manager.impl.AgendaManagerImpl;
 import fr.eni.clinique.bll.manager.impl.PersonnelManagerImpl;
+import fr.eni.clinique.bo.Agenda;
 import fr.eni.clinique.bo.Personnel;
 import fr.eni.clinique.ihm.listener.AgendaActionListener;
 import fr.eni.clinique.ihm.model.AgendaModel;
-import fr.eni.clinique.ihm.model.PersonnelModel;
 
 public class AgendaController implements AgendaActionListener{
 
@@ -42,9 +42,35 @@ public class AgendaController implements AgendaActionListener{
 	}
 
 	@Override
-	public void getAgendaOfPersonnel(Personnel personnel, Date dateRdv) throws BLLException{
+	public List<Agenda> getAgendaOfPersonnel(Personnel personnel, String dateRdv) throws BLLException{
 		
-		agendaManager.getAgendaOfPersonnel(personnel, dateRdv);
+		return agendaManager.getRdvOfPersonnel(personnel, dateRdv);
+		
+	}
+
+	@Override
+	public List<Personnel> selectByName(String name) throws BLLException {
+		
+		return personnelManager.selectByName(name);
+		
+	}
+
+	@Override
+	public void ajoutRdv(Agenda agenda, Personnel personnel) throws BLLException {
+		// TODO Auto-generated method stub
+		agendaManager.ajoutRdv(agenda, personnel);
+	}
+
+	@Override
+	public void deleteRdv(Agenda agenda, Personnel personnel) throws BLLException {
+		// TODO Auto-generated method stub
+		agendaManager.deleteRdv(agenda, personnel);
+	}
+
+	@Override
+	public Agenda getAgendaWithRow(int rowNumber) throws BLLException {
+		
+		return agendaManager.getAgendaWithRow(rowNumber);
 		
 	}	
 }

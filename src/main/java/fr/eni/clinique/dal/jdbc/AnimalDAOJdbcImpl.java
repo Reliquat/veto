@@ -12,10 +12,11 @@ import fr.eni.clinique.bo.Animal;
 import fr.eni.clinique.bo.Client;
 import fr.eni.clinique.common.util.ObjectUtil;
 import fr.eni.clinique.common.util.ResourceUtil;
+import fr.eni.clinique.dal.AnimalDAO;
 import fr.eni.clinique.dal.exception.DalException;
 import fr.eni.clinique.dal.factory.MSSQLConnectionFactory;
 
-public class AnimalDAOJdbcImpl {
+public class AnimalDAOJdbcImpl implements AnimalDAO {
 	
     private final static String SELECT_BY_ID = "SELECT CodeAnimal, NomAnimal, Sexe, Couleur, Race, Espece, CodeClient, Tatouage, Antecedents, Archive FROM Animaux WHERE CodeAnimal = ?";
     private final static String SELECT_BY_CLIENT = "SELECT CodeAnimal, NomAnimal, Sexe, Couleur, Race, Espece, CodeClient, Tatouage, Antecedents, Archive FROM Animaux WHERE CodeClient = ?";
@@ -125,7 +126,7 @@ public class AnimalDAOJdbcImpl {
             statement.setBoolean(9, animal.isArchive());
             statement.setInt(10, animal.getCodeAnimal());
             
-            statement.executeQuery();
+            statement.executeUpdate();
 
         } catch (SQLException e) {
             throw new DalException("Erreur d'execution de la requete UPDATE_QUERY Animal", e);

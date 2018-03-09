@@ -11,11 +11,12 @@ import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
-import fr.eni.clinique.bll.exception.BLLException;
+import fr.eni.clinique.Main;
 import fr.eni.clinique.bo.Personnel;
 import fr.eni.clinique.common.AppConstants;
 import fr.eni.clinique.ihm.controller.LoginController;
@@ -37,7 +38,6 @@ public class LoginScreen extends JFrame {
 	private JButton validateButton;
 	private static LoginScreen window;
 	private Personnel personnel;
-	private LoginController loginController;
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -161,10 +161,14 @@ public class LoginScreen extends JFrame {
 			
 			pwString += car;
 		}
-		this.personnel = loginController.ConnexionPage(nomTxt.getText(), pwString);
-		if (loginController != null) {
+		personnel = loginController.ConnexionPage(nomTxt.getText(), pwString);
+		if (personnel != null) {
 			setVisible(false);
 			dispose();
+			Main.launchApp(personnel);
+		} else {
+			motPasseTxt.setText("");
+			JOptionPane.showMessageDialog(null, "Nom d'utilisateur ou mot de passe incorrect", "Erreur", JOptionPane.ERROR_MESSAGE);
 		}
 	}
 }
