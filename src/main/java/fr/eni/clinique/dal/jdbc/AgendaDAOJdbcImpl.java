@@ -12,11 +12,12 @@ import fr.eni.clinique.bo.Agenda;
 import fr.eni.clinique.bo.Animal;
 import fr.eni.clinique.bo.Personnel;
 import fr.eni.clinique.common.util.ResourceUtil;
+import fr.eni.clinique.dal.AgendaDAO;
 import fr.eni.clinique.dal.exception.DalException;
 import fr.eni.clinique.dal.factory.DaoFactory;
 import fr.eni.clinique.dal.factory.MSSQLConnectionFactory;
 
-public class AgendaDAOJdbcImpl {
+public class AgendaDAOJdbcImpl implements AgendaDAO {
 
     private final static String SELECT_BY_PERSONNEL_DATERDV = "SELECT CodeVeto, DateRdv, CodeAnimal FROM Agenda WHERE CodeVeto = ? AND convert(DATE,DateRdv) = ?";
             

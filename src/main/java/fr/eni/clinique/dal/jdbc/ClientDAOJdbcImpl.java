@@ -12,10 +12,11 @@ import java.util.List;
 import fr.eni.clinique.bo.Client;
 import fr.eni.clinique.common.util.ObjectUtil;
 import fr.eni.clinique.common.util.ResourceUtil;
+import fr.eni.clinique.dal.ClientDAO;
 import fr.eni.clinique.dal.exception.DalException;
 import fr.eni.clinique.dal.factory.MSSQLConnectionFactory;
 
-public class ClientDAOJdbcImpl {
+public class ClientDAOJdbcImpl implements ClientDAO {
 
 	private final static String SELECT_BY_NAME = "SELECT CodeClient, NomClient, PrenomClient, Adresse1, Adresse2, CodePostal, Ville, NumTel, Assurance, Email, Remarque, Archive FROM Clients WHERE UPPER(NomClient) LIKE ?";
     private final static String SELECT_BY_ID = "SELECT CodeClient, NomClient, PrenomClient, Adresse1, Adresse2, CodePostal, Ville, NumTel, Assurance, Email, Remarque, Archive FROM Clients WHERE CodeClient = ?";
