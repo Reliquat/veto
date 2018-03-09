@@ -99,7 +99,7 @@ public class DossierMedicalScreen {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
 				animal.setAntecedents(antecedentsAnimalTxt.getText());
-				animalController.updateAnimalSubmit(animal);
+				animalController.updateAnimal(animal);
 			}
 		});
 		panelHotBar.add(btnValider);
