@@ -174,18 +174,22 @@ public class AgendaScreen implements Observer {
 
 		List<Agenda> listeRdv = new ArrayList<>();
 		List<Personnel> personnels = new ArrayList<>();
-		
+		SimpleDateFormat dateFormater = new SimpleDateFormat("yyyy-MM-dd");
 		try {
 			personnels = agendaActionListener.selectByName(listeVeto.getSelectedItem().toString());
 			for(Personnel p : personnels){
-				System.out.println(datePicker.getJFormattedTextField().getText());
-				if (datePicker.getJFormattedTextField().getText() == null) {
+				System.out.println("*"+datePicker.getJFormattedTextField().getText()+"*");
+				if (datePicker.getJFormattedTextField().getText().equals("")) {
 					Calendar today = Calendar.getInstance();
-					listeRdv = agendaActionListener.getAgendaOfPersonnel(p, today.getTime().toString());
+					System.out.println(today.getTime().toString());
+					
+					listeRdv = agendaActionListener.getAgendaOfPersonnel(p, dateFormater.format(today.getTime()).toString());
 				}
 				else {
 					String date = datePicker.getJFormattedTextField().getText();
+					System.out.println(dateFormater.parse(date).toString());
 					listeRdv = agendaActionListener.getAgendaOfPersonnel(p,date);
+					System.out.println(listeRdv);
 				}
 			}
 			
@@ -198,9 +202,16 @@ public class AgendaScreen implements Observer {
 		}
 		DefaultTableModel newModel = (DefaultTableModel) rdvTable.getModel();
 		newModel.setRowCount(0);
+		
 		for (Agenda agenda : listeRdv) {
+			String min="";
+			if (agenda.getDateRdv().getMinutes() < 10){
+				min = "0"+agenda.getDateRdv().getMinutes(); 
+			} else {
+				min = ""+agenda.getDateRdv().getMinutes(); 
+			}
 			newModel.addRow(
-					new String[] { String.valueOf(agenda.getDateRdv()), agenda.getAnimal().getClient().getNomClient(), agenda.getAnimal().getNomAnimal(),
+					new String[] { agenda.getDateRdv().getHours()+"h"+min, agenda.getAnimal().getClient().getNomClient(), agenda.getAnimal().getNomAnimal(),
 							agenda.getAnimal().getRace(), String.valueOf(agenda.getAnimal().getCodeAnimal())});
 			System.out.println(String.valueOf(agenda.getDateRdv())+ agenda.getAnimal().getClient().getNomClient()+ agenda.getAnimal().getNomAnimal()+agenda.getAnimal().getRace());
 		}
