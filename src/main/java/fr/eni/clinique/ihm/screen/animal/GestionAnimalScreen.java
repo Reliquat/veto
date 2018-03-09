@@ -45,7 +45,7 @@ public class GestionAnimalScreen {
 		
 		this.animalController = animalController;
 		this.races = races.toArray(new String[races.size()]);
-		List<String> especesList = animalController.getEspecesFromRace(races.get(0));
+		List<String> especesList = animalController.getEspecesFromRace(animal.getRace());
 		this.especes = especesList.toArray(new String[especesList.size()]);
 		
 		initialize(animal);
@@ -74,7 +74,7 @@ public class GestionAnimalScreen {
 		button_valider.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-				Animal animal = readAnimal();
+				readAnimal();
 		        if (animal.getCodeAnimal() == -1) {
 		        	animalController.createAnimalSubmit(animal);
 		        } else {
@@ -134,7 +134,12 @@ public class GestionAnimalScreen {
 		label_tatouage.setBounds(10, 111, 72, 14);
 		panel_animal_form.add(label_tatouage);
 		
-		label_code_value = new JLabel(String.valueOf(animal.getCodeAnimal()));
+		if (animal.getCodeAnimal() != -1) {
+			label_code_value = new JLabel(String.valueOf(animal.getCodeAnimal()));
+		} else {
+			label_code_value = new JLabel();
+		}
+		
 		label_code_value.setBounds(92, 11, 46, 14);
 		panel_animal_form.add(label_code_value);
 		
@@ -147,7 +152,7 @@ public class GestionAnimalScreen {
 		String[] genres = {"M", "F", "H"};
 		comboBox_sexe = new JComboBox(genres);
 		comboBox_sexe.setBounds(278, 8, 146, 20);
-		comboBox_sexe.setSelectedIndex(0);
+		comboBox_sexe.setSelectedItem(animal.getSexe());
 		panel_animal_form.add(comboBox_sexe);
 		
 		textField_couleur = new JTextField();
@@ -156,18 +161,19 @@ public class GestionAnimalScreen {
 		textField_couleur.setBounds(92, 58, 332, 20);
 		panel_animal_form.add(textField_couleur);
 		
-		//String[] especes = {"espece", "jhgj", "errg"};
 		comboBox_espece = new JComboBox(especes);
 		comboBox_espece.setBounds(278, 83, 146, 20);
+		System.out.println(animal.getEspece());
+		comboBox_espece.setSelectedItem(animal.getEspece());
 		panel_animal_form.add(comboBox_espece);
 		
 		JLabel label_race = new JLabel("Race");
 		label_race.setBounds(10, 86, 72, 14);
 		panel_animal_form.add(label_race);
 
-		//String[] races = {"race", "zebg", "cvxdhg"};
 		comboBox_race = new JComboBox(races);
 		comboBox_race.setBounds(92, 83, 141, 20);
+		comboBox_race.setSelectedItem(animal.getRace());
 		comboBox_race.addActionListener (new ActionListener () {
 		    public void actionPerformed(ActionEvent e) {
 		    	List<String> especesList = animalController.getEspecesFromRace(comboBox_race.getSelectedItem().toString().trim());
@@ -184,7 +190,7 @@ public class GestionAnimalScreen {
 		label_sexe.setBounds(242, 11, 33, 14);
 		panel_animal_form.add(label_sexe);
 		
-		textField_tatouage = new JTextField();
+		textField_tatouage = new JTextField(animal.getTatouage());
 		textField_tatouage.setColumns(10);
 		textField_tatouage.setBounds(92, 108, 332, 20);
 		panel_animal_form.add(textField_tatouage);
@@ -192,21 +198,14 @@ public class GestionAnimalScreen {
 		this.frame.setVisible(true);
 	}
 	
-	private Animal readAnimal() {
+	private void readAnimal() {
 		
-		Animal animal = new Animal();
-		animal.setCodeAnimal(Integer.valueOf(label_code_value.getText().trim()));
-		animal.setClient(this.animal.getClient());
     	animal.setNomAnimal(textField_nom.getText().trim());
     	animal.setSexe(comboBox_sexe.getSelectedItem().toString().trim());
     	animal.setCouleur(textField_couleur.getText().trim());
     	animal.setRace(comboBox_race.getSelectedItem().toString().trim());
     	animal.setEspece(comboBox_espece.getSelectedItem().toString().trim());
     	animal.setTatouage(textField_tatouage.getText().trim());
-    	//animal.setAntecedents("");
-    	animal.setArchive(false);
-		
-		return animal;
 	}
 	
 	public void hide() {

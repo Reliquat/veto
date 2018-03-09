@@ -52,6 +52,9 @@ public class AnimalController {
 		Animal animal = new Animal();
 		animal.setCodeAnimal(-1);
 		animal.setClient(client);
+		animal.setAntecedents("");
+		animal.setArchive(false);
+		animal.setSexe("H");
 		races = getRaces();
 		gestionAnimalScreen = new GestionAnimalScreen(this, animal, races);
 	}
@@ -98,6 +101,15 @@ public class AnimalController {
 		}
 		ScreenClient.getInstance().update(null, client);
 		gestionAnimalScreen.hide();
+	}
+	
+	public void updateAnimal(Animal animal) {
+		
+		try {
+			animalManager.updateAnimal(animal);
+		} catch (BLLException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public void deleteAnimal(Animal animal) {
