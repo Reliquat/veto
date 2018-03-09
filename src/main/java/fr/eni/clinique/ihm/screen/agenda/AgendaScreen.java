@@ -1,4 +1,4 @@
- package fr.eni.clinique.ihm.screen.agenda;
+package fr.eni.clinique.ihm.screen.agenda;
 
 import java.awt.Color;
 import java.awt.FlowLayout;
@@ -40,7 +40,7 @@ import fr.eni.clinique.ihm.controller.PersonnelController;
 import fr.eni.clinique.ihm.listener.AgendaActionListener;
 
 public class AgendaScreen implements Observer {
-	
+
 	private static AgendaScreen actualInstance;
 	public JFrame frmAgenda;
 	private JPanel contentPane;
@@ -64,8 +64,8 @@ public class AgendaScreen implements Observer {
 		actualInstance = this;
 		initialize();
 	}
-	
-	public static AgendaScreen getInstance(){
+
+	public static AgendaScreen getInstance() {
 		return actualInstance;
 	}
 
@@ -73,7 +73,7 @@ public class AgendaScreen implements Observer {
 	 * Create the frame.
 	 */
 	private void initialize() {
-		
+
 		frmAgenda = new JFrame();
 		frmAgenda.setTitle("Agenda");
 		frmAgenda.setResizable(false);
@@ -82,86 +82,83 @@ public class AgendaScreen implements Observer {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		frmAgenda.setContentPane(contentPane);
 		contentPane.setLayout(null);
-		
+
 		JPanel panel = new JPanel();
 		FlowLayout flowLayout = (FlowLayout) panel.getLayout();
 		flowLayout.setAlignment(FlowLayout.LEFT);
-		panel.setBorder(new TitledBorder(new LineBorder(new Color(0, 0, 0)), "De", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
+		panel.setBorder(new TitledBorder(new LineBorder(new Color(0, 0, 0)), "De", TitledBorder.LEADING,
+				TitledBorder.TOP, null, new Color(0, 0, 0)));
 		panel.setToolTipText("");
 		panel.setBounds(10, 11, 637, 80);
 		contentPane.add(panel);
-		
+
 		JLabel lblNewLabel = new JLabel("V\u00E9t\u00E9rinaire");
 		panel.add(lblNewLabel);
 
 		listeVeto = new JComboBox();
-		listeVeto.addActionListener(new ActionListener(){
+		listeVeto.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				update(null,null);
+				update(null, null);
 			}
 		});
-		
+
 		panel.add(listeVeto);
-		
+
 		JLabel lblDate = new JLabel("Date");
 		panel.add(lblDate);
-		
+
 		this.tableAbstract = new AbstractFormatter() {
-			
-			private String datePattern = "yyyy-MM-dd";
-		    private SimpleDateFormat dateFormatter = new SimpleDateFormat(datePattern);
 
-		    public Object stringToValue(String text) throws ParseException {
-		        return dateFormatter.parseObject(text);
-		    }
+			private String datePattern = "dd/MM/yyyy";
+			private SimpleDateFormat dateFormatter = new SimpleDateFormat(datePattern);
 
-		    public String valueToString(Object value) throws ParseException {
-		        if (value != null) {
-		            Calendar cal = (Calendar) value;
-		            return dateFormatter.format(cal.getTime());
-		        }
-		        return "";
-		    }
+			public Object stringToValue(String text) throws ParseException {
+				return dateFormatter.parseObject(text);
+			}
+
+			public String valueToString(Object value) throws ParseException {
+				if (value != null) {
+					Calendar cal = (Calendar) value;
+					return dateFormatter.format(cal.getTime());
+				}
+				return "";
+			}
 		};
-		
+		Calendar calendar = Calendar.getInstance();
 		model = new UtilDateModel();
+		model.setDate(calendar.get(calendar.YEAR), calendar.get(calendar.MONTH), calendar.get(calendar.DAY_OF_MONTH));
+		model.setSelected(true);
 		Properties p = new Properties();
 		p.put("text.today", "Today");
 		p.put("text.month", "Month");
 		p.put("text.year", "Year");
-        datePanel = new JDatePanelImpl(model, p);
-        datePicker = new JDatePickerImpl(datePanel, this.tableAbstract);
-        datePicker.addActionListener(new ActionListener(){
+		datePanel = new JDatePanelImpl(model, p);
+		datePicker = new JDatePickerImpl(datePanel, this.tableAbstract);
+		datePicker.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				update(null,null);
+				update(null, null);
 			}
 		});
-        
-        panel.add(datePicker);
-		
+
+		panel.add(datePicker);
+
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(10, 113, 637, 276);
 		contentPane.add(scrollPane);
-		
+
 		rdvTable = new JTable();
 		rdvTable.setFillsViewportHeight(true);
-		rdvTable.setModel(new DefaultTableModel(
-			new Object[][] {
-			},
-			new String[] {
-				"Heure", "Nom du client", "Animal", "Race", "id"
-			}
-		));
+		rdvTable.setModel(new DefaultTableModel(new Object[][] {},
+				new String[] { "Heure", "Nom du client", "Animal", "Race", "id" }));
 		scrollPane.setViewportView(rdvTable);
-		
+
 		JButton btnDossierMedical = new JButton("Dossier m\u00E9dical");
 		btnDossierMedical.setBounds(516, 399, 131, 38);
 		btnDossierMedical.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-				System.out.println(Integer.parseInt(rdvTable.getModel().getValueAt(rdvTable.getSelectedRow(), 4).toString()));
 				DossierMedicalScreen dossierScreen = new DossierMedicalScreen(Integer.parseInt(rdvTable.getModel().getValueAt(rdvTable.getSelectedRow(), 4).toString()));
 				dossierScreen.frmDossierMedical.setVisible(true);
 			}
@@ -177,22 +174,17 @@ public class AgendaScreen implements Observer {
 		SimpleDateFormat dateFormater = new SimpleDateFormat("yyyy-MM-dd");
 		try {
 			personnels = agendaActionListener.selectByName(listeVeto.getSelectedItem().toString());
-			for(Personnel p : personnels){
-				System.out.println("*"+datePicker.getJFormattedTextField().getText()+"*");
-				if (datePicker.getJFormattedTextField().getText().equals("")) {
-					Calendar today = Calendar.getInstance();
-					System.out.println(today.getTime().toString());
-					
-					listeRdv = agendaActionListener.getAgendaOfPersonnel(p, dateFormater.format(today.getTime()).toString());
-				}
-				else {
+			for (Personnel p : personnels) {
+				System.out.println("*" + datePicker.getJFormattedTextField().getText() + "*");
+
 					String date = datePicker.getJFormattedTextField().getText();
-					System.out.println(dateFormater.parse(date).toString());
-					listeRdv = agendaActionListener.getAgendaOfPersonnel(p,date);
+					String[] dateSplit = date.split("/");
+					String dateUS = dateSplit[2] + "-" + dateSplit[1] + "-" + dateSplit[0];
+					System.out.println(dateFormater.parse(dateUS).toString());
+					listeRdv = agendaActionListener.getAgendaOfPersonnel(p, dateUS);
 					System.out.println(listeRdv);
-				}
 			}
-			
+
 		} catch (BLLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -202,39 +194,39 @@ public class AgendaScreen implements Observer {
 		}
 		DefaultTableModel newModel = (DefaultTableModel) rdvTable.getModel();
 		newModel.setRowCount(0);
-		
+
 		for (Agenda agenda : listeRdv) {
-			String min="";
-			if (agenda.getDateRdv().getMinutes() < 10){
-				min = "0"+agenda.getDateRdv().getMinutes(); 
+			String min = "";
+			if (agenda.getDateRdv().getMinutes() < 10) {
+				min = "0" + agenda.getDateRdv().getMinutes();
 			} else {
-				min = ""+agenda.getDateRdv().getMinutes(); 
+				min = "" + agenda.getDateRdv().getMinutes();
 			}
-			newModel.addRow(
-					new String[] { agenda.getDateRdv().getHours()+"h"+min, agenda.getAnimal().getClient().getNomClient(), agenda.getAnimal().getNomAnimal(),
-							agenda.getAnimal().getRace(), String.valueOf(agenda.getAnimal().getCodeAnimal())});
-			System.out.println(String.valueOf(agenda.getDateRdv())+ agenda.getAnimal().getClient().getNomClient()+ agenda.getAnimal().getNomAnimal()+agenda.getAnimal().getRace());
+			newModel.addRow(new String[] { agenda.getDateRdv().getHours() + "h" + min,
+					agenda.getAnimal().getClient().getNomClient(), agenda.getAnimal().getNomAnimal(),
+					agenda.getAnimal().getRace(), String.valueOf(agenda.getAnimal().getCodeAnimal()) });
+			System.out.println(String.valueOf(agenda.getDateRdv()) + agenda.getAnimal().getClient().getNomClient()
+					+ agenda.getAnimal().getNomAnimal() + agenda.getAnimal().getRace());
 		}
-		//this.rdvTable.setModel(this.tableModel);
+		// this.rdvTable.setModel(this.tableModel);
 	}
 
-	public void updateComboVeto(){
-		
+	public void updateComboVeto() {
+
 		try {
 			liste = agendaActionListener.getListeVeto();
 		} catch (BLLException e) {
 			e.printStackTrace();
 		}
-		
+
 		listeVeto.removeAllItems();
-		
-		for(Personnel p : liste)
-		{
+
+		for (Personnel p : liste) {
 			listeVeto.addItem(p.getNom());
 		}
-		
+
 	}
-	
+
 	public void setActionListener(AgendaActionListener agendaListener) {
 
 		if (agendaListener != null) {

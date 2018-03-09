@@ -16,6 +16,7 @@ import javax.swing.JTextField;
 import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 
+import fr.eni.clinique.bo.Animal;
 import fr.eni.clinique.ihm.controller.AnimalController;
 import fr.eni.clinique.ihm.controller.ClientController;
 import fr.eni.clinique.ihm.listener.AgendaActionListener;
@@ -31,8 +32,11 @@ public class DossierMedicalScreen {
 	private JTextField tatouageAnimalTxt;
 	private JTextField nomClientTxt;
 	private JTextField prenomClientTxt;
+	private JTextArea antecedentsAnimalTxt;
 	private AgendaActionListener agendaActionListener;
 	private AnimalController animalController;
+	private Animal animal;
+	private int codeAnimal;
 
 	/**
 	 * Launch the application.
@@ -53,17 +57,20 @@ public class DossierMedicalScreen {
 	/**
 	 * Create the application.
 	 */
-	public DossierMedicalScreen(int codeAnimal) {
+	public DossierMedicalScreen(int code) {
+		
+		animalController = new AnimalController();
+		this.codeAnimal = code;
 		
 		initialize();
-		
-		
 	}
 
 	/**
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
+		animal = animalController.getAnimalById(codeAnimal);
+		
 		frmDossierMedical = new JFrame();
 		frmDossierMedical.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		frmDossierMedical.setTitle("Dossier m\u00E9dical");
@@ -81,7 +88,7 @@ public class DossierMedicalScreen {
 		btnAnnuler.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-				System.out.println("Annuler");
+				frmDossierMedical.dispose();
 			}
 		});
 		panelHotBar.add(btnAnnuler);
@@ -91,7 +98,8 @@ public class DossierMedicalScreen {
 		btnValider.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-				System.out.println("Valider");
+				animal.setAntecedents(antecedentsAnimalTxt.getText());
+				animalController.updateAnimalSubmit(animal);
 			}
 		});
 		panelHotBar.add(btnValider);
@@ -107,11 +115,13 @@ public class DossierMedicalScreen {
 		nomClientTxt = new JTextField();
 		nomClientTxt.setEditable(false);
 		nomClientTxt.setColumns(10);
+		nomClientTxt.setText(animal.getClient().getNomClient());
 		panelClient.add(nomClientTxt);
 		
 		prenomClientTxt = new JTextField();
 		prenomClientTxt.setEditable(false);
 		prenomClientTxt.setColumns(10);
+		prenomClientTxt.setText(animal.getClient().getPrenomClient());
 		panelClient.add(prenomClientTxt);
 		
 		JLabel lblNewLabel = new JLabel("Ant\u00E9c\u00E9dents/consultations");
@@ -124,8 +134,9 @@ public class DossierMedicalScreen {
 		lblAnimal.setBounds(10, 167, 46, 14);
 		frmDossierMedical.getContentPane().add(lblAnimal);
 		
-		JTextArea antecedentsAnimalTxt = new JTextArea();
+		antecedentsAnimalTxt = new JTextArea();
 		antecedentsAnimalTxt.setBounds(296, 114, 351, 323);
+		antecedentsAnimalTxt.setText(animal.getAntecedents());
 		JScrollPane scrollPane = new JScrollPane(antecedentsAnimalTxt);
 		scrollPane.setBounds(296, 114, 351, 323);
 		frmDossierMedical.getContentPane().add(scrollPane);
@@ -133,6 +144,7 @@ public class DossierMedicalScreen {
 		codeAnimalTxt = new JTextField();
 		codeAnimalTxt.setEditable(false);
 		codeAnimalTxt.setBounds(58, 165, 228, 20);
+		codeAnimalTxt.setText(String.valueOf(animal.getCodeAnimal()));
 		frmDossierMedical.getContentPane().add(codeAnimalTxt);
 		codeAnimalTxt.setColumns(10);
 		
@@ -140,30 +152,35 @@ public class DossierMedicalScreen {
 		nomAnimalTxt.setEditable(false);
 		nomAnimalTxt.setColumns(10);
 		nomAnimalTxt.setBounds(58, 192, 228, 20);
+		nomAnimalTxt.setText(animal.getNomAnimal());
 		frmDossierMedical.getContentPane().add(nomAnimalTxt);
 		
 		couleurAnimalTxt = new JTextField();
 		couleurAnimalTxt.setEditable(false);
 		couleurAnimalTxt.setColumns(10);
 		couleurAnimalTxt.setBounds(58, 223, 108, 20);
+		couleurAnimalTxt.setText(animal.getCouleur());
 		frmDossierMedical.getContentPane().add(couleurAnimalTxt);
 		
 		sexeAnimalTxt = new JTextField();
 		sexeAnimalTxt.setEditable(false);
 		sexeAnimalTxt.setColumns(10);
 		sexeAnimalTxt.setBounds(178, 223, 108, 20);
+		sexeAnimalTxt.setText(animal.getSexe());
 		frmDossierMedical.getContentPane().add(sexeAnimalTxt);
 		
 		especeAnimalTxt = new JTextField();
 		especeAnimalTxt.setEditable(false);
 		especeAnimalTxt.setColumns(10);
 		especeAnimalTxt.setBounds(58, 254, 228, 20);
+		especeAnimalTxt.setText(animal.getEspece());
 		frmDossierMedical.getContentPane().add(especeAnimalTxt);
 		
 		tatouageAnimalTxt = new JTextField();
 		tatouageAnimalTxt.setEditable(false);
 		tatouageAnimalTxt.setColumns(10);
 		tatouageAnimalTxt.setBounds(58, 285, 228, 20);
+		tatouageAnimalTxt.setText(animal.getTatouage());
 		frmDossierMedical.getContentPane().add(tatouageAnimalTxt);
 	}
 }
