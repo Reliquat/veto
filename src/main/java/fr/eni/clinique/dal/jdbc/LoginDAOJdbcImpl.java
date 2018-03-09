@@ -8,10 +8,11 @@ import java.sql.SQLException;
 import fr.eni.clinique.bo.Personnel;
 import fr.eni.clinique.common.util.ObjectUtil;
 import fr.eni.clinique.common.util.ResourceUtil;
+import fr.eni.clinique.dal.LoginDAO;
 import fr.eni.clinique.dal.exception.DalException;
 import fr.eni.clinique.dal.factory.MSSQLConnectionFactory;
 
-public class LoginDAOJdbcImpl {
+public class LoginDAOJdbcImpl implements LoginDAO {
 
     private final static String SELECT_BY_NAME_PW = "SELECT CodePers, Nom, MotPasse, Role, Archive FROM Personnels WHERE Nom = ? AND MotPasse = ?";
     
