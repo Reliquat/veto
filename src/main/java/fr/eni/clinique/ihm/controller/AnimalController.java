@@ -153,4 +153,23 @@ public class AnimalController {
 		
 		return animal;
 	}
+	
+	public void archiveAnimal(Animal animal) {
+		
+		animal.setArchive(true);
+		
+		try {
+			animalManager.updateAnimal(animal);
+		} catch (BLLException e) {
+			e.printStackTrace();
+		}
+		
+		Client client = animal.getClient();
+		try {
+			client.setAnimaux(animalManager.getAnimauxOfClient(client));
+		} catch (BLLException e) {
+			e.printStackTrace();
+		}
+		ScreenClient.getInstance().update(null, client);
+	}
 }
